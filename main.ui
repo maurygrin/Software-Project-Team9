@@ -51,8 +51,8 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>-10</x>
-        <y>0</y>
+        <x>20</x>
+        <y>10</y>
         <width>261</width>
         <height>681</height>
        </rect>
@@ -77,7 +77,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>60</y>
+         <y>80</y>
          <width>231</width>
          <height>521</height>
         </rect>
@@ -114,7 +114,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>20</y>
+         <y>30</y>
          <width>231</width>
          <height>31</height>
         </rect>
@@ -282,19 +282,6 @@ p, li { white-space: pre-wrap; }
         <string>Delete</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="geometry">
-        <rect>
-         <x>840</x>
-         <y>620</y>
-         <width>99</width>
-         <height>25</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Save</string>
-       </property>
-      </widget>
       <widget class="QScrollArea" name="scrollArea">
        <property name="geometry">
         <rect>
@@ -411,6 +398,19 @@ p, li { white-space: pre-wrap; }
         </widget>
        </widget>
       </widget>
+      <widget class="QPushButton" name="pushButton_19">
+       <property name="geometry">
+        <rect>
+         <x>830</x>
+         <y>620</y>
+         <width>113</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -422,7 +422,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>310</x>
         <y>120</y>
-        <width>931</width>
+        <width>911</width>
         <height>571</height>
        </rect>
       </property>
@@ -434,7 +434,7 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>20</x>
          <y>420</y>
-         <width>871</width>
+         <width>841</width>
          <height>131</height>
         </rect>
        </property>
@@ -447,7 +447,7 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>20</x>
          <y>40</y>
-         <width>871</width>
+         <width>841</width>
          <height>361</height>
         </rect>
        </property>
@@ -470,10 +470,10 @@ p, li { white-space: pre-wrap; }
       <widget class="QPushButton" name="pushButton_16">
        <property name="geometry">
         <rect>
-         <x>890</x>
+         <x>870</x>
          <y>40</y>
-         <width>40</width>
-         <height>32</height>
+         <width>32</width>
+         <height>30</height>
         </rect>
        </property>
        <property name="text">
@@ -610,7 +610,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </item>
      </widget>
-     <widget class="QPushButton" name="pushButton_5">
+     <widget class="QPushButton" name="runButtonStatic">
       <property name="geometry">
        <rect>
         <x>290</x>
@@ -666,7 +666,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </item>
      </widget>
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="runButtonDynamic">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -679,7 +679,7 @@ p, li { white-space: pre-wrap; }
        <string>Run</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_7">
+     <widget class="QPushButton" name="stopButton">
       <property name="geometry">
        <rect>
         <x>830</x>
@@ -692,30 +692,30 @@ p, li { white-space: pre-wrap; }
        <string>Stop</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_17">
-      <property name="geometry">
-       <rect>
-        <x>1240</x>
-        <y>130</y>
-        <width>40</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>A</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton_18">
       <property name="geometry">
        <rect>
-        <x>1240</x>
+        <x>1230</x>
         <y>160</y>
-        <width>40</width>
-        <height>32</height>
+        <width>32</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="text">
        <string>O</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_20">
+      <property name="geometry">
+       <rect>
+        <x>1230</x>
+        <y>130</y>
+        <width>32</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>A</string>
       </property>
      </widget>
     </widget>
@@ -751,9 +751,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QTextEdit" name="poiSearch_2">
        <property name="geometry">
         <rect>
-         <x>50</x>
-         <y>20</y>
-         <width>151</width>
+         <x>10</x>
+         <y>30</y>
+         <width>231</width>
          <height>31</height>
         </rect>
        </property>
@@ -762,14 +762,14 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:14pt; font-style:italic; color:#7e7e7e;&quot;&gt;Plugin 🔍 &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic; color:#7e7e7e;&quot;&gt;Plugin 🔍 &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QListWidget" name="listWidget_2">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>60</y>
+         <x>10</x>
+         <y>80</y>
          <width>231</width>
          <height>521</height>
         </rect>
@@ -1108,9 +1108,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QTextEdit" name="poiSearch">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>30</y>
-         <width>221</width>
+         <width>231</width>
          <height>31</height>
         </rect>
        </property>
@@ -1194,7 +1194,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QPushButton" name="pushButton_15">
        <property name="geometry">
         <rect>
-         <x>820</x>
+         <x>830</x>
          <y>620</y>
          <width>113</width>
          <height>32</height>
