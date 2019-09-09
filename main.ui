@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
+    <width>1318</width>
     <height>755</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>0</y>
       <width>1281</width>
       <height>721</height>
      </rect>
@@ -27,7 +27,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>2</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideLeft</enum>
@@ -614,6 +614,75 @@
         <string>New</string>
        </property>
       </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>50</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="plainText">
+        <string>Plugin A</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_2">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>120</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="plainText">
+        <string>Plugin B
+
+</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_3">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>200</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="plainText">
+        <string>Plugin C
+</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_22">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>260</y>
+         <width>55</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>........</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit_4">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>300</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="plainText">
+        <string>Plugin D
+</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
@@ -714,6 +783,13 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;C:\Users\Documents\BEAT\Plugins\Security\DataSet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
       <widget class="QTextBrowser" name="textBrowser_5">
        <property name="geometry">
@@ -723,6 +799,13 @@
          <width>641</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;C:\Users\Documents\BEAT\Plugins\Security&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QTextBrowser" name="textBrowser_6">
@@ -734,6 +817,14 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Security Plugin&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
       <widget class="QTextBrowser" name="textBrowser_7">
        <property name="geometry">
@@ -744,6 +835,13 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Plugin that finds and analyzes points of interest that are to do with security protocols only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
       <widget class="QTextBrowser" name="textBrowser_8">
        <property name="geometry">
@@ -753,6 +851,28 @@
          <width>641</width>
          <height>211</height>
         </rect>
+       </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;lt;xs:element name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;SecuritySuitabilityPolicy&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;        type=&amp;quot;dssc:SecuritySuitabilityPolicyType&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;   &amp;lt;xs:complexType name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;SecuritySuitabilityPolicyType&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:sequence&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;dssc:PolicyName&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;dssc:Publisher&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;PolicyIssueDate&amp;quot; type=&amp;quot;xs:dateTime&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;NextUpdate&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; type=&amp;quot;xs:dateTime&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;Usage&amp;quot; type=&amp;quot;xs:string&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;dssc:Algorithm&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; maxOccurs=&amp;quot;unbounded&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;ds:Signature&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;/xs:sequence&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;version&amp;quot; type=&amp;quot;xs:string&amp;quot; default=&amp;quot;1&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;lang&amp;quot; default=&amp;quot;en&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;id&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; type=&amp;quot;xs:ID&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;   &amp;lt;/xs:complexType&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QComboBox" name="comboBox_3">
@@ -809,6 +929,19 @@
         <string>Save</string>
        </property>
       </widget>
+      <widget class="QToolButton" name="toolButton">
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>110</y>
+         <width>21</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QPushButton" name="pushButton_8">
       <property name="geometry">
@@ -824,7 +957,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="pointsOfInterest">
+    <widget class="QWidget" name="tab_4">
      <attribute name="title">
       <string>Points of Interest</string>
      </attribute>
@@ -834,13 +967,13 @@
         <x>20</x>
         <y>10</y>
         <width>261</width>
-        <height>721</height>
+        <height>681</height>
        </rect>
       </property>
       <property name="title">
        <string>Point of Interest View</string>
       </property>
-      <widget class="QPushButton" name="newButton">
+      <widget class="QPushButton" name="pushButton_13">
        <property name="geometry">
         <rect>
          <x>140</x>
@@ -851,53 +984,6 @@
        </property>
        <property name="text">
         <string>New</string>
-       </property>
-      </widget>
-      <widget class="QListWidget" name="listWidget">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>140</y>
-         <width>256</width>
-         <height>451</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>Point of Interest A</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest B</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest C</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest D</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QTextEdit" name="poiSearch">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>30</y>
-         <width>151</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-style:italic; color:#7e7e7e;&quot;&gt;Point of Interest Search &lt;/span&gt;&lt;span style=&quot; font-family:'Roboto,arial,sans-serif'; font-size:8pt; color:#222222; background-color:#ffffff;&quot;&gt;🔍&lt;/span&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-style:italic; color:#7e7e7e;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
@@ -913,7 +999,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Detailed Point of Interest View</string>
       </property>
-      <widget class="QLabel" name="plugin">
+      <widget class="QLabel" name="label_16">
        <property name="geometry">
         <rect>
          <x>120</x>
@@ -926,7 +1012,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin</string>
        </property>
       </widget>
-      <widget class="QLabel" name="poiType">
+      <widget class="QLabel" name="label_17">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -948,23 +1034,8 @@ p, li { white-space: pre-wrap; }
          <height>471</height>
         </rect>
        </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;	&lt;/span&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;main:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#aa0000;&quot;&gt;(fcn) sym.main 133&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	; DATA XREF from 0x0040080d (entry0)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	0x0040095a	55	push rbp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	0x0040095b	4889e5	mov rbp, rsp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	0x0040095c	4881ec200100	sub rsp, 0x120&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	0x0040095d	89bdfcfefff	mov dword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;	0x0040095e	b800000000	mov qword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt; color:#00557f;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
       </widget>
-      <widget class="QPushButton" name="saveButton">
+      <widget class="QPushButton" name="pushButton_15">
        <property name="geometry">
         <rect>
          <x>820</x>
@@ -977,7 +1048,7 @@ p, li { white-space: pre-wrap; }
         <string>Save</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="pluginDropdown">
+      <widget class="QComboBox" name="comboBox_4">
        <property name="geometry">
         <rect>
          <x>170</x>
@@ -1002,7 +1073,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
-      <widget class="QComboBox" name="poiTypeDropdown">
+      <widget class="QComboBox" name="comboBox_5">
        <property name="geometry">
         <rect>
          <x>170</x>
@@ -1016,12 +1087,12 @@ p, li { white-space: pre-wrap; }
        </property>
        <item>
         <property name="text">
-         <string>Function Calls</string>
+         <string>Type</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Type</string>
+         <string>Function Calls</string>
         </property>
        </item>
        <item>
@@ -1031,7 +1102,7 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <property name="text">
-         <string>DLL</string>
+         <string>Dll</string>
         </property>
        </item>
        <item>
@@ -1045,44 +1116,8 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
-      <widget class="QScrollArea" name="scrollArea_2">
-       <property name="geometry">
-        <rect>
-         <x>910</x>
-         <y>90</y>
-         <width>20</width>
-         <height>471</height>
-        </rect>
-       </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents_2">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>18</width>
-          <height>469</height>
-         </rect>
-        </property>
-        <widget class="QScrollBar" name="verticalScrollBar">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>9</y>
-           <width>20</width>
-           <height>461</height>
-          </rect>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </widget>
-      </widget>
      </widget>
-     <widget class="QPushButton" name="deleteButton">
+     <widget class="QPushButton" name="pushButton_14">
       <property name="geometry">
        <rect>
         <x>330</x>
@@ -1125,8 +1160,8 @@ p, li { white-space: pre-wrap; }
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The purpose of this software is to perform binary analysis. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:13pt;&quot;&gt;The purpose of this software is to perform binary analysis. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
@@ -1168,21 +1203,17 @@ p, li { white-space: pre-wrap; }
         <string>Plugin Structure</string>
        </property>
       </widget>
-      <widget class="QTextEdit" name="poiSearch_2">
+      <widget class="QLineEdit" name="lineEdit_3">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>151</width>
-         <height>31</height>
+         <x>20</x>
+         <y>50</y>
+         <width>141</width>
+         <height>21</height>
         </rect>
        </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:18pt; font-style:italic; color:#7e7e7e;&quot;&gt;Document &lt;/span&gt;&lt;span style=&quot; font-family:'Roboto,arial,sans-serif'; font-size:18pt; color:#222222; background-color:#ffffff;&quot;&gt;🔍&lt;/span&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:18pt; font-style:italic; color:#7e7e7e;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <property name="text">
+        <string>Document</string>
        </property>
       </widget>
      </widget>
