@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1440</width>
-    <height>900</height>
+    <width>1318</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>4</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideLeft</enum>
@@ -1345,38 +1345,12 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Documentation View</string>
       </property>
-      <widget class="QLabel" name="label_20">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>80</y>
-         <width>131</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>BEAT Documentation</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_21">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>110</y>
-         <width>131</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Plugin Structure</string>
-       </property>
-      </widget>
       <widget class="QTextEdit" name="poiSearch_3">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>221</width>
+         <width>231</width>
          <height>31</height>
         </rect>
        </property>
@@ -1387,6 +1361,33 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-style:italic; color:#7e7e7e;&quot;&gt;Document &lt;/span&gt;&lt;span style=&quot; font-family:'Roboto,arial,sans-serif'; font-size:12pt; color:#222222; background-color:#ffffff;&quot;&gt;🔍&lt;/span&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-style:italic; color:#7e7e7e;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
+      </widget>
+      <widget class="QListWidget" name="listWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>231</width>
+         <height>521</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>BEAT Documentation</string>
+        </property>
+        <property name="font">
+         <font>
+          <weight>50</weight>
+          <bold>false</bold>
+          <underline>false</underline>
+         </font>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Plugin Structure</string>
+        </property>
+       </item>
       </widget>
      </widget>
     </widget>
