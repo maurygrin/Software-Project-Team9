@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'main.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -259,9 +261,6 @@ class Ui_MainWindow(object):
         self.pushButton_12 = QtWidgets.QPushButton(self.groupBox_6)
         self.pushButton_12.setGeometry(QtCore.QRect(830, 620, 113, 32))
         self.pushButton_12.setObjectName("pushButton_12")
-        self.toolButton = QtWidgets.QToolButton(self.groupBox_6)
-        self.toolButton.setGeometry(QtCore.QRect(870, 110, 21, 22))
-        self.toolButton.setObjectName("toolButton")
         self.pushButton_8 = QtWidgets.QPushButton(self.tab_3)
         self.pushButton_8.setGeometry(QtCore.QRect(1150, 70, 99, 25))
         self.pushButton_8.setObjectName("pushButton_8")
@@ -334,15 +333,21 @@ class Ui_MainWindow(object):
         self.groupBox_10 = QtWidgets.QGroupBox(self.Documentation)
         self.groupBox_10.setGeometry(QtCore.QRect(20, 10, 261, 681))
         self.groupBox_10.setObjectName("groupBox_10")
-        self.label_20 = QtWidgets.QLabel(self.groupBox_10)
-        self.label_20.setGeometry(QtCore.QRect(30, 80, 131, 16))
-        self.label_20.setObjectName("label_20")
-        self.label_21 = QtWidgets.QLabel(self.groupBox_10)
-        self.label_21.setGeometry(QtCore.QRect(30, 110, 131, 16))
-        self.label_21.setObjectName("label_21")
         self.poiSearch_3 = QtWidgets.QTextEdit(self.groupBox_10)
-        self.poiSearch_3.setGeometry(QtCore.QRect(10, 40, 221, 31))
+        self.poiSearch_3.setGeometry(QtCore.QRect(10, 40, 231, 31))
         self.poiSearch_3.setObjectName("poiSearch_3")
+        self.listWidget_4 = QtWidgets.QListWidget(self.groupBox_10)
+        self.listWidget_4.setGeometry(QtCore.QRect(10, 80, 231, 521))
+        self.listWidget_4.setObjectName("listWidget_4")
+        item = QtWidgets.QListWidgetItem()
+        font = QtGui.QFont()
+        font.setBold(False)
+        font.setUnderline(False)
+        font.setWeight(50)
+        item.setFont(font)
+        self.listWidget_4.addItem(item)
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget_4.addItem(item)
         self.tabWidget.addTab(self.Documentation, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -542,7 +547,6 @@ class Ui_MainWindow(object):
         self.pushButton_9.setText(_translate("MainWindow", "Browse"))
         self.pushButton_11.setText(_translate("MainWindow", "Delete"))
         self.pushButton_12.setText(_translate("MainWindow", "Save"))
-        self.toolButton.setText(_translate("MainWindow", "..."))
         self.pushButton_8.setText(_translate("MainWindow", "Browse"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Plugin Management"))
         self.groupBox_7.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -598,13 +602,18 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The purpose of the Software Requirements Specification (SRS) is to give the customer a clear and precise description of the functionality of the Behavior Extraction and Analysis Tool (BEAT). The SRS divides the system requirements into two parts, behavioral and non-behavioral requirements. The behavioral requirements describe the interaction between the system and its environment. Non-behavioral requirements relate to the definition of the attributes of the product as it performs its functions. This includes performance requirements of the product. The intended audience of the SRS is Dr. Jaime Acosta, Dr. Oscar Perez, Mr. Vincent Fonseca, Ms. Herandy Vazquez, Mr. Baltazar Santaella, Ms. Florencia Larsen, Mr. Juan Ulloa, Mr. Jesus Martinez, and the Software Engineering teams. This document serves as an agreement between both parties regarding the product to be developed. </p></body></html>"))
         self.groupBox_10.setTitle(_translate("MainWindow", "Documentation View"))
-        self.label_20.setText(_translate("MainWindow", "BEAT Documentation"))
-        self.label_21.setText(_translate("MainWindow", "Plugin Structure"))
         self.poiSearch_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:12pt; font-style:italic; color:#7e7e7e;\">Document </span><span style=\" font-family:\'Roboto,arial,sans-serif\'; font-size:12pt; color:#222222; background-color:#ffffff;\">🔍</span><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:12pt; font-style:italic; color:#7e7e7e;\"> </span></p></body></html>"))
+        __sortingEnabled = self.listWidget_4.isSortingEnabled()
+        self.listWidget_4.setSortingEnabled(False)
+        item = self.listWidget_4.item(0)
+        item.setText(_translate("MainWindow", "BEAT Documentation"))
+        item = self.listWidget_4.item(1)
+        item.setText(_translate("MainWindow", "Plugin Structure"))
+        self.listWidget_4.setSortingEnabled(__sortingEnabled)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
 
@@ -616,4 +625,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
