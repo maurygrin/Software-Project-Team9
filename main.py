@@ -9,6 +9,7 @@
 import self as self
 from PyQt5 import QtCore, QtGui, QtWidgets
 from savePM import Ui_confirmationWindow
+from delete import Ui_deleteWindow
 from PyQt5.QtWidgets import QFileDialog
 
 
@@ -16,6 +17,12 @@ class Ui_MainWindow(object):
     def openWindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_confirmationWindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+    def deleteWindow(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_deleteWindow()
         self.ui.setupUi(self.window)
         self.window.show()
 
@@ -93,6 +100,9 @@ class Ui_MainWindow(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox_2)
         self.pushButton_3.setGeometry(QtCore.QRect(20, 620, 113, 32))
         self.pushButton_3.setObjectName("pushButton_3")
+
+        self.pushButton_3.clicked.connect(self.deleteWindow)
+
         self.scrollArea = QtWidgets.QScrollArea(self.groupBox_2)
         self.scrollArea.setGeometry(QtCore.QRect(170, 170, 671, 441))
         self.scrollArea.setWidgetResizable(True)
@@ -271,6 +281,9 @@ class Ui_MainWindow(object):
         self.pushButton_11 = QtWidgets.QPushButton(self.groupBox_6)
         self.pushButton_11.setGeometry(QtCore.QRect(20, 620, 113, 32))
         self.pushButton_11.setObjectName("pushButton_11")
+
+        self.pushButton_11.clicked.connect(self.deleteWindow)
+
         self.pushButton_12 = QtWidgets.QPushButton(self.groupBox_6)
         self.pushButton_12.setGeometry(QtCore.QRect(830, 620, 113, 32))
         self.pushButton_12.setObjectName("pushButton_12")
@@ -340,6 +353,9 @@ class Ui_MainWindow(object):
         self.pushButton_14 = QtWidgets.QPushButton(self.tab_4)
         self.pushButton_14.setGeometry(QtCore.QRect(330, 630, 113, 32))
         self.pushButton_14.setObjectName("pushButton_14")
+
+        self.pushButton_14.clicked.connect(self.deleteWindow)
+
         self.tabWidget.addTab(self.tab_4, "")
         self.Documentation = QtWidgets.QWidget()
         self.Documentation.setObjectName("Documentation")
