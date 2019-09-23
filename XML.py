@@ -34,6 +34,8 @@ class Notepad(QWidget):
 
         self.show()
 
+
+
     def save_text(self):
         filename = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'))
         with open(filename[0], 'w') as f:
@@ -50,6 +52,7 @@ class Notepad(QWidget):
         self.text.clear()
 
 
-app = QApplication(sys.argv)
-writer = Notepad()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    writer = Notepad()
+    sys.exit(app.exec_())

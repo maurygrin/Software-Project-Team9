@@ -5,28 +5,36 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-import PyQt5
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
+import XML
 from delete import Ui_deleteWindow
+from XML import Notepad
 
 
 class Ui_MainWindow(object):
     def __init__(self):
+
+        self.ui = Ui_deleteWindow()
+        self.window = QtWidgets.QMainWindow()
+        self.text = None
         self.contents = None
         self.le = None
 
     def getfile(self):
-        fname = PyQt5.QtWidgets.QFileDialog.getOpenFileName(self.centralwidget)
-        self.le.setPixmap(QPixmap(fname))
+        filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
+        with open(filename[0], 'r') as f:
+            file_text = f.read()
+            self.text.setText(file_text)
 
     def projectWindow(self):
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_deleteWindow()
         self.ui.setupUi(self.window)
         self.window.show()
+
+    def write(self):
+        self.writer = Notepad()
 
     def mB(self):
         r = QMessageBox()
@@ -247,6 +255,9 @@ class Ui_MainWindow(object):
         self.runButtonStatic = QtWidgets.QPushButton(self.tab_2)
         self.runButtonStatic.setGeometry(QtCore.QRect(880, 30, 111, 32))
         self.runButtonStatic.setObjectName("runButtonStatic")
+
+        self.runButtonStatic.clicked.connect(self.write)
+
         self.comboBox_2 = QtWidgets.QComboBox(self.tab_2)
         self.comboBox_2.setGeometry(QtCore.QRect(460, 70, 131, 32))
         self.comboBox_2.setEditable(False)

@@ -43,12 +43,6 @@ class Ui_deleteWindow(object):
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(630, 130, 75, 24))
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(640, 450, 75, 24))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(550, 450, 75, 24))
-        self.pushButton_3.setObjectName("pushButton_3")
         deleteWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(deleteWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 774, 21))
@@ -69,8 +63,6 @@ class Ui_deleteWindow(object):
         self.label_3.setText(_translate("deleteWindow", "Project Location"))
         self.label_4.setText(_translate("deleteWindow", "Project Description"))
         self.pushButton.setText(_translate("deleteWindow", "Browse.."))
-        self.pushButton_2.setText(_translate("deleteWindow", "Cancel"))
-        self.pushButton_3.setText(_translate("deleteWindow", "Save"))
 
 
 if __name__ == "__main__":
