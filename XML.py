@@ -35,7 +35,6 @@ class Notepad(QWidget):
         self.show()
 
 
-
     def save_text(self):
         filename = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'))
         with open(filename[0], 'w') as f:

@@ -5,6 +5,7 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
@@ -13,15 +14,19 @@ import XML
 from delete import Ui_deleteWindow
 from XML import Notepad
 
-
 class Ui_MainWindow(object):
     def __init__(self):
-
         self.ui = Ui_deleteWindow()
         self.window = QtWidgets.QMainWindow()
         self.text = None
         self.contents = None
         self.le = None
+
+    def getFilePath(self):
+        filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
+        self.textBrowser_5.setText(str(filename))
+        self.textBrowser_4.setText(str(filename))
+        print(filename)
 
     def getfile(self):
         filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
@@ -155,6 +160,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setGeometry(QtCore.QRect(730, 620, 113, 32))
         self.pushButton_3.setObjectName("pushButton_3")
 
+
         self.pushButton_3.clicked.connect(self.mB)
 
         self.scrollArea = QtWidgets.QScrollArea(self.groupBox_2)
@@ -259,13 +265,11 @@ class Ui_MainWindow(object):
         self.runButtonStatic = QtWidgets.QPushButton(self.tab_2)
         self.runButtonStatic.setGeometry(QtCore.QRect(880, 30, 111, 32))
         self.runButtonStatic.setObjectName("runButtonStatic")
-
-        self.runButtonStatic.clicked.connect(self.write)
-
         self.comboBox_2 = QtWidgets.QComboBox(self.tab_2)
         self.comboBox_2.setGeometry(QtCore.QRect(460, 70, 131, 32))
         self.comboBox_2.setEditable(False)
         self.comboBox_2.setObjectName("comboBox_2")
+        self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
@@ -399,7 +403,7 @@ class Ui_MainWindow(object):
         self.pushButton_9.setGeometry(QtCore.QRect(840, 30, 99, 25))
         self.pushButton_9.setObjectName("pushButton_9")
 
-        self.pushButton_9.clicked.connect(self.getfile)
+        self.pushButton_9.clicked.connect(self.getFilePath)
 
         self.pushButton_11 = QtWidgets.QPushButton(self.groupBox_6)
         self.pushButton_11.setGeometry(QtCore.QRect(730, 620, 113, 32))
@@ -421,11 +425,17 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_19.setFont(font)
         self.label_19.setObjectName("label_19")
+        self.pushButton_21 = QtWidgets.QPushButton(self.groupBox_6)
+        self.pushButton_21.setGeometry(QtCore.QRect(0, 280, 113, 32))
+        self.pushButton_21.setObjectName("pushButton_21")
+
+        self.pushButton_21.clicked.connect(self.write)
+
         self.pushButton_8 = QtWidgets.QPushButton(self.tab_3)
         self.pushButton_8.setGeometry(QtCore.QRect(1150, 70, 99, 25))
         self.pushButton_8.setObjectName("pushButton_8")
 
-        self.pushButton_8.clicked.connect(self.getfile)
+        self.pushButton_8.clicked.connect(self.getFilePath)
 
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_4 = QtWidgets.QWidget()
@@ -491,6 +501,7 @@ class Ui_MainWindow(object):
         self.comboBox_5.setGeometry(QtCore.QRect(160, 40, 131, 32))
         self.comboBox_5.setEditable(False)
         self.comboBox_5.setObjectName("comboBox_5")
+        self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
@@ -565,7 +576,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -673,15 +684,16 @@ class Ui_MainWindow(object):
         self.label_7.setText(_translate("MainWindow", "Static Analysis"))
         self.label_8.setText(_translate("MainWindow", "POI Type"))
         self.label_9.setText(_translate("MainWindow", "Dynamic Analysis"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "Existing Plugin"))
+        self.comboBox.setItemText(0, _translate("MainWindow", "Select"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Network"))
         self.comboBox.setItemText(2, _translate("MainWindow", "Security"))
         self.runButtonStatic.setText(_translate("MainWindow", "Run"))
-        self.comboBox_2.setItemText(0, _translate("MainWindow", "Function Calls"))
-        self.comboBox_2.setItemText(1, _translate("MainWindow", "Variable Names"))
-        self.comboBox_2.setItemText(2, _translate("MainWindow", "Dll"))
-        self.comboBox_2.setItemText(3, _translate("MainWindow", "Data Structures"))
-        self.comboBox_2.setItemText(4, _translate("MainWindow", "Strings"))
+        self.comboBox_2.setItemText(0, _translate("MainWindow", "Select"))
+        self.comboBox_2.setItemText(1, _translate("MainWindow", "Function Calls"))
+        self.comboBox_2.setItemText(2, _translate("MainWindow", "Variable Names"))
+        self.comboBox_2.setItemText(3, _translate("MainWindow", "Dll"))
+        self.comboBox_2.setItemText(4, _translate("MainWindow", "Data Structures"))
+        self.comboBox_2.setItemText(5, _translate("MainWindow", "Strings"))
         self.runButtonDynamic.setText(_translate("MainWindow", "Run"))
         self.stopButton.setText(_translate("MainWindow", "Stop"))
         self.groupBox_4.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -724,12 +736,12 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9.75pt;\">C:\\Users\\Documents\\BEAT\\Plugins\\Security\\DataSet</span></p></body></html>"))
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.textBrowser_5.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9.75pt;\">C:\\Users\\Documents\\BEAT\\Plugins\\Security</span></p></body></html>"))
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.textBrowser_6.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -766,6 +778,7 @@ class Ui_MainWindow(object):
         self.pushButton_11.setText(_translate("MainWindow", "- Delete"))
         self.pushButton_12.setText(_translate("MainWindow", "+ Save"))
         self.label_19.setText(_translate("MainWindow", "Detailed Plugin View"))
+        self.pushButton_21.setText(_translate("MainWindow", "XML EDITOR"))
         self.pushButton_8.setText(_translate("MainWindow", "Browse"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Plugin Management"))
         self.groupBox_7.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -790,14 +803,15 @@ class Ui_MainWindow(object):
         self.label_16.setText(_translate("MainWindow", "Plugin"))
         self.label_17.setText(_translate("MainWindow", "POI Filter"))
         self.pushButton_15.setText(_translate("MainWindow", "+ Save"))
-        self.comboBox_4.setItemText(0, _translate("MainWindow", "Existing Plugin"))
+        self.comboBox_4.setItemText(0, _translate("MainWindow", "Select"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Network"))
         self.comboBox_4.setItemText(2, _translate("MainWindow", "Security"))
-        self.comboBox_5.setItemText(0, _translate("MainWindow", "Function Calls"))
-        self.comboBox_5.setItemText(1, _translate("MainWindow", "Variable Names"))
-        self.comboBox_5.setItemText(2, _translate("MainWindow", "Dll"))
-        self.comboBox_5.setItemText(3, _translate("MainWindow", "Data Structures"))
-        self.comboBox_5.setItemText(4, _translate("MainWindow", "Strings"))
+        self.comboBox_5.setItemText(0, _translate("MainWindow", "Select"))
+        self.comboBox_5.setItemText(1, _translate("MainWindow", "Function Calls"))
+        self.comboBox_5.setItemText(2, _translate("MainWindow", "Variable Names"))
+        self.comboBox_5.setItemText(3, _translate("MainWindow", "Dll"))
+        self.comboBox_5.setItemText(4, _translate("MainWindow", "Data Structures"))
+        self.comboBox_5.setItemText(5, _translate("MainWindow", "Strings"))
         self.textEdit_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
