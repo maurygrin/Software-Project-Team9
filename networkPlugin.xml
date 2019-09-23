@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<plugin>
+    <name maxOccurs="1" required = "true"> Network </name>
+    <description maxOccurs="1" required = "true"> Network plugin includes six points of interest. </description>
+    <!--[Please refer to the requirements on the network points of interest.]-->
+    <output minOccurs="1" maxOccurs="unbounded" default=True>
+        <name maxOccurs="1"> Script </name>
+        <functionName maxOccurs="1"> GenerateScript </functionName>
+<functionSource maxOccurs="1"> <!--[File Path to the source of the function.]-->a </functionSource>
+    </output>
+</plugin>

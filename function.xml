@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pointOfInterest minOccurs="1" maxOccurs="unbounded" required = "True">
+    <name maxOccurs="1" required = "True" > Function </name>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True" >
+            <name maxOccurs="1" required = "True" > Function Name</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > String</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True" >
+            <name maxOccurs="1" required = "True" > Parameter Type and Order</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > Ordered List</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True" >
+            <name maxOccurs="1" required = "True" > Parameter Value</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > Ordered List</datatype>
+        </attribute>    
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True" >
+            <name maxOccurs="1" required = "True" > Return Type</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > String</datatype>
+        </attribute>    
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True" >
+            <name maxOccurs="1" required = "True" > Return Value</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > SpecifiedReturnType</datatype>
+        </attribute>            
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True" >
+            <name maxOccurs="1" required = "True" > Call From Address</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > String</datatype>
+        </attribute>    
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True" >
+            <name maxOccurs="1" required = "True" > Destination Address</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > String</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True" >
+            <name maxOccurs="1" required = "True" > Python Translation Code</name>
+            <guiComponentType maxOccurs="1" required = "True" > Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True" > String</datatype>
+        </attribute>
+</pointOfInterest>

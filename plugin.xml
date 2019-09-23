@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<plugin>
+    <name maxOccurs="1" required = "true"> </name>
+    <description maxOccurs="1" required = "true"> </description>
+    <pointOfInterest minOccurs="1" maxOccurs="unbounded" required = "true">
+        <name maxOccurs="1" required = "true"> </name>
+            <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Boolean required = "true">
+                <name maxOccurs="1" required = "true"> </name>
+                <guiComponentType maxOccurs="1" required = "true"> </guiComponentType >
+<value minOccurs="1" maxOccurs="unbounded" required = "true"> </value>
+                <datatype maxOccurs="1" required = "true"> </datatype>
+            </attribute>
+    </pointOfInterest>
+    <output minOccurs="1" maxOccurs="unbounded" default="Boolean">
+        <name maxOccurs="1"> </name>t
+        <functionName maxOccurs="1"> </functionName>
+        <functionSource maxOccurs="1"> </functionSource>
+    </output>
+</plugin>

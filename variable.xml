@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pointOfInterest minOccurs="1" maxOccurs="unbounded" required = "True">
+    <name maxOccurs="1" required = "True"> Variable </name>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+            <name maxOccurs="1" required = "True"> Variable Name</name>
+            <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True"> String</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True">
+            <name maxOccurs="1" required = "True"> Variable Value</name>
+            <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True"> List</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+            <name maxOccurs="1" required = "True"> Variable Type</name>
+            <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"i> </value>
+            <datatype maxOccurs="1" required = "True"> List</datatype>
+        </attribute>
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+            <name maxOccurs="1" required = "True"> Variable Size</name>
+            <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True"> Int</datatype>
+        </attribute>        
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True">
+            <name maxOccurs="1" required = "True"> Call From Address</name>
+            <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
+            <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
+            <datatype maxOccurs="1" required = "True"> String</datatype>
+        </attribute>            
+</pointOfInterest>
