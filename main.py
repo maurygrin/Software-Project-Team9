@@ -6,15 +6,17 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import os
+import os, sys, r2pipe
+
+from Script import Script
+
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 import XML
 from delete import Ui_deleteWindow
 from XML import Notepad
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -62,10 +64,54 @@ class Ui_MainWindow(object):
         x = r.exec()
 
     def isStaticButtonPressed(self):
+
         poiSelected = self.comboBox_2.currentText()
-        self.textEdit_3.setHtml("Displaying " + poiSelected)
-        if (poiSelected=="Variable Names"):
-            self.textEdit_3.setHtml("parameterList  |  x000F12390  |  String ")
+
+        if(poiSelected!="Select"):
+            r2 = r2pipe.open("./bomb2019.exe")
+            if (poiSelected=="Strings"):
+                display = "strings"
+                analysis = Script()
+                result = analysis.analyzeFile(r2, display)
+                self.textEdit_3.setText(result)
+                self.runButtonDynamic.setEnabled(True)
+                self.textEdit_3.repaint()
+
+            if (poiSelected=="Variables"):
+                display = "variables"
+                analysis = Script()
+                result = analysis.analyzeFile(r2, display)
+                self.textEdit_3.setText(result)
+                self.runButtonDynamic.setEnabled(True)
+                self.textEdit_3.repaint()
+
+            if (poiSelected=="Functions"):
+                display = "functions"
+                analysis = Script()
+                result = analysis.analyzeFile(r2, display)
+                self.textEdit_3.setText(result)
+                self.runButtonDynamic.setEnabled(True)
+                self.textEdit_3.repaint()
+
+            if (poiSelected=="DLLs"):
+                display = "dlls"
+                analysis = Script()
+                result = analysis.analyzeFile(r2, display)
+                self.textEdit_3.setText(result)
+                self.runButtonDynamic.setEnabled(True)
+                self.textEdit_3.repaint()
+
+    def isDynamicButtonPressed(self):
+        self.stopButton.setEnabled(True)
+        self.runButtonDynamic.setEnabled(False)
+        self.textEdit_3.repaint()
+
+    def isStopButtonPressed(self):
+        self.runButtonDynamic.setEnabled(True)
+        self.stopButton.setEnabled(False)
+        self.textEdit_3.repaint()
+
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -278,7 +324,6 @@ class Ui_MainWindow(object):
         self.comboBox_2.setGeometry(QtCore.QRect(460, 70, 131, 32))
         self.comboBox_2.setEditable(False)
         self.comboBox_2.setObjectName("comboBox_2")
-        self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
@@ -515,7 +560,6 @@ class Ui_MainWindow(object):
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
         self.comboBox_5.addItem("")
-        self.comboBox_5.addItem("")
         self.textEdit_4 = QtWidgets.QTextEdit(self.groupBox_8)
         self.textEdit_4.setGeometry(QtCore.QRect(20, 90, 821, 511))
         self.textEdit_4.setObjectName("textEdit_4")
@@ -672,24 +716,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Project"))
         self.label_23.setText(_translate("MainWindow", "Detailed Point of Interest View"))
         self.pushButton_20.setText(_translate("MainWindow", "A"))
-        self.pushButton_20.setToolTip('Analysis')
         self.pushButton_18.setText(_translate("MainWindow", "O"))
-        self.pushButton_18.setToolTip('Output Field')
         self.pushButton_16.setText(_translate("MainWindow", "C"))
-        self.pushButton_16.setToolTip('Command Pannel')
-        self.textEdit_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">    <span style=\" color:#00557f;\">main:</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#aa0000;\">(fcn) sym.main 133</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    ; DATA XREF from 0x0040080d (entry0)</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    0x0040095a    55    push rbp</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    0x0040095b    4889e5    mov rbp, rsp</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    0x0040095c    4881ec200100    sub rsp, 0x120</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    0x0040095d    89bdfcfefff    mov dword</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#00557f;\">    0x0040095e    b800000000    mov qword</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#00557f;\"><br /></p></body></html>"))
         self.lineEdit_2.setText(_translate("MainWindow", "$"))
         self.label_47.setText(_translate("MainWindow", "Terminal"))
         self.label_6.setText(_translate("MainWindow", "Plugin"))
@@ -699,15 +727,16 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(0, _translate("MainWindow", "Select"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Network"))
         self.comboBox.setItemText(2, _translate("MainWindow", "Security"))
-        self.runButtonStatic.setText(_translate("MainWindow", ""))
+        self.runButtonStatic.setText(_translate("MainWindow", "Run"))
         self.comboBox_2.setItemText(0, _translate("MainWindow", "Select"))
-        self.comboBox_2.setItemText(1, _translate("MainWindow", "Function Calls"))
-        self.comboBox_2.setItemText(2, _translate("MainWindow", "Variable Names"))
-        self.comboBox_2.setItemText(3, _translate("MainWindow", "Dll"))
-        self.comboBox_2.setItemText(4, _translate("MainWindow", "Data Structures"))
-        self.comboBox_2.setItemText(5, _translate("MainWindow", "Strings"))
-        self.runButtonDynamic.setText(_translate("MainWindow", ""))
-        self.stopButton.setText(_translate("MainWindow", "")) ###
+        self.comboBox_2.setItemText(1, _translate("MainWindow", "Functions"))
+        self.comboBox_2.setItemText(2, _translate("MainWindow", "Variables"))
+        self.comboBox_2.setItemText(3, _translate("MainWindow", "DLLs"))
+        self.comboBox_2.setItemText(4, _translate("MainWindow", "Strings"))
+        self.runButtonDynamic.setText(_translate("MainWindow", "Run"))
+        self.runButtonDynamic.setEnabled(False)
+        self.stopButton.setText(_translate("MainWindow", "Stop"))
+        self.stopButton.setEnabled(False)
         self.groupBox_4.setTitle(_translate("MainWindow", "Point of Interest View"))
         __sortingEnabled = self.listWidget_10.isSortingEnabled()
         self.listWidget_10.setSortingEnabled(False)
@@ -819,11 +848,10 @@ class Ui_MainWindow(object):
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Network"))
         self.comboBox_4.setItemText(2, _translate("MainWindow", "Security"))
         self.comboBox_5.setItemText(0, _translate("MainWindow", "Select"))
-        self.comboBox_5.setItemText(1, _translate("MainWindow", "Function Calls"))
-        self.comboBox_5.setItemText(2, _translate("MainWindow", "Variable Names"))
-        self.comboBox_5.setItemText(3, _translate("MainWindow", "Dll"))
-        self.comboBox_5.setItemText(4, _translate("MainWindow", "Data Structures"))
-        self.comboBox_5.setItemText(5, _translate("MainWindow", "Strings"))
+        self.comboBox_5.setItemText(1, _translate("MainWindow", "Functions"))
+        self.comboBox_5.setItemText(2, _translate("MainWindow", "Variables"))
+        self.comboBox_5.setItemText(3, _translate("MainWindow", "DLLs"))
+        self.comboBox_5.setItemText(4, _translate("MainWindow", "Strings"))
         self.textEdit_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -863,16 +891,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
         self.runButtonStatic.clicked.connect(self.isStaticButtonPressed)
-        self.runButtonStatic.setIcon(QIcon('startButton.png'))           #Create Icons
-        self.runButtonStatic.setIconSize(QSize(30, 30))
+        self.runButtonDynamic.clicked.connect(self.isDynamicButtonPressed)
 
-        self.runButtonDynamic.clicked.connect(self.isStaticButtonPressed)
-        self.runButtonDynamic.setIcon(QIcon('startButton.png'))           #Create Icons
-        self.runButtonDynamic.setIconSize(QSize(30, 30))
-
-        self.stopButton.clicked.connect(self.isStaticButtonPressed)
-        self.stopButton.setIcon(QIcon('stopButton.png'))  # Create Icons
-        self.stopButton.setIconSize(QSize(15, 15))
+        self.stopButton.clicked.connect(self.isStopButtonPressed)
 
 if __name__ == "__main__":
     import sys

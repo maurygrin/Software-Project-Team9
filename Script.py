@@ -9,24 +9,30 @@ class Script:
 
     def sendStrings(self, r2):  # Sends strings from the binary file
         results = r2.cmd("iz")
-        print(results)
+        return results
 
     def sendFunctions(self, r2):  # Sends functions from the binary file
         results = r2.cmd("afl")
-        print(results)
+        return results
 
     def sendVariables(self, r2):  # Sends variables from the binary file
         results = r2.cmd("afv")
-        print(results)
+        return results
+
+    def sendDLLs(self, r2):  # Sends variables from the binary file
+        results = r2.cmd("ii")
+        return results
 
     def analyzeFile(self, r2, display): # Analize the binary file
         r2.cmd("aa")
         if display == "strings":
-            self.sendStrings(r2)
+            return self.sendStrings(r2)
         if display == "functions":
-            self.sendFunctions(r2)
+            return self.sendFunctions(r2)
         if display == "variables":
-            self.sendVariables(r2)
+            return self.sendVariables(r2)
+        if display == "dlls":
+            return self.sendDLLs(r2)
         
 
 
