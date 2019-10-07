@@ -58,6 +58,13 @@ class Ui_MainWindow(object):
         r.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
 
         x = r.exec()
+
+    def isStaticButtonPressed(self):
+        poiSelected = self.comboBox_2.currentText()
+        self.textEdit_3.setHtml("Displaying " + poiSelected)
+        if (poiSelected=="Variable Names"):
+            self.textEdit_3.setHtml("parameterList  |  x000F12390  |  String ")
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1318, 755)
@@ -850,6 +857,7 @@ class Ui_MainWindow(object):
         self.pushButton_17.setText(_translate("MainWindow", "🔍 "))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
+        self.runButtonStatic.clicked.connect(self.isStaticButtonPressed)
 
 if __name__ == "__main__":
     import sys
