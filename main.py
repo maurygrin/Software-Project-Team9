@@ -8,6 +8,8 @@
 
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 import XML
@@ -670,8 +672,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Project"))
         self.label_23.setText(_translate("MainWindow", "Detailed Point of Interest View"))
         self.pushButton_20.setText(_translate("MainWindow", "A"))
+        self.pushButton_20.setToolTip('Analysis')
         self.pushButton_18.setText(_translate("MainWindow", "O"))
+        self.pushButton_18.setToolTip('Output Field')
         self.pushButton_16.setText(_translate("MainWindow", "C"))
+        self.pushButton_16.setToolTip('Command Pannel')
         self.textEdit_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -694,15 +699,15 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(0, _translate("MainWindow", "Select"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Network"))
         self.comboBox.setItemText(2, _translate("MainWindow", "Security"))
-        self.runButtonStatic.setText(_translate("MainWindow", "Run"))
+        self.runButtonStatic.setText(_translate("MainWindow", ""))
         self.comboBox_2.setItemText(0, _translate("MainWindow", "Select"))
         self.comboBox_2.setItemText(1, _translate("MainWindow", "Function Calls"))
         self.comboBox_2.setItemText(2, _translate("MainWindow", "Variable Names"))
         self.comboBox_2.setItemText(3, _translate("MainWindow", "Dll"))
         self.comboBox_2.setItemText(4, _translate("MainWindow", "Data Structures"))
         self.comboBox_2.setItemText(5, _translate("MainWindow", "Strings"))
-        self.runButtonDynamic.setText(_translate("MainWindow", "Run"))
-        self.stopButton.setText(_translate("MainWindow", "Stop"))
+        self.runButtonDynamic.setText(_translate("MainWindow", ""))
+        self.stopButton.setText(_translate("MainWindow", "")) ###
         self.groupBox_4.setTitle(_translate("MainWindow", "Point of Interest View"))
         __sortingEnabled = self.listWidget_10.isSortingEnabled()
         self.listWidget_10.setSortingEnabled(False)
@@ -858,6 +863,16 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
         self.runButtonStatic.clicked.connect(self.isStaticButtonPressed)
+        self.runButtonStatic.setIcon(QIcon('startButton.png'))           #Create Icons
+        self.runButtonStatic.setIconSize(QSize(30, 30))
+
+        self.runButtonDynamic.clicked.connect(self.isStaticButtonPressed)
+        self.runButtonDynamic.setIcon(QIcon('startButton.png'))           #Create Icons
+        self.runButtonDynamic.setIconSize(QSize(30, 30))
+
+        self.stopButton.clicked.connect(self.isStaticButtonPressed)
+        self.stopButton.setIcon(QIcon('stopButton.png'))  # Create Icons
+        self.stopButton.setIconSize(QSize(15, 15))
 
 if __name__ == "__main__":
     import sys
