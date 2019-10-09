@@ -3,6 +3,7 @@ import r2pipe
 
 
 class Script:
+
     
     def __init__(self):
         pass
@@ -23,8 +24,7 @@ class Script:
         results = r2.cmd("ii")
         return results
 
-    def analyzeFile(self, r2, display): # Analize the binary file
-        r2.cmd("aa")
+    def display(self, r2, display): # Analize the binary file
         if display == "strings":
             return self.sendStrings(r2)
         if display == "functions":
@@ -33,6 +33,10 @@ class Script:
             return self.sendVariables(r2)
         if display == "dlls":
             return self.sendDLLs(r2)
+
+    def analyzeFile(self, r2): # Analize the binary file
+        r2.cmd("aa")
+        return r2
         
 
 

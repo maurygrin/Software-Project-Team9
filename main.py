@@ -17,6 +17,8 @@ import XML
 from delete import Ui_deleteWindow
 from XML import Notepad
 
+from pathlib import Path, PureWindowsPath
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -30,7 +32,12 @@ class Ui_MainWindow(object):
         filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
         self.textBrowser_5.setText(str(filename))
         self.textBrowser_4.setText(str(filename))
-        print(filename)
+
+    def getBinaryFilePath(self):
+        filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
+        self.path = str(filename)
+        self.path = self.path.replace("(", "").replace("'", "").split(",")[0]
+        self.textBrowser.setText(str(self.path))
 
     def getfile(self):
         filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
@@ -65,46 +72,84 @@ class Ui_MainWindow(object):
 
     def isStaticButtonPressed(self):
 
+        self.runButtonDynamic.setEnabled(True)
+
+        self.static = 1
+
         poiSelected = self.comboBox_2.currentText()
 
-        if(poiSelected!="Select"):
-            r2 = r2pipe.open("./bomb2019.exe")
+        self.r2 = r2pipe.open(self.path)
+        self.analysis = Script()
+        result = self.analysis.analyzeFile(self.r2)
+
+        if (poiSelected=="Strings"):
+            display = "strings"
+            s = self.analysis.display(self.r2, display)
+            print(display)
+            self.textEdit_3.setText("hey")
+            self.textEdit_3.repaint()
+
+        elif (poiSelected=="Variables"):
+            display = "variables"
+            v = self.analysis.display(self.r2, display)
+            self.textEdit_3.setText(v)
+            self.textEdit_3.repaint()
+
+        elif (poiSelected=="Functions"):
+            display = "functions"
+            f = self.analysis.display(self.r2, display)
+            self.textEdit_3.setText(f)
+            self.textEdit_3.repaint()
+
+        elif (poiSelected=="DLLs"):
+            display = "dlls"
+            d = self.analysis.display(self.r2, display)
+            self.textEdit_3.setText(d)
+            self.textEdit_3.repaint()
+
+        else:
+            self.textEdit_3.setText("")
+            self.textEdit_3.repaint()
+
+
+    def displayPOI(self):
+        if(self.static == 1):
+
+            poiSelected = self.comboBox_2.currentText()
+
             if (poiSelected=="Strings"):
                 display = "strings"
-                analysis = Script()
-                result = analysis.analyzeFile(r2, display)
-                self.textEdit_3.setText(result)
-                self.runButtonDynamic.setEnabled(True)
+                s = self.analysis.display(self.r2, display)
+                self.textEdit_3.setText(s)
                 self.textEdit_3.repaint()
 
-            if (poiSelected=="Variables"):
+            elif (poiSelected=="Variables"):
                 display = "variables"
-                analysis = Script()
-                result = analysis.analyzeFile(r2, display)
-                self.textEdit_3.setText(result)
-                self.runButtonDynamic.setEnabled(True)
+                v = self.analysis.display(self.r2, display)
+                self.textEdit_3.setText(v)
                 self.textEdit_3.repaint()
 
-            if (poiSelected=="Functions"):
+            elif (poiSelected=="Functions"):
                 display = "functions"
-                analysis = Script()
-                result = analysis.analyzeFile(r2, display)
-                self.textEdit_3.setText(result)
-                self.runButtonDynamic.setEnabled(True)
+                f = self.analysis.display(self.r2, display)
+                self.textEdit_3.setText(f)
                 self.textEdit_3.repaint()
 
-            if (poiSelected=="DLLs"):
+            elif (poiSelected=="DLLs"):
                 display = "dlls"
-                analysis = Script()
-                result = analysis.analyzeFile(r2, display)
-                self.textEdit_3.setText(result)
-                self.runButtonDynamic.setEnabled(True)
+                d = self.analysis.display(self.r2, display)
+                self.textEdit_3.setText(d)
                 self.textEdit_3.repaint()
+
+            else:
+                self.textEdit_3.setText("")
+                self.textEdit_3.repaint()
+
 
     def isDynamicButtonPressed(self):
         self.stopButton.setEnabled(True)
         self.runButtonDynamic.setEnabled(False)
-        self.textEdit_3.repaint()
+
 
     def isStopButtonPressed(self):
         self.runButtonDynamic.setEnabled(True)
@@ -215,6 +260,10 @@ class Ui_MainWindow(object):
         self.pushButton_3.setGeometry(QtCore.QRect(730, 620, 113, 32))
         self.pushButton_3.setObjectName("pushButton_3")
 
+        self.path = ""
+        self.static = 0
+        self.analysis = ""
+        self.r2 = ""
 
         self.pushButton_3.clicked.connect(self.mB)
 
@@ -660,11 +709,6 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "Binary File Properties"))
         self.label_5.setText(_translate("MainWindow", "** User cannot modify the binary file path once the project is "))
         self.pushButton.setText(_translate("MainWindow", "Browse"))
-        self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9.75pt;\">C:\\Users\\Documents\\BEAT\\ProjectA</span></p></body></html>"))
         self.textBrowser_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -894,6 +938,10 @@ class Ui_MainWindow(object):
         self.runButtonDynamic.clicked.connect(self.isDynamicButtonPressed)
 
         self.stopButton.clicked.connect(self.isStopButtonPressed)
+
+        self.pushButton.clicked.connect(self.getBinaryFilePath)
+
+        self.comboBox_2.activated.connect(self.displayPOI)
 
 if __name__ == "__main__":
     import sys
