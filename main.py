@@ -149,6 +149,7 @@ class Ui_MainWindow(object):
     def isDynamicButtonPressed(self):
         self.stopButton.setEnabled(True)
         self.runButtonDynamic.setEnabled(False)
+        self.comboBox_2.activated.connect(self.displayPOI)
 
 
     def isStopButtonPressed(self):
