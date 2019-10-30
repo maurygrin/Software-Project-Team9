@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <plugin>
-    <name maxOccurs="1" required = "true"> Network </name>
-    <description maxOccurs="1" required = "true"> Network plugin includes six points of interest. </description>
+    <name maxOccurs="1" required = "true">Network Plugin</name>
+    <description maxOccurs="1" required = "true">Points of interest related to network</description>
     <!--[Please refer to the requirements on the network points of interest.]-->
     <output minOccurs="1" maxOccurs="unbounded" default=True>
         <name maxOccurs="1"> Script </name>

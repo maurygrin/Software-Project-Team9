@@ -85,8 +85,7 @@ class Ui_MainWindow(object):
         if (poiSelected=="Strings"):
             display = "strings"
             s = self.analysis.display(self.r2, display)
-            print(display)
-            self.textEdit_3.setText("hey")
+            self.textEdit_3.setText(s)
             self.textEdit_3.repaint()
 
         elif (poiSelected=="Variables"):
@@ -149,8 +148,9 @@ class Ui_MainWindow(object):
     def isDynamicButtonPressed(self):
         self.stopButton.setEnabled(True)
         self.runButtonDynamic.setEnabled(False)
-        self.comboBox_2.activated.connect(self.displayPOI)
-
+        self.r2.cmd('oo')
+        x = self.r2.cmd('ood')
+        print(x)
 
     def isStopButtonPressed(self):
         self.runButtonDynamic.setEnabled(True)
@@ -674,6 +674,11 @@ class Ui_MainWindow(object):
         self.pushButton_17.setObjectName("pushButton_17")
         self.tabWidget.addTab(self.Documentation, "")
         MainWindow.setCentralWidget(self.centralwidget)
+
+        self.pushButton_20.setToolTip('Analysis Result View')
+        self.pushButton_18.setToolTip('Output Field View')
+        self.pushButton_16.setToolTip('Comment View')
+
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)

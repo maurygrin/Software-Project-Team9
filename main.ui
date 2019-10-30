@@ -14,7 +14,7 @@
    <string>BEAT: Binary Extraction and Analysis Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QTabWidget" name="UI">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -48,7 +48,7 @@
      <attribute name="title">
       <string>Project</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox">
+     <widget class="QGroupBox" name="projectViewGroup">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -67,7 +67,7 @@
       <property name="title">
        <string>Project View</string>
       </property>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="projectNewButton">
        <property name="geometry">
         <rect>
          <x>130</x>
@@ -80,7 +80,7 @@
         <string>New</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="listWidget_3">
+      <widget class="QListWidget" name="projectList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -94,35 +94,8 @@
          <pointsize>11</pointsize>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Project A</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>50</weight>
-          <bold>false</bold>
-          <underline>false</underline>
-         </font>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Project B</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Project C</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Project D</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QTextEdit" name="poiSearch_4">
+      <widget class="QTextEdit" name="projectSearch">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -135,8 +108,8 @@
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic; color:#7e7e7e;&quot;&gt;Project Search &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic; color:#7e7e7e;&quot;&gt;Project Search &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QLabel" name="glass">
@@ -158,7 +131,7 @@ p, li { white-space: pre-wrap; }
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="projectSearchButton">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -172,7 +145,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_2">
+     <widget class="QGroupBox" name="detailedProjectViewGroup">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -199,7 +172,7 @@ p, li { white-space: pre-wrap; }
       <property name="flat">
        <bool>true</bool>
       </property>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="projectNameLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -212,7 +185,7 @@ p, li { white-space: pre-wrap; }
         <string>Project Name</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="projectDescriptionLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -225,7 +198,7 @@ p, li { white-space: pre-wrap; }
         <string>Project Description</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="binaryFilePathLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -238,7 +211,7 @@ p, li { white-space: pre-wrap; }
         <string>Binary File Path</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="binaryFilePropertiesLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -251,7 +224,7 @@ p, li { white-space: pre-wrap; }
         <string>Binary File Properties</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="projectNoteLabel1">
        <property name="geometry">
         <rect>
          <x>170</x>
@@ -264,7 +237,7 @@ p, li { white-space: pre-wrap; }
         <string>** User cannot modify the binary file path once the project is </string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="projectBrowseButton">
        <property name="geometry">
         <rect>
          <x>840</x>
@@ -277,58 +250,7 @@ p, li { white-space: pre-wrap; }
         <string>Browse</string>
        </property>
       </widget>
-      <widget class="QTextBrowser" name="textBrowser">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>140</y>
-         <width>671</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9.75pt;&quot;&gt;C:\Users\Documents\BEAT\ProjectA&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_2">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>60</y>
-         <width>671</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Reduces the amount of time required to perform binary analysis and performs a more targeted binary analysis....&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_3">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>30</y>
-         <width>671</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Project A&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="projectDeleteButton">
        <property name="geometry">
         <rect>
          <x>730</x>
@@ -341,7 +263,7 @@ p, li { white-space: pre-wrap; }
         <string>- Delete</string>
        </property>
       </widget>
-      <widget class="QScrollArea" name="scrollArea">
+      <widget class="QScrollArea" name="binaryFilePropertiesField">
        <property name="geometry">
         <rect>
          <x>170</x>
@@ -384,10 +306,20 @@ p, li { white-space: pre-wrap; }
           <bool>true</bool>
          </property>
         </widget>
-        <widget class="Line" name="line">
+        <widget class="QTextBrowser" name="fileProperties">
          <property name="geometry">
           <rect>
-           <x>110</x>
+           <x>0</x>
+           <y>0</y>
+           <width>671</width>
+           <height>441</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="Line" name="filePropertiesLine">
+         <property name="geometry">
+          <rect>
+           <x>220</x>
            <y>0</y>
            <width>16</width>
            <height>471</height>
@@ -397,67 +329,9 @@ p, li { white-space: pre-wrap; }
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QTextBrowser" name="textBrowser_10">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>121</width>
-           <height>441</height>
-          </rect>
-         </property>
-         <property name="html">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Name&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;OS&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Binary Type&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Machine&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Class Bits&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Language&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Canary&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Nx&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Pic&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Relocs&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Relro&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Stripped&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-        <widget class="QTextBrowser" name="textBrowser_11">
-         <property name="geometry">
-          <rect>
-           <x>120</x>
-           <y>0</y>
-           <width>531</width>
-           <height>441</height>
-          </rect>
-         </property>
-         <property name="html">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Value&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;CentOS&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Binary(n)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Linux&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;MACH064&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Python 3&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;True&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;False&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;True&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;False&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Full&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;False&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
        </widget>
       </widget>
-      <widget class="QPushButton" name="pushButton_19">
+      <widget class="QPushButton" name="projectSaveButton">
        <property name="geometry">
         <rect>
          <x>620</x>
@@ -470,7 +344,7 @@ p, li { white-space: pre-wrap; }
         <string>+ Save</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_18">
+      <widget class="QLabel" name="detailedProjectViewLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -490,7 +364,7 @@ p, li { white-space: pre-wrap; }
         <string>Detailed Project View</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_22">
+      <widget class="QLabel" name="projectNoteLabel">
        <property name="geometry">
         <rect>
          <x>170</x>
@@ -503,13 +377,43 @@ p, li { white-space: pre-wrap; }
         <string>     created.</string>
        </property>
       </widget>
+      <widget class="QLineEdit" name="projectNameField">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>30</y>
+         <width>671</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="projectDescriptionField">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>60</y>
+         <width>671</width>
+         <height>71</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="binaryFilePathField">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>140</y>
+         <width>671</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="analysisTab">
      <attribute name="title">
       <string>Analysis</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox_3">
+     <widget class="QGroupBox" name="analysisView">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -521,7 +425,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string/>
       </property>
-      <widget class="QLabel" name="label_23">
+      <widget class="QLabel" name="detailedPoiViewLabel">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -541,84 +445,20 @@ p, li { white-space: pre-wrap; }
         <string>Detailed Point of Interest View</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_20">
+      <widget class="QPushButton" name="analysisResultViewButton">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>150</y>
-         <width>32</width>
+         <x>30</x>
+         <y>480</y>
+         <width>151</width>
          <height>30</height>
         </rect>
        </property>
        <property name="text">
-        <string>A</string>
+        <string>Analysis Result View</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_18">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>180</y>
-         <width>32</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>O</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_16">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>210</y>
-         <width>32</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>C</string>
-       </property>
-      </widget>
-      <widget class="QTextEdit" name="textEdit_3">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>150</y>
-         <width>841</width>
-         <height>361</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;	&lt;span style=&quot; color:#00557f;&quot;&gt;main:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;(fcn) sym.main 133&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	; DATA XREF from 0x0040080d (entry0)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095a	55	push rbp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095b	4889e5	mov rbp, rsp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095c	4881ec200100	sub rsp, 0x120&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095d	89bdfcfefff	mov dword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095e	b800000000	mov qword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#00557f;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_2">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>540</y>
-         <width>841</width>
-         <height>131</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>$</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_47">
+      <widget class="QLabel" name="terminalLabel">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -638,8 +478,54 @@ p, li { white-space: pre-wrap; }
         <string>Terminal</string>
        </property>
       </widget>
+      <widget class="QTextBrowser" name="detailedPoiAnalysisField">
+       <property name="geometry">
+        <rect>
+         <x>35</x>
+         <y>151</y>
+         <width>851</width>
+         <height>321</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="outputFieldViewButton">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>480</y>
+         <width>151</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Output Field View</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="commentViewButton">
+       <property name="geometry">
+        <rect>
+         <x>740</x>
+         <y>480</y>
+         <width>151</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Comment View</string>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="terminalField">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>550</y>
+         <width>851</width>
+         <height>121</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="pluginLabel">
       <property name="geometry">
        <rect>
         <x>390</x>
@@ -652,7 +538,7 @@ p, li { white-space: pre-wrap; }
        <string>Plugin</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_7">
+     <widget class="QLabel" name="staticAnalysisLabel">
       <property name="geometry">
        <rect>
         <x>750</x>
@@ -665,7 +551,7 @@ p, li { white-space: pre-wrap; }
        <string>Static Analysis</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_8">
+     <widget class="QLabel" name="poiTypeLabel">
       <property name="geometry">
        <rect>
         <x>390</x>
@@ -678,7 +564,7 @@ p, li { white-space: pre-wrap; }
        <string>POI Type</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_9">
+     <widget class="QLabel" name="dynamicAnalysisLabel">
       <property name="geometry">
        <rect>
         <x>750</x>
@@ -691,7 +577,7 @@ p, li { white-space: pre-wrap; }
        <string>Dynamic Analysis</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="pluginDropDownAnalysis">
       <property name="geometry">
        <rect>
         <x>460</x>
@@ -710,13 +596,8 @@ p, li { white-space: pre-wrap; }
         <string>Network</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>Security</string>
-       </property>
-      </item>
      </widget>
-     <widget class="QPushButton" name="runButtonStatic">
+     <widget class="QPushButton" name="runStaticButton">
       <property name="geometry">
        <rect>
         <x>880</x>
@@ -729,7 +610,7 @@ p, li { white-space: pre-wrap; }
        <string>Run</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_2">
+     <widget class="QComboBox" name="poiTypeDropDownAnalysis">
       <property name="geometry">
        <rect>
         <x>460</x>
@@ -748,31 +629,26 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <property name="text">
-        <string>Function Calls</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Variable Names</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Dll</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Data Structures</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Strings</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Functions</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Variables</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>DLLs</string>
+       </property>
+      </item>
      </widget>
-     <widget class="QPushButton" name="runButtonDynamic">
+     <widget class="QPushButton" name="runDynamicButton">
       <property name="geometry">
        <rect>
         <x>880</x>
@@ -785,7 +661,7 @@ p, li { white-space: pre-wrap; }
        <string>Run</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="stopButton">
+     <widget class="QPushButton" name="stopDynamicButton">
       <property name="geometry">
        <rect>
         <x>1000</x>
@@ -798,7 +674,7 @@ p, li { white-space: pre-wrap; }
        <string>Stop</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox_4">
+     <widget class="QGroupBox" name="poiView">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -817,26 +693,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Point of Interest View</string>
       </property>
-      <widget class="QLabel" name="glass_7">
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>30</y>
-         <width>51</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>../../cliparts-for-powerpoint-transparent-magnifying-glass-md.png</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QListWidget" name="listWidget_10">
+      <widget class="QListWidget" name="poiAnalysisList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -850,45 +707,14 @@ p, li { white-space: pre-wrap; }
          <pointsize>11</pointsize>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Point of Interest A</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>50</weight>
-          <bold>false</bold>
-          <underline>false</underline>
-         </font>
-        </property>
-        <property name="checkState">
-         <enum>Checked</enum>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest B</string>
-        </property>
-        <property name="checkState">
-         <enum>Checked</enum>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest C</string>
-        </property>
-        <property name="checkState">
-         <enum>Checked</enum>
-        </property>
-       </item>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="pluginManagementTab">
      <attribute name="title">
       <string>Plugin Management</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox_5">
+     <widget class="QGroupBox" name="pluginView">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -905,7 +731,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Plugin View</string>
       </property>
-      <widget class="QPushButton" name="pushButton_10">
+      <widget class="QPushButton" name="newPluginButton">
        <property name="geometry">
         <rect>
          <x>130</x>
@@ -918,7 +744,7 @@ p, li { white-space: pre-wrap; }
         <string>New</string>
        </property>
       </widget>
-      <widget class="QTextEdit" name="poiSearch_2">
+      <widget class="QTextEdit" name="pluginSearch">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -931,11 +757,11 @@ p, li { white-space: pre-wrap; }
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-style:italic; color:#7e7e7e;&quot;&gt;Plugin &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:13pt; font-style:italic; color:#7e7e7e;&quot;&gt;Plugin &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="listWidget_2">
+      <widget class="QListWidget" name="pluginManagementList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -949,33 +775,6 @@ p, li { white-space: pre-wrap; }
          <pointsize>11</pointsize>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Plugin A</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>50</weight>
-          <bold>false</bold>
-          <underline>false</underline>
-         </font>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Plugin B</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Plugin C</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Plugin D</string>
-        </property>
-       </item>
       </widget>
       <widget class="QLabel" name="glass_2">
        <property name="geometry">
@@ -996,7 +795,7 @@ p, li { white-space: pre-wrap; }
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="searchPluginButton">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -1010,7 +809,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_6">
+     <widget class="QGroupBox" name="detailedPluginView">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -1022,7 +821,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string/>
       </property>
-      <widget class="QLabel" name="label_10">
+      <widget class="QLabel" name="pluginStructureLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1035,7 +834,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin Structure</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_11">
+      <widget class="QLabel" name="pluginPredefinedLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1048,7 +847,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin Predefined Data Set</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_12">
+      <widget class="QLabel" name="pluginNameLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1061,7 +860,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin Name</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_13">
+      <widget class="QLabel" name="pluginDescriptionLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1074,7 +873,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin Description</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_14">
+      <widget class="QLabel" name="defaultOutputFieldLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1087,7 +886,7 @@ p, li { white-space: pre-wrap; }
         <string>Default Output Field</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_15">
+      <widget class="QLabel" name="poiLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1100,108 +899,7 @@ p, li { white-space: pre-wrap; }
         <string>Points of Interest</string>
        </property>
       </widget>
-      <widget class="QTextBrowser" name="textBrowser_4">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>60</y>
-         <width>641</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_5">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>30</y>
-         <width>641</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_6">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>90</y>
-         <width>641</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9.75pt;&quot;&gt;Security Plugin&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9.75pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_7">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>120</y>
-         <width>641</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9.75pt;&quot;&gt;Plugin that finds and analyzes points of interest that are to do with security protocols only.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="textBrowser_8">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>250</y>
-         <width>641</width>
-         <height>211</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;lt;xs:element name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;SecuritySuitabilityPolicy&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;        type=&amp;quot;dssc:SecuritySuitabilityPolicyType&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;   &amp;lt;xs:complexType name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;SecuritySuitabilityPolicyType&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:sequence&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;dssc:PolicyName&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;dssc:Publisher&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;PolicyIssueDate&amp;quot; type=&amp;quot;xs:dateTime&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;NextUpdate&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; type=&amp;quot;xs:dateTime&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element name=&amp;quot;Usage&amp;quot; type=&amp;quot;xs:string&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;dssc:Algorithm&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; maxOccurs=&amp;quot;unbounded&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;       &amp;lt;xs:element ref=&amp;quot;ds:Signature&amp;quot; minOccurs=&amp;quot;0&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;/xs:sequence&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;version&amp;quot; type=&amp;quot;xs:string&amp;quot; default=&amp;quot;1&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;lang&amp;quot; default=&amp;quot;en&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;     &amp;lt;xs:attribute name=&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#ff0000;&quot;&gt;id&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;&amp;quot; type=&amp;quot;xs:ID&amp;quot;/&amp;gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New'; font-size:10pt; color:#000000;&quot;&gt;   &amp;lt;/xs:complexType&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_3">
+      <widget class="QComboBox" name="outputFieldDropDown">
        <property name="geometry">
         <rect>
          <x>200</x>
@@ -1216,7 +914,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
-      <widget class="QPushButton" name="pushButton_9">
+      <widget class="QPushButton" name="pluginStructureBrowseButton">
        <property name="geometry">
         <rect>
          <x>840</x>
@@ -1229,7 +927,7 @@ p, li { white-space: pre-wrap; }
         <string>Browse</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_11">
+      <widget class="QPushButton" name="deletePluginButton">
        <property name="geometry">
         <rect>
          <x>730</x>
@@ -1242,7 +940,7 @@ p, li { white-space: pre-wrap; }
         <string>- Delete</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_12">
+      <widget class="QPushButton" name="savePluginButton">
        <property name="geometry">
         <rect>
          <x>620</x>
@@ -1255,7 +953,7 @@ p, li { white-space: pre-wrap; }
         <string>+ Save</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_19">
+      <widget class="QLabel" name="detailedPluginViewLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1275,7 +973,7 @@ p, li { white-space: pre-wrap; }
         <string>Detailed Plugin View</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_21">
+      <widget class="QPushButton" name="XMLEditorButton">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -1285,11 +983,61 @@ p, li { white-space: pre-wrap; }
         </rect>
        </property>
        <property name="text">
-        <string>XML EDITOR</string>
+        <string>XML Editor</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="pluginStructureField">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>30</y>
+         <width>641</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="pluginPredefinedField">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>60</y>
+         <width>641</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="pluginNameField">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>90</y>
+         <width>641</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="pluginDescriptionField">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>120</y>
+         <width>641</width>
+         <height>74</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="poiPluginField">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>250</y>
+         <width>641</width>
+         <height>341</height>
+        </rect>
        </property>
       </widget>
      </widget>
-     <widget class="QPushButton" name="pushButton_8">
+     <widget class="QPushButton" name="pluginPredifinedButton">
       <property name="geometry">
        <rect>
         <x>1150</x>
@@ -1303,11 +1051,11 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_4">
+    <widget class="QWidget" name="poiTab">
      <attribute name="title">
       <string>Points of Interest</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox_7">
+     <widget class="QGroupBox" name="poiView_2">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -1324,7 +1072,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Point of Interest View</string>
       </property>
-      <widget class="QPushButton" name="pushButton_13">
+      <widget class="QPushButton" name="newPOIButton">
        <property name="geometry">
         <rect>
          <x>130</x>
@@ -1350,11 +1098,11 @@ p, li { white-space: pre-wrap; }
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic; color:#7e7e7e;&quot;&gt;Point of Interest&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic; color:#7e7e7e;&quot;&gt;Point of Interest&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="listWidget">
+      <widget class="QListWidget" name="poiList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1368,26 +1116,6 @@ p, li { white-space: pre-wrap; }
          <pointsize>11</pointsize>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Point of Interest A</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest B</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest C</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Point of Interest D</string>
-        </property>
-       </item>
       </widget>
       <widget class="QLabel" name="glass_3">
        <property name="geometry">
@@ -1408,7 +1136,7 @@ p, li { white-space: pre-wrap; }
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="poiSearchButton">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -1422,7 +1150,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_8">
+     <widget class="QGroupBox" name="poiDetailedView">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -1434,11 +1162,11 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string/>
       </property>
-      <widget class="QLabel" name="label_16">
+      <widget class="QLabel" name="pluginPoiLabel">
        <property name="geometry">
         <rect>
          <x>90</x>
-         <y>10</y>
+         <y>20</y>
          <width>51</width>
          <height>16</height>
         </rect>
@@ -1447,7 +1175,7 @@ p, li { white-space: pre-wrap; }
         <string>Plugin</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_17">
+      <widget class="QLabel" name="poiFilterLabel">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -1460,7 +1188,7 @@ p, li { white-space: pre-wrap; }
         <string>POI Filter</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_15">
+      <widget class="QPushButton" name="poiSaveButton">
        <property name="geometry">
         <rect>
          <x>620</x>
@@ -1473,11 +1201,11 @@ p, li { white-space: pre-wrap; }
         <string>+ Save</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="poiPluginDropDown">
        <property name="geometry">
         <rect>
          <x>160</x>
-         <y>0</y>
+         <y>10</y>
          <width>131</width>
          <height>32</height>
         </rect>
@@ -1492,13 +1220,8 @@ p, li { white-space: pre-wrap; }
          <string>Network</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Security</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="poiFilterDropDown">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -1517,60 +1240,30 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <property name="text">
-         <string>Function Calls</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Variable Names</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Dll</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Data Structures</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>Strings</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Functions</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Variables</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DLLs</string>
+        </property>
+       </item>
       </widget>
-      <widget class="QTextEdit" name="textEdit_4">
+      <widget class="QLabel" name="detailedPoiViewLabel_2">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>90</y>
-         <width>821</width>
-         <height>511</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;	&lt;span style=&quot; color:#00557f;&quot;&gt;main:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;(fcn) sym.main 133&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	; DATA XREF from 0x0040080d (entry0)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095a	55	push rbp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095b	4889e5	mov rbp, rsp&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095c	4881ec200100	sub rsp, 0x120&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095d	89bdfcfefff	mov dword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#00557f;&quot;&gt;	0x0040095e	b800000000	mov qword&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#00557f;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_20">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>70</y>
+         <x>40</x>
+         <y>120</y>
          <width>271</width>
          <height>21</height>
         </rect>
@@ -1586,8 +1279,18 @@ p, li { white-space: pre-wrap; }
         <string>Detailed Points of Interest View</string>
        </property>
       </widget>
+      <widget class="QTextBrowser" name="poiViewField">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>140</y>
+         <width>891</width>
+         <height>461</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
-     <widget class="QPushButton" name="pushButton_14">
+     <widget class="QPushButton" name="poiDeleteButton">
       <property name="geometry">
        <rect>
         <x>1040</x>
@@ -1605,7 +1308,7 @@ p, li { white-space: pre-wrap; }
      <attribute name="title">
       <string>Documentation</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox_9">
+     <widget class="QGroupBox" name="detailedDocumentView">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -1617,7 +1320,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string/>
       </property>
-      <widget class="QTextEdit" name="textEdit">
+      <widget class="QTextEdit" name="documentViewField">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -1630,11 +1333,11 @@ p, li { white-space: pre-wrap; }
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:13pt;&quot;&gt;The purpose of the Software Requirements Specification (SRS) is to give the customer a clear and precise description of the functionality of the Behavior Extraction and Analysis Tool (BEAT). The SRS divides the system requirements into two parts, behavioral and non-behavioral requirements. The behavioral requirements describe the interaction between the system and its environment. Non-behavioral requirements relate to the definition of the attributes of the product as it performs its functions. This includes performance requirements of the product. The intended audience of the SRS is Dr. Jaime Acosta, Dr. Oscar Perez, Mr. Vincent Fonseca, Ms. Herandy Vazquez, Mr. Baltazar Santaella, Ms. Florencia Larsen, Mr. Juan Ulloa, Mr. Jesus Martinez, and the Software Engineering teams. This document serves as an agreement between both parties regarding the product to be developed. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The purpose of the Software Requirements Specification (SRS) is to give the customer a clear and precise description of the functionality of the Behavior Extraction and Analysis Tool (BEAT). The SRS divides the system requirements into two parts, behavioral and non-behavioral requirements. The behavioral requirements describe the interaction between the system and its environment. Non-behavioral requirements relate to the definition of the attributes of the product as it performs its functions. This includes performance requirements of the product. The intended audience of the SRS is Dr. Jaime Acosta, Dr. Oscar Perez, Mr. Vincent Fonseca, Ms. Herandy Vazquez, Mr. Baltazar Santaella, Ms. Florencia Larsen, Mr. Juan Ulloa, Mr. Jesus Martinez, and the Software Engineering teams. This document serves as an agreement between both parties regarding the product to be developed. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_21">
+      <widget class="QLabel" name="detailedDocumentationViewLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1655,7 +1358,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_10">
+     <widget class="QGroupBox" name="documentView">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -1672,7 +1375,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string>Documentation View</string>
       </property>
-      <widget class="QTextEdit" name="poiSearch_3">
+      <widget class="QTextEdit" name="documentSearch">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1685,11 +1388,11 @@ p, li { white-space: pre-wrap; }
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic; color:#7e7e7e;&quot;&gt;Document&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic; color:#7e7e7e;&quot;&gt;Document&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="listWidget_4">
+      <widget class="QListWidget" name="documentList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1721,7 +1424,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
-      <widget class="QPushButton" name="pushButton_17">
+      <widget class="QPushButton" name="searchDocumentButton">
        <property name="geometry">
         <rect>
          <x>180</x>
