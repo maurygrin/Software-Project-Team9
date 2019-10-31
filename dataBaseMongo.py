@@ -7,9 +7,11 @@ db = cluster.test
 
 collection = db["test"]
 
-post = {"name": "tim", "score": 5}
-project = {"title": "BEAT", "name":"Gustavo"}
 
-collection.insert_many([post, project])
+project = {"title": "BEAT",
+           "Project Description":"Description",
+           "Binary File Path": "PATH"}
+
+collection.insert_many([project])
 
 

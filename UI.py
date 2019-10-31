@@ -7,8 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 
-import os, sys, r2pipe
-
+import os, sys, r2pipe, json
+import pymongo
+from pymongo import MongoClient
 from Script import Script
 
 from Project import Project
@@ -38,6 +39,10 @@ class Ui_MainWindow(object):
         self.text = None
         self.contents = None
         self.le = None
+        self.path = ""
+        cluster = MongoClient("mongodb+srv://Ortiz:team09@cluster0-mvofe.mongodb.net/test?retryWrites=true&w=majority")
+        db = cluster.test
+        self.collection = db["test"]
 
     def isStaticButtonPressed(self):
 
@@ -152,15 +157,48 @@ class Ui_MainWindow(object):
             self.fileErrorWindow()
         else:
             #Save Project
-            print("ok")
+
+            project = {"Project Name" : self.project.name,
+                       "Project Description" : self.project.description,
+                       "Binary File Path" : self.project.binary.path,
+                       "arch" : self.project.binary.metadata.arch,
+                       "os" : self.project.binary.metadata.os,
+                       "bintype": self.project.binary.metadata.binaryType,
+                       "machine" : self.project.binary.metadata.machine,
+                       "class" : self.project.binary.metadata.classVariable,
+                       "bits": self.project.binary.metadata.bits,
+                       "language" : self.project.binary.metadata.language,
+                       "canary" : self.project.binary.metadata.canary,
+                       "endian": self.project.binary.metadata.endian,
+                       "crypto" : self.project.binary.metadata.crypto,
+                       "nx" : self.project.binary.metadata.nx,
+                       "pic": self.project.binary.metadata.pic,
+                       "relocs" : self.project.binary.metadata.relocs,
+                       "stripped" : self.project.binary.metadata.stripped,
+                       "extension" : self.project.binary.metadata.type}
+
+            self.collection.insert([project])
+
+            self.projectList.addItem(self.project.name)
+
 
     def deleteProject(self):
-        print('delete')
-        #if self.binaryFilePathField.text() == "":
-            #self.fileErrorWindow()
-        #else:
-            #Save Project
-            #print("ok")
+        if self.binaryFilePathField.text() == "":
+            self.fileErrorWindow()
+        else:
+            p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+            self.collection.delete_one(p)
+            self.projectList.takeItem(self.projectList.currentRow())
+            self.projectNameField.clear()
+            self.projectDescriptionField.clear()
+            self.binaryFilePathField.clear()
+            self.fileProperties.clear()
+            self.projectNameField.repaint()
+            self.projectDescriptionField.repaint()
+            self.binaryFilePathField.repaint()
+            self.fileProperties.repaint()
+            self.r2 = ""
+
 
     def createProject(self, name, description):
         if not name or not description:
@@ -169,7 +207,6 @@ class Ui_MainWindow(object):
             self.project = Project(name, description, self.binary)
             self.projectNameField.setText(self.project.name)
             self.projectDescriptionField.setText(self.project.description)
-            self.projectList.addItem(self.project.name)
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -209,44 +246,61 @@ class Ui_MainWindow(object):
                 else:
                     self.binaryFilePathField.setText(str(self.path))
                     self.fileProperties.append("arch\t\t\t" + self.binary.metadata.arch + "\n")
-                    self.fileProperties.append("baddr\t\t\t" + str(self.binaryInfo.get("bin").get("baddr")) + "\n")
-                    self.fileProperties.append("binsz\t\t\t" + str(self.binaryInfo.get("bin").get("binsz")) + "\n")
-                    self.fileProperties.append("bintype\t\t\t" + self.binaryInfo.get("bin").get("bintype") + "\n")
-                    self.fileProperties.append("bits\t\t\t" + str(self.binaryInfo.get("bin").get("bits")) + "\n")
-                    self.fileProperties.append("canary\t\t\t" + str(self.binaryInfo.get("bin").get("canary")) + "\n")
-                    self.fileProperties.append("retguard\t\t\t" + str(self.binaryInfo.get("bin").get("retguard")) + "\n")
-                    self.fileProperties.append("class\t\t\t" + self.binaryInfo.get("bin").get("class") + "\n")
-                    self.fileProperties.append("cmp.csum\t\t\t" + str(self.binaryInfo.get("bin").get("cmp.csum")) + "\n")
-                    self.fileProperties.append("compiled\t\t\t" + self.binaryInfo.get("bin").get("compiled") + "\n")
-                    self.fileProperties.append("crypto\t\t\t" + str(self.binaryInfo.get("bin").get("crypto")) + "\n")
-                    self.fileProperties.append("endian\t\t\t" + self.binaryInfo.get("bin").get("endian") + "\n")
-                    self.fileProperties.append("havecode\t\t\t" + str(self.binaryInfo.get("bin").get("havecode")) + "\n")
-                    self.fileProperties.append("hdr.csum\t\t\t" + str(self.binaryInfo.get("bin").get("hdr.csum")) + "\n")
-                    self.fileProperties.append("guid\t\t\t" + self.binaryInfo.get("bin").get("guid") + "\n")
-                    self.fileProperties.append("laddr\t\t\t" + str(self.binaryInfo.get("bin").get("laddr")) + "\n")
-                    self.fileProperties.append("lang\t\t\t" + self.binaryInfo.get("bin").get("lang") + "\n")
-                    self.fileProperties.append("linenum\t\t\t" + str(self.binaryInfo.get("bin").get("linenum")) + "\n")
-                    self.fileProperties.append("lsyms\t\t\t" + str(self.binaryInfo.get("bin").get("lsyms")) + "\n")
-                    self.fileProperties.append("machine\t\t\t" + self.binaryInfo.get("bin").get("machine") + "\n")
-                    self.fileProperties.append("maxopsz\t\t\t" + str(self.binaryInfo.get("bin").get("maxopsz")) + "\n")
-                    self.fileProperties.append("minopsz\t\t\t" + str(self.binaryInfo.get("bin").get("minopsz")) + "\n")
-                    self.fileProperties.append("nx\t\t\t" + str(self.binaryInfo.get("bin").get("nx")) + "\n")
-                    self.fileProperties.append("os\t\t\t" + self.binaryInfo.get("bin").get("os") + "\n")
-                    self.fileProperties.append("overlay\t\t\t" + str(self.binaryInfo.get("bin").get("overlay")) + "\n")
-                    self.fileProperties.append("pcalign\t\t\t" + str(self.binaryInfo.get("bin").get("pcalign")) + "\n")
-                    self.fileProperties.append("pic\t\t\t" + str(self.binaryInfo.get("bin").get("pic")) + "\n")
-                    self.fileProperties.append("relocs\t\t\t" + str(self.binaryInfo.get("bin").get("relocs")) + "\n")
-                    self.fileProperties.append("signed\t\t\t" + str(self.binaryInfo.get("bin").get("signed")) + "\n")
-                    self.fileProperties.append("sanitiz\t\t\t" + str(self.binaryInfo.get("bin").get("sanitiz")) + "\n")
-                    self.fileProperties.append("static\t\t\t" + str(self.binaryInfo.get("bin").get("static")) + "\n")
-                    self.fileProperties.append("stripped\t\t\t" + str(self.binaryInfo.get("bin").get("stripped")) + "\n")
-                    self.fileProperties.append("subsys\t\t\t" + self.binaryInfo.get("bin").get("subsys") + "\n")
-                    self.fileProperties.append("va\t\t\t" + str(self.binaryInfo.get("bin").get("va")) + "\n")
+                    self.fileProperties.append("os\t\t\t" + self.binary.metadata.os + "\n")
+                    self.fileProperties.append("bintype\t\t\t" + self.binary.metadata.binaryType + "\n")
+                    self.fileProperties.append("machine\t\t\t" + self.binary.metadata.machine + "\n")
+                    self.fileProperties.append("class\t\t\t" + self.binary.metadata.classVariable + "\n")
+                    self.fileProperties.append("bits\t\t\t" + str(self.binary.metadata.bits) + "\n")
+                    self.fileProperties.append("language\t\t\t" + self.binary.metadata.language + "\n")
+                    self.fileProperties.append("canary\t\t\t" + str(self.binary.metadata.canary) + "\n")
+                    self.fileProperties.append("endian\t\t\t" + self.binary.metadata.endian + "\n")
+                    self.fileProperties.append("crypto\t\t\t" + str(self.binary.metadata.crypto) + "\n")
+                    self.fileProperties.append("nx\t\t\t" + str(self.binary.metadata.nx) + "\n")
+                    self.fileProperties.append("pic\t\t\t" + str(self.binary.metadata.pic) + "\n")
+                    self.fileProperties.append("relocs\t\t\t" + str(self.binary.metadata.relocs) + "\n")
+                    self.fileProperties.append("stripped\t\t\t" + str(self.binary.metadata.stripped) + "\n")
+                    self.fileProperties.append("extension\t\t\t" + self.binary.metadata.type + "\n")
+
             except Exception as e:
                 self.binaryErrorWindow()
                 self.r2 = ""
                 self.fileProperties.setText("")
                 self.binaryFilePathField.setText("")
+
+    def clicked(self):
+
+        #item = self.projectList.currentItem()
+        #print(item.text())
+
+        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+
+        self.projectNameField.setText(p.get("Project Name"))
+
+
+        self.projectDescriptionField.setText(p.get("Project Description"))
+
+        self.binaryFilePathField.setText(p.get("Binary File Path"))
+
+        self.fileProperties.append("arch\t\t\t" + p.get("arch") + "\n")
+        self.fileProperties.append("os\t\t\t" + p.get("os") + "\n")
+        self.fileProperties.append("bintype\t\t\t" + p.get("bintype") + "\n")
+        self.fileProperties.append("machine\t\t\t" + p.get("machine") + "\n")
+        self.fileProperties.append("class\t\t\t" + p.get("class") + "\n")
+        self.fileProperties.append("bits\t\t\t" + str(p.get("bits")) + "\n")
+        self.fileProperties.append("language\t\t\t" + p.get("language") + "\n")
+        self.fileProperties.append("canary\t\t\t" + str(p.get("canary")) + "\n")
+        self.fileProperties.append("endian\t\t\t" + p.get("endian") + "\n")
+        self.fileProperties.append("crypto\t\t\t" + str(p.get("crypto")) + "\n")
+        self.fileProperties.append("nx\t\t\t" + str(p.get("nx")) + "\n")
+        self.fileProperties.append("pic\t\t\t" + str(p.get("pic")) + "\n")
+        self.fileProperties.append("relocs\t\t\t" + str(p.get("relocs")) + "\n")
+        self.fileProperties.append("stripped\t\t\t" + str(p.get("stripped")) + "\n")
+        self.fileProperties.append("extension\t\t\t" + p.get("extension") + "\n")
+
+
+        self.r2 = r2pipe.open(p.get("Binary File Path"))
+
+        self.detailedPoiAnalysisField.clear()
 
 
 
@@ -750,6 +804,11 @@ class Ui_MainWindow(object):
         self.runDynamicButton.setEnabled(False)
 
         self.stopDynamicButton.setEnabled(False)
+
+        self.projectList.clicked.connect(self.clicked)
+
+        for document in self.collection.find():
+            self.projectList.addItem(document.get("Project Name"))
 
 
     def setupUiCreate(self, Dialog):
