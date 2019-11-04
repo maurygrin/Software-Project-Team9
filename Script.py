@@ -8,7 +8,7 @@ class Script:
         pass
 
     def sendStrings(self, r2):  # Sends strings from the binary file
-        results = r2.cmd("iz")
+        results = r2.cmdj("izj")
         return results
 
     def sendFunctions(self, r2):  # Sends functions from the binary file
@@ -16,11 +16,11 @@ class Script:
         return results
 
     def sendVariables(self, r2):  # Sends variables from the binary file
-        results = r2.cmd("afv")
+        results = r2.cmdj("afvj")
         return results
 
     def sendDLLs(self, r2):  # Sends variables from the binary file
-        results = r2.cmd("ii")
+        results = r2.cmdj("iij")
         return results
 
 
