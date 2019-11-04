@@ -7,13 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 
-import os, sys, r2pipe, json
+import os, sys, r2pipe, json, base64
 import pymongo
 from pymongo import MongoClient
 from Script import Script
-from Plugin import Plugin
+
 from Project import Project
-from PointOfInterest import POI
 from BinaryFile import BinaryFile
 from Metadata import Metadata
 
@@ -22,7 +21,6 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 import XML
 from newProject import Ui_newProject
-from NewPlugin import Ui_newPlugin
 from XML import Notepad
 
 from pathlib import Path, PureWindowsPath
@@ -32,8 +30,6 @@ class Ui_MainWindow(object):
 
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
-        self.windowPlug = QtWidgets.QDialog()
-        self.windowPOI = QtWidgets.QDialog()
         self.windowBinaryError = QtWidgets.QDialog()
         self.windowFileError = QtWidgets.QDialog()
         self.windowAnalysisResult = QtWidgets.QDialog()
@@ -44,13 +40,16 @@ class Ui_MainWindow(object):
         self.contents = None
         self.le = None
         self.path = ""
-
-    # cluster = pymongo.MongoClient("mongodb://localhost:27017")
-    # db = cluster.test
-    # collection = db["test"]
-
-    def editor(self):
-        print("fix editor")
+        self.s = ""
+        self.v = ""
+        self.f = ""
+        self.d = ""
+        self.value = ""
+        self.section = ""
+        self.display = ""
+        cluster = MongoClient("mongodb://localhost:27017/")
+        db = cluster.test
+        self.collection = db["test"]
 
     def isStaticButtonPressed(self):
 
@@ -67,68 +66,162 @@ class Ui_MainWindow(object):
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
             self.analysis = Script()
-            result = self.analysis.analyzeFile(self.r2)
 
-            if (poiSelected == "Strings"):
-                display = "strings"
-                s = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(s)
+            if (poiSelected=="Strings"):
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(30)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
-            elif (poiSelected == "Variables"):
-                display = "variables"
-                v = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(v)
-                self.detailedPoiAnalysisField.repaint()
+            elif (poiSelected=="Variables"):
+                self.display = "variables"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.v = self.analysis.display(self.r2, self.display)
+                print(self.v)
+                #for item in self.v:
+                    #print(base64.b64decode(item["string"]).decode())
+                    #self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                #self.detailedPoiAnalysisField.setText(v)
+                #self.detailedPoiAnalysisField.repaint()
 
-            elif (poiSelected == "Functions"):
-                display = "functions"
-                f = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(f)
-                self.detailedPoiAnalysisField.repaint()
+            elif (poiSelected=="Functions"):
+                self.display = "functions"
+                self.poiAnalysisList.clear()
+                self.f = self.analysis.display(self.r2, self.display)
+                print(self.f)
+                #display = "strings"
+                #self.f = self.analysis.display(self.r2, display)
+                #for item in self.f:
+                  #  self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                #self.detailedPoiAnalysisField.setText(f)
+                #self.detailedPoiAnalysisField.repaint()
 
-            elif (poiSelected == "DLLs"):
-                display = "dlls"
-                d = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(d)
+            elif (poiSelected=="DLLs"):
+                self.display = "dlls"
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(5)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.d = self.analysis.display(self.r2, self.display)
+                for item in self.d:
+                    self.poiAnalysisList.addItem(item["name"])
+
+                print(self.d)
 
             else:
                 self.detailedPoiAnalysisField.setText("")
                 self.detailedPoiAnalysisField.repaint()
 
+
     def displayPOI(self):
-        if (self.static == 1):
+        if(self.static == 1):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected == "Strings"):
-                display = "strings"
-                s = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(s)
+            if (poiSelected=="Strings"):
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(30)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    print(item)
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+
+            elif (poiSelected=="Variables"):
+                self.display = "variables"
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(5)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.v = self.analysis.display(self.r2, self.display)
+                #self.detailedPoiAnalysisField.setText(v)
+                #self.detailedPoiAnalysisField.repaint()
+
+            elif (poiSelected=="Functions"):
+                self.display = "functions"
+                #self.poiAnalysisList.clear()
+                self.f = self.analysis.display(self.r2, self.display)
+                self.detailedPoiAnalysisField.setText(self.f)
                 self.detailedPoiAnalysisField.repaint()
 
-            elif (poiSelected == "Variables"):
-                display = "variables"
-                v = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(v)
+            elif (poiSelected=="DLLs"):
+                self.display = "dlls"
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(20)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-
-            elif (poiSelected == "Functions"):
-                display = "functions"
-                f = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(f)
-                self.detailedPoiAnalysisField.repaint()
-
-            elif (poiSelected == "DLLs"):
-                display = "dlls"
-                d = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(d)
-                self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.d = self.analysis.display(self.r2, self.display)
+                for item in self.d:
+                    self.poiAnalysisList.addItem(item["name"])
+                #self.detailedPoiAnalysisField.setText(d)
+                #self.detailedPoiAnalysisField.repaint()
 
             else:
                 self.detailedPoiAnalysisField.setText("")
                 self.detailedPoiAnalysisField.repaint()
+
 
     def isDynamicButtonPressed(self):
         self.stopButton.setEnabled(True)
@@ -158,71 +251,35 @@ class Ui_MainWindow(object):
         self.setupUiCreate(self.windowNew)
         self.windowNew.show()
 
-    def pluginWindow(self):
-        self.setupUiPlugin(self.windowPlug)
-        self.windowPlug.show()
-
-    def poiWindow(self):
-        self.setupUiPOI(self.windowPOI)
-        self.windowPOI.show()
-
     def saveProject(self):
         if self.binaryFilePathField.text() == "":
             self.fileErrorWindow()
         else:
-            # Save Project
+            #Save Project
 
-            project = {"Project Name": self.project.name,
-                       "Project Description": self.project.description,
-                       "Binary File Path": self.project.binary.path,
-                       "arch": self.project.binary.metadata.arch,
-                       "os": self.project.binary.metadata.os,
+            project = {"Project Name" : self.project.name,
+                       "Project Description" : self.project.description,
+                       "Binary File Path" : self.project.binary.path,
+                       "arch" : self.project.binary.metadata.arch,
+                       "os" : self.project.binary.metadata.os,
                        "bintype": self.project.binary.metadata.binaryType,
-                       "machine": self.project.binary.metadata.machine,
-                       "class": self.project.binary.metadata.classVariable,
+                       "machine" : self.project.binary.metadata.machine,
+                       "class" : self.project.binary.metadata.classVariable,
                        "bits": self.project.binary.metadata.bits,
-                       "language": self.project.binary.metadata.language,
-                       "canary": self.project.binary.metadata.canary,
+                       "language" : self.project.binary.metadata.language,
+                       "canary" : self.project.binary.metadata.canary,
                        "endian": self.project.binary.metadata.endian,
-                       "crypto": self.project.binary.metadata.crypto,
-                       "nx": self.project.binary.metadata.nx,
+                       "crypto" : self.project.binary.metadata.crypto,
+                       "nx" : self.project.binary.metadata.nx,
                        "pic": self.project.binary.metadata.pic,
-                       "relocs": self.project.binary.metadata.relocs,
-                       "stripped": self.project.binary.metadata.stripped,
-                       "extension": self.project.binary.metadata.type}
+                       "relocs" : self.project.binary.metadata.relocs,
+                       "stripped" : self.project.binary.metadata.stripped,
+                       "extension" : self.project.binary.metadata.type}
 
             self.collection.insert([project])
 
             self.projectList.addItem(self.project.name)
 
-    def savePlugin(self):
-        if self.pluginNameField.text() == "":
-            self.fileErrorWindow()
-        else:
-            plugin = {"Plugin Name": self.plugin.name,
-                      "Plugin Description": self.plugin.description,
-                      "Structure File Path": self.plugin.structure,
-                      "Pre-Defined Dataset File Path": self.plugin.data_set}
-
-            self.collection.insert([plugin])
-            self.pluginManagementList.addItem(self.plugin.name)
-
-
-    def deletePlugin(self):
-        if self.pluginNameField.text() == "":
-            self.fileErrorWindow()
-        else:
-            p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
-            self.collection.delete_one(p)
-            self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
-            self.pluginNameField.clear()
-            self.pluginDescriptionField.clear()
-            self.pluginStructureField.clear()
-            self.pluginPredefinedField.clear()
-            self.pluginNameField.repaint()
-            self.pluginDescriptionField.repaint()
-            self.pluginStructureField.repaint()
-            self.pluginPredefinedField.repaint()
 
     def deleteProject(self):
         if self.binaryFilePathField.text() == "":
@@ -241,6 +298,7 @@ class Ui_MainWindow(object):
             self.fileProperties.repaint()
             self.r2 = ""
 
+
     def createProject(self, name, description):
         if not name or not description:
             print("Failed")
@@ -248,40 +306,6 @@ class Ui_MainWindow(object):
             self.project = Project(name, description, self.binary)
             self.projectNameField.setText(self.project.name)
             self.projectDescriptionField.setText(self.project.description)
-
-    def createPlugin(self, name, description, structure, data_set):
-        if not name or not description or not structure or not data_set:
-            print("Failed")
-        else:
-            self.plugin = Plugin(name, description, structure, data_set)
-            self.pluginNameField.setText(self.plugin.name)
-            self.pluginDescriptionField.setText(self.plugin.description)
-            self.pluginStructureField.setText(self.plugin.structure)
-            self.pluginPredefinedField.setText(self.plugin.data_set)
-
-    def createPOI(self, name, type, out):
-        if not name or not type or not out:
-            print("Failed")
-        else:
-            self.poi = POI(name, type, out)
-            self.poiNameEdit.setText(self.poi.name)
-            self.poiTypeEdit.setText(self.poi.type)
-            self.poiOutEdit.setText(self.poi.out)
-
-    def savePOI(self):
-      self.poiList.addItem(self.poi.name)
-
-    def deletePOI(self):
-        self.poiList.takeItem(self.poiList.currentRow())
-
-
-
-
-    def savePlugin(self):
-        if self.poiNameEdit.text() == "":
-            self.fileErrorWindow()
-        else:
-            self.poiList.addItem(self.poi.name)
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -302,24 +326,18 @@ class Ui_MainWindow(object):
 
             self.binaryInfo = self.r2.cmdj('ij')
 
-            self.metadata = Metadata(self.binaryInfo.get("bin").get("arch"), self.binaryInfo.get("bin").get("os"),
-                                     self.binaryInfo.get("bin").get("bintype"),
-                                     self.binaryInfo.get("bin").get("machine"), self.binaryInfo.get("bin").get("class"),
-                                     self.binaryInfo.get("bin").get("bits"),
-                                     self.binaryInfo.get("bin").get("lang"), self.binaryInfo.get("bin").get("canary"),
-                                     self.binaryInfo.get("bin").get("endian"),
-                                     self.binaryInfo.get("bin").get("crypto"), self.binaryInfo.get("bin").get("nx"),
-                                     self.binaryInfo.get("bin").get("pic"),
-                                     self.binaryInfo.get("bin").get("relocs"),
-                                     self.binaryInfo.get("bin").get("striped"), self.binaryInfo.get("core").get("type"))
+            self.metadata = Metadata(self.binaryInfo.get("bin").get("arch"), self.binaryInfo.get("bin").get("os"), self.binaryInfo.get("bin").get("bintype"),
+                                     self.binaryInfo.get("bin").get("machine"), self.binaryInfo.get("bin").get("class"), self.binaryInfo.get("bin").get("bits"),
+                                     self.binaryInfo.get("bin").get("lang"), self.binaryInfo.get("bin").get("canary"), self.binaryInfo.get("bin").get("endian"),
+                                     self.binaryInfo.get("bin").get("crypto"), self.binaryInfo.get("bin").get("nx"), self.binaryInfo.get("bin").get("pic"),
+                                     self.binaryInfo.get("bin").get("relocs"), self.binaryInfo.get("bin").get("striped"), self.binaryInfo.get("core").get("type"))
 
             self.binary = BinaryFile(self.path, self.metadata)
 
-            # print(self.binaryInfo)
-            # print(self.binaryInfo.get("core").get("type"))
+            #print(self.binaryInfo)
+            #print(self.binaryInfo.get("core").get("type"))
             try:
-                if (self.binary.metadata.arch != "x86") or (
-                        self.binary.metadata.type != "Executable file" and self.binary.metadata.type != "EXEC (Executable file)"):
+                if (self.binary.metadata.arch != "x86") or (self.binary.metadata.type != "Executable file" and self.binary.metadata.type != "EXEC (Executable file)"):
                     self.binaryErrorWindow()
                     self.r2 = ""
                     self.fileProperties.setText("")
@@ -348,30 +366,15 @@ class Ui_MainWindow(object):
                 self.fileProperties.setText("")
                 self.binaryFilePathField.setText("")
 
-    def BrowseStruct(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.structureFieldWindow, "Browse XML Schema", "",
-                                                            "XML Schemas Files (*.xsd)", options=options)
-        if fileName:
-            self.structureFieldWindow.setText(fileName)
+    def clickedProject(self):
 
-    def BrowseDataSet(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
-                                                            "XML Files (*.xml)", options=options)
-        if fileName:
-            self.datasetFieldWindow.setText(fileName)
-
-    def clicked(self):
-
-        # item = self.projectList.currentItem()
-        # print(item.text())
+        #item = self.projectList.currentItem()
+        #print(item.text())
 
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
 
         self.projectNameField.setText(p.get("Project Name"))
+
 
         self.projectDescriptionField.setText(p.get("Project Description"))
 
@@ -393,9 +396,12 @@ class Ui_MainWindow(object):
         self.fileProperties.append("stripped\t\t\t" + str(p.get("stripped")) + "\n")
         self.fileProperties.append("extension\t\t\t" + p.get("extension") + "\n")
 
+
         self.r2 = r2pipe.open(p.get("Binary File Path"))
 
         self.detailedPoiAnalysisField.clear()
+
+
 
     def openWindow(self):
         r = QMessageBox()
@@ -542,6 +548,10 @@ class Ui_MainWindow(object):
         self.binaryFilePathField.setObjectName("binaryFilePathField")
         self.UI.addTab(self.tab, "")
 
+
+
+
+
         self.analysisTab = QtWidgets.QWidget()
         self.analysisTab.setObjectName("analysisTab")
         self.analysisView = QtWidgets.QGroupBox(self.analysisTab)
@@ -629,6 +639,10 @@ class Ui_MainWindow(object):
         self.poiAnalysisList.setFont(font)
         self.poiAnalysisList.setObjectName("poiAnalysisList")
         self.UI.addTab(self.analysisTab, "")
+
+
+
+
 
         self.pluginManagementTab = QtWidgets.QWidget()
         self.pluginManagementTab.setObjectName("pluginManagementTab")
@@ -725,6 +739,8 @@ class Ui_MainWindow(object):
         self.pluginPredifinedButton.setObjectName("pluginPredifinedButton")
         self.UI.addTab(self.pluginManagementTab, "")
 
+
+
         self.poiTab = QtWidgets.QWidget()
         self.poiTab.setObjectName("poiTab")
         self.poiView_2 = QtWidgets.QGroupBox(self.poiTab)
@@ -797,6 +813,8 @@ class Ui_MainWindow(object):
         self.poiDeleteButton.setObjectName("poiDeleteButton")
         self.UI.addTab(self.poiTab, "")
 
+
+
         self.Documentation = QtWidgets.QWidget()
         self.Documentation.setObjectName("Documentation")
         self.detailedDocumentView = QtWidgets.QGroupBox(self.Documentation)
@@ -843,6 +861,8 @@ class Ui_MainWindow(object):
         self.searchDocumentButton.setObjectName("searchDocumentButton")
         self.UI.addTab(self.Documentation, "")
 
+
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -858,27 +878,13 @@ class Ui_MainWindow(object):
 
         self.projectNewButton.clicked.connect(self.projectWindow)
 
-        self.newPluginButton.clicked.connect(self.pluginWindow)
-
-        self.newPOIButton.clicked.connect(self.poiWindow)
-
         self.projectBrowseButton.clicked.connect(self.getBinaryFilePath)
 
         self.fileProperties.setText("Name\t\t\tValue\n")
 
         self.projectSaveButton.clicked.connect(self.saveProject)
 
-        self.savePluginButton.clicked.connect(self.savePlugin)
-
-        self.poiSaveButton.clicked.connect(self.savePOI)
-
         self.projectDeleteButton.clicked.connect(self.deleteProject)
-
-        self.deletePluginButton.clicked.connect(self.deletePlugin)
-
-        self.poiDeleteButton.clicked.connect(self.deletePOI)
-
-        self.XMLEditorButton.clicked.connect(self.editor)
 
         self.analysisResultViewButton.clicked.connect(self.analysisResultWindow)
 
@@ -898,10 +904,60 @@ class Ui_MainWindow(object):
 
         self.stopDynamicButton.setEnabled(False)
 
-        self.projectList.clicked.connect(self.clicked)
+        self.projectList.clicked.connect(self.clickedProject)
 
-    #        for document in self.collection.find():
-    #          self.projectList.addItem(document.get("Project Name"))
+        self.poiAnalysisList.clicked.connect(self.clickedPoi)
+
+        #self.poiAnalysisList.clicked.connect(self.poiChange(str(self.poiAnalysisList.takeItem(self.poiAnalysisList.currentRow())), self.display))
+
+        for document in self.collection.find():
+            self.projectList.addItem(document.get("Project Name"))
+
+
+    def clickedPoi(self):
+        selected = self.poiAnalysisList.currentItem().text()
+        if self.display is "strings":
+            for item in self.s:
+                current = base64.b64decode(item["string"]).decode()
+                if current == selected:
+                    self.value = str(item["vaddr"])
+                    self.section = item["section"]
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Value: " + "\t" + self.value)
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Section: " + "\t" + self.section)
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(30)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+
+        if self.display is "dlls":
+            for item in self.d:
+                current = item["name"]
+                if current == selected:
+                    self.value = str(item["vaddr"])
+                    self.section = item["section"]
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(30)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+
 
     def setupUiCreate(self, Dialog):
 
@@ -934,91 +990,6 @@ class Ui_MainWindow(object):
 
         self.buttonBox.accepted.connect(
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.projectDescriptionEdit.toPlainText()))
-
-    def setupUiPlugin(self, newPlugin):
-        newPlugin.setObjectName("newPlugin")
-        newPlugin.resize(567, 444)
-        self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
-        self.buttonBox.setGeometry(QtCore.QRect(210, 400, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.projectNameLabel = QtWidgets.QLabel(newPlugin)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
-        self.projectNameLabel.setObjectName("projectNameLabel")
-        self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
-        self.pluginNameEdit.setObjectName("pluginNameEdit")
-        self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
-        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
-        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
-        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
-        self.structureFieldWindow = QtWidgets.QTextEdit(newPlugin)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
-        self.structureFieldWindow.setObjectName("structureFieldWindow")
-        self.datasetFieldWindow = QtWidgets.QTextEdit(newPlugin)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
-        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
-        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
-        self.pluginStructlabel.setObjectName("pluginStructlabel")
-        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
-        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
-        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
-        self.browseStructWindow.setObjectName("browseStructWindow")
-        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
-        self.brosweDSWindow.setObjectName("brosweDSWindow")
-
-        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
-        self.browseStructWindow.clicked.connect(self.BrowseStruct)
-
-        self.retranslateUiPlugin(newPlugin)
-        self.buttonBox.accepted.connect(newPlugin.accept)
-        self.buttonBox.rejected.connect(newPlugin.reject)
-        QtCore.QMetaObject.connectSlotsByName(newPlugin)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
-
-    def setupUiPOI(self, NewPOI):
-        NewPOI.setObjectName("NewPOI")
-        NewPOI.resize(454, 184)
-        self.poiTypeLabel = QtWidgets.QLabel(NewPOI)
-        self.poiTypeLabel.setGeometry(QtCore.QRect(10, 60, 141, 16))
-        self.poiTypeLabel.setObjectName("poiTypeLabel")
-        self.poiOutLabel = QtWidgets.QLabel(NewPOI)
-        self.poiOutLabel.setGeometry(QtCore.QRect(10, 110, 81, 16))
-        self.poiOutLabel.setObjectName("poiOutLabel")
-        self.poiOutEdit = QtWidgets.QTextEdit(NewPOI)
-        self.poiOutEdit.setGeometry(QtCore.QRect(10, 130, 431, 21))
-        self.poiOutEdit.setObjectName("poiOutEdit")
-        self.buttonBox = QtWidgets.QDialogButtonBox(NewPOI)
-        self.buttonBox.setGeometry(QtCore.QRect(90, 150, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.poiTypeEdit = QtWidgets.QTextEdit(NewPOI)
-        self.poiTypeEdit.setGeometry(QtCore.QRect(10, 80, 431, 21))
-        self.poiTypeEdit.setObjectName("poiTypeEdit")
-        self.poiNameEdit = QtWidgets.QTextEdit(NewPOI)
-        self.poiNameEdit.setGeometry(QtCore.QRect(10, 30, 431, 21))
-        self.poiNameEdit.setObjectName("poiNameEdit")
-        self.poiNameLabel = QtWidgets.QLabel(NewPOI)
-        self.poiNameLabel.setGeometry(QtCore.QRect(10, 10, 121, 16))
-        self.poiNameLabel.setObjectName("poiNameLabel")
-
-        self.retranslateUiPOI(NewPOI)
-        QtCore.QMetaObject.connectSlotsByName(NewPOI)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPOI(self.poiNameEdit.toPlainText(), self.poiTypeEdit.toPlainText(),
-                                      self.poiOutEdit.toPlainText()))
 
     def setupUiBinaryError(self, binaryFileErrorWindow):
         binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
@@ -1120,30 +1091,31 @@ class Ui_MainWindow(object):
         self.buttonBox.accepted.connect(pluginSelected.accept)
         QtCore.QMetaObject.connectSlotsByName(pluginSelected)
 
+
     def retranslateUiMain(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "BEAT: Binary Extraction and Analysis Tool"))
         self.projectViewGroup.setTitle(_translate("MainWindow", "Project View"))
         self.projectNewButton.setText(_translate("MainWindow", "New"))
-        self.projectSearch.setHtml(_translate("MainWindow",
-                                              "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                              "p, li { white-space: pre-wrap; }\n"
-                                              "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                              "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Project Search </span></p></body></html>"))
+        self.projectSearch.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Project Search </span></p></body></html>"))
         self.projectSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.projectNameLabel.setText(_translate("MainWindow", "Project Name"))
         self.projectDescriptionLabel.setText(_translate("MainWindow", "Project Description"))
         self.binaryFilePathLabel.setText(_translate("MainWindow", "Binary File Path"))
         self.binaryFilePropertiesLabel.setText(_translate("MainWindow", "Binary File Properties"))
-        self.projectNoteLabel1.setText(
-            _translate("MainWindow", "** User cannot modify the binary file path once the project is "))
+        self.projectNoteLabel1.setText(_translate("MainWindow", "** User cannot modify the binary file path once the project is "))
         self.projectBrowseButton.setText(_translate("MainWindow", "Browse"))
         self.projectDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.projectSaveButton.setText(_translate("MainWindow", "+ Save"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
         self.projectNoteLabel.setText(_translate("MainWindow", "     created."))
         self.UI.setTabText(self.UI.indexOf(self.tab), _translate("MainWindow", "Project"))
+
+
 
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Point of Interest View"))
         self.analysisResultViewButton.setText(_translate("MainWindow", "Analysis Result View"))
@@ -1167,14 +1139,15 @@ class Ui_MainWindow(object):
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
         self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", "Analysis"))
 
+
+
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
-        self.pluginSearch.setHtml(_translate("MainWindow",
-                                             "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                             "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                             "p, li { white-space: pre-wrap; }\n"
-                                             "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:13pt; font-style:italic; color:#7e7e7e;\">Plugin </span></p></body></html>"))
+        self.pluginSearch.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:13pt; font-style:italic; color:#7e7e7e;\">Plugin </span></p></body></html>"))
         self.searchPluginButton.setText(_translate("MainWindow", "🔍 "))
         self.pluginStructureLabel.setText(_translate("MainWindow", "Plugin Structure"))
         self.pluginPredefinedLabel.setText(_translate("MainWindow", "Plugin Predefined Data Set"))
@@ -1191,14 +1164,15 @@ class Ui_MainWindow(object):
         self.pluginPredifinedButton.setText(_translate("MainWindow", "Browse"))
         self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
 
+
+
         self.poiView_2.setTitle(_translate("MainWindow", "Point of Interest View"))
         self.newPOIButton.setText(_translate("MainWindow", "New"))
-        self.poiSearch.setHtml(_translate("MainWindow",
-                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          "p, li { white-space: pre-wrap; }\n"
-                                          "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Point of Interest</span></p></body></html>"))
+        self.poiSearch.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Point of Interest</span></p></body></html>"))
         self.poiSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.pluginPoiLabel.setText(_translate("MainWindow", "Plugin"))
         self.poiFilterLabel.setText(_translate("MainWindow", "POI Filter"))
@@ -1214,20 +1188,20 @@ class Ui_MainWindow(object):
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
 
-        self.documentViewField.setHtml(_translate("MainWindow",
-                                                  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                  "p, li { white-space: pre-wrap; }\n"
-                                                  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                                  "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The purpose of the Software Requirements Specification (SRS) is to give the customer a clear and precise description of the functionality of the Behavior Extraction and Analysis Tool (BEAT). The SRS divides the system requirements into two parts, behavioral and non-behavioral requirements. The behavioral requirements describe the interaction between the system and its environment. Non-behavioral requirements relate to the definition of the attributes of the product as it performs its functions. This includes performance requirements of the product. The intended audience of the SRS is Dr. Jaime Acosta, Dr. Oscar Perez, Mr. Vincent Fonseca, Ms. Herandy Vazquez, Mr. Baltazar Santaella, Ms. Florencia Larsen, Mr. Juan Ulloa, Mr. Jesus Martinez, and the Software Engineering teams. This document serves as an agreement between both parties regarding the product to be developed. </p></body></html>"))
+
+
+        self.documentViewField.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The purpose of the Software Requirements Specification (SRS) is to give the customer a clear and precise description of the functionality of the Behavior Extraction and Analysis Tool (BEAT). The SRS divides the system requirements into two parts, behavioral and non-behavioral requirements. The behavioral requirements describe the interaction between the system and its environment. Non-behavioral requirements relate to the definition of the attributes of the product as it performs its functions. This includes performance requirements of the product. The intended audience of the SRS is Dr. Jaime Acosta, Dr. Oscar Perez, Mr. Vincent Fonseca, Ms. Herandy Vazquez, Mr. Baltazar Santaella, Ms. Florencia Larsen, Mr. Juan Ulloa, Mr. Jesus Martinez, and the Software Engineering teams. This document serves as an agreement between both parties regarding the product to be developed. </p></body></html>"))
         self.detailedDocumentationViewLabel.setText(_translate("MainWindow", "Detailed Documentation View"))
         self.documentView.setTitle(_translate("MainWindow", "Documentation View"))
-        self.documentSearch.setHtml(_translate("MainWindow",
-                                               "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                               "p, li { white-space: pre-wrap; }\n"
-                                               "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                               "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Document</span></p></body></html>"))
+        self.documentSearch.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-style:italic; color:#7e7e7e;\">Document</span></p></body></html>"))
         __sortingEnabled = self.documentList.isSortingEnabled()
         self.documentList.setSortingEnabled(False)
         item = self.documentList.item(0)
@@ -1244,37 +1218,17 @@ class Ui_MainWindow(object):
         self.projectNameLabel.setText(_translate("Dialog", "Project Name"))
         self.projectDescriptionLabel.setText(_translate("Dialog", "Project Description"))
 
+
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
-        binaryFileErrorWindow.setWindowTitle(
-            _translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
-        self.messageLabel.setText(
-            _translate("binaryFileErrorWindow", "The system only supports files that are of x86 architecture."))
-
-    def retranslateUiPlugin(self, newPlugin):
-        _translate = QtCore.QCoreApplication.translate
-        newPlugin.setWindowTitle(_translate("newPlugin", "New Plugin"))
-        self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
-        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
-        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
-        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
-        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
-        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
-
-    def retranslateUiPOI(self, NewPOI):
-        _translate = QtCore.QCoreApplication.translate
-        NewPOI.setWindowTitle(_translate("NewPOI", "New POI"))
-        self.poiTypeLabel.setText(_translate("NewPOI", "Poin Of Interest Description"))
-        self.poiOutLabel.setText(_translate("NewPOI", "Python Output"))
-        self.poiNameLabel.setText(_translate("NewPOI", "Point Of Interest Name"))
+        binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
+        self.messageLabel.setText(_translate("binaryFileErrorWindow", "The system only supports files that are of x86 architecture."))
 
     def retranslateUiFileError(self, fileSpecifiedErrorWindow):
         _translate = QtCore.QCoreApplication.translate
         fileSpecifiedErrorWindow.setWindowTitle(_translate("fileSpecifiedErrorWindow", "Error Message: File Specified"))
-        self.messageLabel.setText(
-            _translate("fileSpecifiedErrorWindow", "A project is associated with one binary file and cannot be "))
-        self.messageLabel_2.setText(
-            _translate("fileSpecifiedErrorWindow", "saved without a binary file. Please provide a binary file."))
+        self.messageLabel.setText(_translate("fileSpecifiedErrorWindow", "A project is associated with one binary file and cannot be "))
+        self.messageLabel_2.setText(_translate("fileSpecifiedErrorWindow", "saved without a binary file. Please provide a binary file."))
 
     def retranslateAnalysisResultView(self, analysisResultView):
         _translate = QtCore.QCoreApplication.translate
@@ -1311,13 +1265,11 @@ class Ui_MainWindow(object):
     def retranslatePluginError(self, pluginSelected):
         _translate = QtCore.QCoreApplication.translate
         pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
-        self.messageLabel.setText(
-            _translate("pluginSelected", "You need to select a plugin before running an analysis."))
+        self.messageLabel.setText(_translate("pluginSelected", "You need to select a plugin before running an analysis."))
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
