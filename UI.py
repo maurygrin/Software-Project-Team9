@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         self.contents = None
         self.le = None
         self.path = ""
-        cluster = MongoClient("mongodb+srv://Ortiz:team09@cluster0-mvofe.mongodb.net/test?retryWrites=true&w=majority")
+        cluster = MongoClient("mongodb://localhost:27017/")
         db = cluster.test
         self.collection = db["test"]
 
