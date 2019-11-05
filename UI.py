@@ -47,11 +47,6 @@ class Ui_MainWindow(object):
         self.value = ""
         self.section = ""
         self.display = ""
-        self.pt = "Project"
-        self.at = "Analysis"
-        self.pit = "Plugin Management"
-        self.poit = "Points of Interest"
-        self.dt = "Documentation"
         cluster = MongoClient("mongodb://localhost:27017/")
         db = cluster.test
         self.collection = db["test"]
@@ -115,7 +110,7 @@ class Ui_MainWindow(object):
             elif (poiSelected=="DLLs"):
                 self.display = "dlls"
                 self.detailedPoiAnalysisField.setText("")
-
+                self.detailedPoiAnalysisField.append("\t" + "\n")
                 self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
@@ -128,7 +123,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Relation: ")
                 font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(15)
+                font.setPointSize(5)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 self.poiAnalysisList.clear()
@@ -227,87 +222,13 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.setText("")
                 self.detailedPoiAnalysisField.repaint()
 
+
     def isDynamicButtonPressed(self):
-        # self.stopButton.setEnabled(True)
-        self.runDynamicButton.setEnabled(False)
-        self.r2 = r2pipe.open(self.path)
-        self.r2.cmd("doo")
-        self.r2.cmd("aaa")
-        self.r2.cmd("dc")
-
-        self.r2.cmd("dso")
-
-        poiSelected = self.poiTypeDropDownAnalysis.currentText()
-        self.analysis = Script()
-
-        if (poiSelected == "Strings"):
-            self.display = "strings"
-            self.detailedPoiAnalysisField.setText("")
-            self.poiAnalysisList.clear()
-            self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Value: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Section: ")
-            font = self.detailedPoiAnalysisField.font()
-            font.setPointSize(30)
-            self.detailedPoiAnalysisField.setFont(font)
-            self.detailedPoiAnalysisField.repaint()
-            self.s = self.analysis.display(self.r2, self.display)
-            for item in self.s:
-                self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
-
-        elif (poiSelected == "Variables"):
-            self.display = "variables"
-            self.detailedPoiAnalysisField.setText("")
-            self.poiAnalysisList.clear()
-            self.v = self.analysis.display(self.r2, self.display)
-            print(self.v)
-            # for item in self.v:
-            # print(base64.b64decode(item["string"]).decode())
-            # self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
-            # self.detailedPoiAnalysisField.setText(v)
-            # self.detailedPoiAnalysisField.repaint()
-
-        elif (poiSelected == "Functions"):
-            self.display = "functions"
-            self.poiAnalysisList.clear()
-            self.f = self.analysis.display(self.r2, self.display)
-            print(self.f)
-            # display = "strings"
-            # self.f = self.analysis.display(self.r2, display)
-            # for item in self.f:
-            #  self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
-            # self.detailedPoiAnalysisField.setText(f)
-            # self.detailedPoiAnalysisField.repaint()
-
-        elif (poiSelected == "DLLs"):
-            self.display = "dlls"
-            self.detailedPoiAnalysisField.setText("")
-            self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
-            self.detailedPoiAnalysisField.append("\n")
-            self.detailedPoiAnalysisField.append("\t" + "Relation: ")
-            font = self.detailedPoiAnalysisField.font()
-            font.setPointSize(5)
-            self.detailedPoiAnalysisField.setFont(font)
-            self.detailedPoiAnalysisField.repaint()
-            self.poiAnalysisList.clear()
-            self.d = self.analysis.display(self.r2, self.display)
-            for item in self.d:
-                self.poiAnalysisList.addItem(item["name"])
-            print(self.d)
-
-        else:
-            self.detailedPoiAnalysisField.setText("")
-            self.detailedPoiAnalysisField.repaint()
+        self.stopButton.setEnabled(True)
+        self.runButtonDynamic.setEnabled(False)
+        self.r2.cmd('oo')
+        x = self.r2.cmd('ood')
+        print(x)
 
     def isStopButtonPressed(self):
         self.runButtonDynamic.setEnabled(True)
@@ -385,13 +306,6 @@ class Ui_MainWindow(object):
             self.project = Project(name, description, self.binary)
             self.projectNameField.setText(self.project.name)
             self.projectDescriptionField.setText(self.project.description)
-            self.pt = "Project - " +  self.project.name
-            self.at = "Analysis - " + self.project.name
-            self.pit = "Plugin Management - " + self.project.name
-            self.poit = "Points of Interest - " + self.project.name
-            self.dt = "Documentation - " + self.project.name
-            self.retranslateUiMain(MainWindow)
-
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -456,13 +370,6 @@ class Ui_MainWindow(object):
 
         #item = self.projectList.currentItem()
         #print(item.text())
-
-        self.pt = "Project - " + self.projectList.currentItem().text()
-        self.at = "Analysis - " + self.projectList.currentItem().text()
-        self.pit = "Plugin Management - " + self.projectList.currentItem().text()
-        self.poit = "Points of Interest - " + self.projectList.currentItem().text()
-        self.dt = "Documentation - " + self.projectList.currentItem().text()
-        self.retranslateUiMain(MainWindow)
 
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
 
@@ -1001,36 +908,11 @@ class Ui_MainWindow(object):
 
         self.poiAnalysisList.clicked.connect(self.clickedPoi)
 
-        self.poiAnalysisList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-
-        self.poiAnalysisList.customContextMenuRequested.connect(self.listItemRightClicked)
+        #self.poiAnalysisList.clicked.connect(self.poiChange(str(self.poiAnalysisList.takeItem(self.poiAnalysisList.currentRow())), self.display))
 
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
 
-    def listItemRightClicked(self, QPos):
-        self.listMenu = QtWidgets.QMenu()
-        menu_breakpoint = self.listMenu.addAction("Add Breakpoint")
-        menu_watchpoint = self.listMenu.addAction("Add Watchpoint")
-        menu_comment = self.listMenu.addAction("Add Comment")
-        menu_breakpoint.triggered.connect(self.menuBreakpointClicked)
-        menu_watchpoint.triggered.connect(self.menuWatchpointClicked)
-        menu_comment.triggered.connect(self.menuCommentClicked)
-        parentPosition = self.poiAnalysisList.mapToGlobal(QtCore.QPoint(0, 0))
-        self.listMenu.move(parentPosition + QPos)
-        self.listMenu.show()
-
-    def menuBreakpointClicked(self):
-        currentItemName = str(self.poiAnalysisList.currentItem().text())
-        print("Breakpoint at: " + currentItemName)
-
-    def menuWatchpointClicked(self):
-        currentItemName = str(self.poiAnalysisList.currentItem().text())
-        print("Watchpoint at: " + currentItemName)
-
-    def menuCommentClicked(self):
-        currentItemName = str(self.poiAnalysisList.currentItem().text())
-        print("Comment at: " + currentItemName)
 
     def clickedPoi(self):
         selected = self.poiAnalysisList.currentItem().text()
@@ -1231,7 +1113,8 @@ class Ui_MainWindow(object):
         self.projectSaveButton.setText(_translate("MainWindow", "+ Save"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
         self.projectNoteLabel.setText(_translate("MainWindow", "     created."))
-        self.UI.setTabText(self.UI.indexOf(self.tab), _translate("MainWindow", self.pt))
+        self.UI.setTabText(self.UI.indexOf(self.tab), _translate("MainWindow", "Project"))
+
 
 
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Point of Interest View"))
@@ -1254,7 +1137,8 @@ class Ui_MainWindow(object):
         self.runDynamicButton.setText(_translate("MainWindow", "Run"))
         self.stopDynamicButton.setText(_translate("MainWindow", "Stop"))
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
-        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.at))
+        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", "Analysis"))
+
 
 
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
@@ -1278,7 +1162,8 @@ class Ui_MainWindow(object):
         self.detailedPluginViewLabel.setText(_translate("MainWindow", "Detailed Plugin View"))
         self.XMLEditorButton.setText(_translate("MainWindow", "XML Editor"))
         self.pluginPredifinedButton.setText(_translate("MainWindow", "Browse"))
-        self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", self.pit))
+        self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
+
 
 
         self.poiView_2.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -1301,7 +1186,7 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.setItemText(4, _translate("MainWindow", "DLLs"))
         self.detailedPoiViewLabel_2.setText(_translate("MainWindow", "Detailed Points of Interest View"))
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
-        self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", self.poit))
+        self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
 
 
 
@@ -1325,7 +1210,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Plugin Structure"))
         self.documentList.setSortingEnabled(__sortingEnabled)
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
-        self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", self.dt))
+        self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
     def retranslateUiCreate(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
