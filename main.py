@@ -503,6 +503,7 @@ class Ui_MainWindow(object):
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
+# TESTING A MERGE TO MASTER
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
