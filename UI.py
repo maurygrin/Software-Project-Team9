@@ -5,8 +5,6 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-
-
 import os, sys, r2pipe, json
 import pymongo
 from pymongo import MongoClient
@@ -45,9 +43,9 @@ class Ui_MainWindow(object):
         self.le = None
         self.path = ""
 
-    # cluster = pymongo.MongoClient("mongodb://localhost:27017")
-    # db = cluster.test
-    # collection = db["test"]
+        cluster = pymongo.MongoClient("mongodb://localhost:27017")
+        db = cluster.test
+        collection = db["test"]
 
     def editor(self):
         print("fix editor")
@@ -195,13 +193,12 @@ class Ui_MainWindow(object):
 
             self.projectList.addItem(self.project.name)
 
-
     def deletePlugin(self):
         if self.pluginNameField.text() == "":
             self.fileErrorWindow()
         else:
-           # p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
-            #self.collection.delete_one(p)
+            p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
+            self.collection.delete_one(p)
             self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
             self.pluginNameField.clear()
             self.pluginDescriptionField.clear()
@@ -258,16 +255,26 @@ class Ui_MainWindow(object):
             self.poiOutEdit.setText(self.poi.out)
 
     def savePOI(self):
-      self.poiList.addItem(self.poi.name)
+        self.poiList.addItem(self.poi.name)
 
     def deletePOI(self):
+
         self.poiList.takeItem(self.poiList.currentRow())
 
-
-
-
     def savePlugin(self):
-        self.pluginManagementList.addItem(self.plugin.name)
+        if self.pluginNameField.text() == "":
+            self.fileErrorWindow()
+        else:
+            # Save Plugin
+
+            plugins = {"Plugin Name": self.plugin.name,
+                       "Plugin Description": self.plugin.description,
+                       "Plugin Structure": self.plugin.structure,
+                       "Plugin Data_Set": self.plugin.data_set}
+
+            self.collection.insert([plugins])
+            self.pluginManagementList.addItem(self.plugin.name)
+            self.pluginDropDownAnalysis.addItem(self.plugin.name)
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -332,7 +339,6 @@ class Ui_MainWindow(object):
                 self.r2 = ""
                 self.fileProperties.setText("")
 
-
     def BrowseStruct(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
@@ -381,6 +387,7 @@ class Ui_MainWindow(object):
         self.r2 = r2pipe.open(p.get("Binary File Path"))
 
         self.detailedPoiAnalysisField.clear()
+
 
     def openWindow(self):
         r = QMessageBox()
@@ -882,6 +889,7 @@ class Ui_MainWindow(object):
 
         self.projectList.clicked.connect(self.clicked)
 
+
     #        for document in self.collection.find():
     #          self.projectList.addItem(document.get("Project Name"))
 
@@ -891,7 +899,7 @@ class Ui_MainWindow(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(110, 270, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.projectNameLabel = QtWidgets.QLabel(Dialog)
         self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
@@ -923,7 +931,8 @@ class Ui_MainWindow(object):
         self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
 
         self.buttonBox.accepted.connect(
-            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(), self.projectDescriptionEdit.toPlainText()))
+            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
+                                       self.projectDescriptionEdit.toPlainText()))
 
     def setupUiPlugin(self, newPlugin):
         newPlugin.setObjectName("newPlugin")
@@ -973,7 +982,8 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(newPlugin)
 
         self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(), self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
+                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
 
     def setupUiPOI(self, NewPOI):
         NewPOI.setObjectName("NewPOI")
@@ -1007,7 +1017,7 @@ class Ui_MainWindow(object):
 
         self.buttonBox.accepted.connect(
             lambda: self.createPOI(self.poiNameEdit.toPlainText(), self.poiTypeEdit.toPlainText(),
-                                      self.poiOutEdit.toPlainText()))
+                                   self.poiOutEdit.toPlainText()))
 
     def setupUiBinaryError(self, binaryFileErrorWindow):
         binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
@@ -1145,6 +1155,7 @@ class Ui_MainWindow(object):
         self.dynamicAnalysisLabel.setText(_translate("MainWindow", "Dynamic Analysis"))
         self.pluginDropDownAnalysis.setItemText(0, _translate("MainWindow", "Select"))
         self.pluginDropDownAnalysis.setItemText(1, _translate("MainWindow", "Network"))
+
         self.runStaticButton.setText(_translate("MainWindow", "Run"))
         self.poiTypeDropDownAnalysis.setItemText(0, _translate("MainWindow", "Select"))
         self.poiTypeDropDownAnalysis.setItemText(1, _translate("MainWindow", "Strings"))
@@ -1194,6 +1205,7 @@ class Ui_MainWindow(object):
         self.poiSaveButton.setText(_translate("MainWindow", "+ Save"))
         self.poiPluginDropDown.setItemText(0, _translate("MainWindow", "Select"))
         self.poiPluginDropDown.setItemText(1, _translate("MainWindow", "Network"))
+
         self.poiFilterDropDown.setItemText(0, _translate("MainWindow", "Select"))
         self.poiFilterDropDown.setItemText(1, _translate("MainWindow", "Strings"))
         self.poiFilterDropDown.setItemText(2, _translate("MainWindow", "Functions"))
@@ -1227,7 +1239,6 @@ class Ui_MainWindow(object):
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
-
     def retranslateUiCreate(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
@@ -1235,7 +1246,6 @@ class Ui_MainWindow(object):
         self.projectDescriptionLabel.setText(_translate("Dialog", "Project Description"))
         self.binaryFilePathLabel.setText(_translate("Dialog", "Binary File Path"))
         self.binaryFilePathBrowse.setText(_translate("Dialog", "Browse"))
-
 
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
