@@ -383,6 +383,13 @@ class Ui_MainWindow(object):
         #item = self.projectList.currentItem()
         #print(item.text())
 
+        self.pt = "Project - " + self.projectList.currentItem().text()
+        self.at = "Analysis - " + self.projectList.currentItem().text()
+        self.pit = "Plugin Management - " + self.projectList.currentItem().text()
+        self.poit = "Points of Interest - " + self.projectList.currentItem().text()
+        self.dt = "Documentation - " + self.projectList.currentItem().text()
+        self.retranslateUiMain(MainWindow)
+
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
 
         self.projectNameField.setText(p.get("Project Name"))
