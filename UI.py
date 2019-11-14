@@ -47,6 +47,11 @@ class Ui_MainWindow(object):
         self.value = ""
         self.section = ""
         self.display = ""
+        self.pt = "Project"
+        self.at = "Analysis"
+        self.pit = "Plugin Management"
+        self.poit = "Points of Interest"
+        self.dt = "Documentation"
         cluster = MongoClient("mongodb://localhost:27017/")
         db = cluster.test
         self.collection = db["test"]
@@ -306,6 +311,13 @@ class Ui_MainWindow(object):
             self.project = Project(name, description, self.binary)
             self.projectNameField.setText(self.project.name)
             self.projectDescriptionField.setText(self.project.description)
+            self.pt = "Project - " +  self.project.name
+            self.at = "Analysis - " + self.project.name
+            self.pit = "Plugin Management - " + self.project.name
+            self.poit = "Points of Interest - " + self.project.name
+            self.dt = "Documentation - " + self.project.name
+            self.retranslateUiMain(MainWindow)
+
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -1138,8 +1150,7 @@ class Ui_MainWindow(object):
         self.projectSaveButton.setText(_translate("MainWindow", "+ Save"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
         self.projectNoteLabel.setText(_translate("MainWindow", "     created."))
-        self.UI.setTabText(self.UI.indexOf(self.tab), _translate("MainWindow", "Project"))
-
+        self.UI.setTabText(self.UI.indexOf(self.tab), _translate("MainWindow", self.pt))
 
 
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Point of Interest View"))
@@ -1162,8 +1173,7 @@ class Ui_MainWindow(object):
         self.runDynamicButton.setText(_translate("MainWindow", "Run"))
         self.stopDynamicButton.setText(_translate("MainWindow", "Stop"))
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
-        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", "Analysis"))
-
+        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.at))
 
 
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
@@ -1187,8 +1197,7 @@ class Ui_MainWindow(object):
         self.detailedPluginViewLabel.setText(_translate("MainWindow", "Detailed Plugin View"))
         self.XMLEditorButton.setText(_translate("MainWindow", "XML Editor"))
         self.pluginPredifinedButton.setText(_translate("MainWindow", "Browse"))
-        self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
-
+        self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", self.pit))
 
 
         self.poiView_2.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -1211,7 +1220,7 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.setItemText(4, _translate("MainWindow", "DLLs"))
         self.detailedPoiViewLabel_2.setText(_translate("MainWindow", "Detailed Points of Interest View"))
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
-        self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
+        self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", self.poit))
 
 
 
@@ -1235,7 +1244,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Plugin Structure"))
         self.documentList.setSortingEnabled(__sortingEnabled)
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
-        self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
+        self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", self.dt))
 
     def retranslateUiCreate(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
