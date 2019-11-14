@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
             elif (poiSelected=="DLLs"):
                 self.display = "dlls"
                 self.detailedPoiAnalysisField.setText("")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
+
                 self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Relation: ")
                 font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(5)
+                font.setPointSize(15)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 self.poiAnalysisList.clear()
@@ -908,11 +908,36 @@ class Ui_MainWindow(object):
 
         self.poiAnalysisList.clicked.connect(self.clickedPoi)
 
-        #self.poiAnalysisList.clicked.connect(self.poiChange(str(self.poiAnalysisList.takeItem(self.poiAnalysisList.currentRow())), self.display))
+        self.poiAnalysisList.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
+        self.poiAnalysisList.customContextMenuRequested.connect(self.listItemRightClicked)
 
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
 
+    def listItemRightClicked(self, QPos):
+        self.listMenu = QtWidgets.QMenu()
+        menu_breakpoint = self.listMenu.addAction("Add Breakpoint")
+        menu_watchpoint = self.listMenu.addAction("Add Watchpoint")
+        menu_comment = self.listMenu.addAction("Add Comment")
+        menu_breakpoint.triggered.connect(self.menuBreakpointClicked)
+        menu_watchpoint.triggered.connect(self.menuWatchpointClicked)
+        menu_comment.triggered.connect(self.menuCommentClicked)
+        parentPosition = self.poiAnalysisList.mapToGlobal(QtCore.QPoint(0, 0))
+        self.listMenu.move(parentPosition + QPos)
+        self.listMenu.show()
+
+    def menuBreakpointClicked(self):
+        currentItemName = str(self.poiAnalysisList.currentItem().text())
+        print("Breakpoint at: " + currentItemName)
+
+    def menuWatchpointClicked(self):
+        currentItemName = str(self.poiAnalysisList.currentItem().text())
+        print("Watchpoint at: " + currentItemName)
+
+    def menuCommentClicked(self):
+        currentItemName = str(self.poiAnalysisList.currentItem().text())
+        print("Comment at: " + currentItemName)
 
     def clickedPoi(self):
         selected = self.poiAnalysisList.currentItem().text()
