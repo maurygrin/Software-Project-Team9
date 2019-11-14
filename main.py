@@ -57,9 +57,14 @@ class Ui_MainWindow(object):
         r.setWindowTitle("Confirmation Window")
         r.setText("Are you sure that you want to delete?")
         r.setIcon(QMessageBox.Information)
-        r.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
+        r.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
 
-        x = r.exec()
+        clickResult = r.exec()
+
+        if clickResult == QMessageBox.Yes: #If user clicked on yes
+            return True
+        else:
+            return False
 
     def openWindow(self):
         r = QMessageBox()
@@ -68,7 +73,11 @@ class Ui_MainWindow(object):
         r.setIcon(QMessageBox.Information)
         r.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
 
-        x = r.exec()
+        clickResult = r.exec()
+        if clickResult == QMessageBox.Save:    #If user clicked save
+            return True
+        else:
+            return False
 
     def isStaticButtonPressed(self):
 
