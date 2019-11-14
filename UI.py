@@ -195,25 +195,13 @@ class Ui_MainWindow(object):
 
             self.projectList.addItem(self.project.name)
 
-    def savePlugin(self):
-        if self.pluginNameField.text() == "":
-            self.fileErrorWindow()
-        else:
-            plugin = {"Plugin Name": self.plugin.name,
-                      "Plugin Description": self.plugin.description,
-                      "Structure File Path": self.plugin.structure,
-                      "Pre-Defined Dataset File Path": self.plugin.data_set}
-
-            self.collection.insert([plugin])
-            self.pluginManagementList.addItem(self.plugin.name)
-
 
     def deletePlugin(self):
         if self.pluginNameField.text() == "":
             self.fileErrorWindow()
         else:
-            p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
-            self.collection.delete_one(p)
+           # p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
+            #self.collection.delete_one(p)
             self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
             self.pluginNameField.clear()
             self.pluginDescriptionField.clear()
@@ -241,12 +229,13 @@ class Ui_MainWindow(object):
             self.fileProperties.repaint()
             self.r2 = ""
 
-    def createProject(self, name, description):
-        if not name or not description:
+    def createProject(self, name, binary, description):
+        if not name or not binary or not description:
             print("Failed")
         else:
-            self.project = Project(name, description, self.binary)
+            self.project = Project(name, binary, description)
             self.projectNameField.setText(self.project.name)
+            self.binaryFilePathField.setText(self.project.binary)
             self.projectDescriptionField.setText(self.project.description)
 
     def createPlugin(self, name, description, structure, data_set):
@@ -259,13 +248,13 @@ class Ui_MainWindow(object):
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
 
-    def createPOI(self, name, type, out):
-        if not name or not type or not out:
+    def createPOI(self, name, typeP, out):
+        if not name or not typeP or not out:
             print("Failed")
         else:
             self.poi = POI(name, type, out)
             self.poiNameEdit.setText(self.poi.name)
-            self.poiTypeEdit.setText(self.poi.type)
+            self.poiTypeEdit.setText(self.poi.typeP)
             self.poiOutEdit.setText(self.poi.out)
 
     def savePOI(self):
@@ -278,10 +267,7 @@ class Ui_MainWindow(object):
 
 
     def savePlugin(self):
-        if self.poiNameEdit.text() == "":
-            self.fileErrorWindow()
-        else:
-            self.poiList.addItem(self.poi.name)
+        self.pluginManagementList.addItem(self.plugin.name)
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -323,9 +309,8 @@ class Ui_MainWindow(object):
                     self.binaryErrorWindow()
                     self.r2 = ""
                     self.fileProperties.setText("")
-                    self.binaryFilePathField.setText("")
                 else:
-                    self.binaryFilePathField.setText(str(self.path))
+                    self.binaryFilePathEdit.setText(str(self.path))
                     self.fileProperties.append("arch\t\t\t" + self.binary.metadata.arch + "\n")
                     self.fileProperties.append("os\t\t\t" + self.binary.metadata.os + "\n")
                     self.fileProperties.append("bintype\t\t\t" + self.binary.metadata.binaryType + "\n")
@@ -346,7 +331,7 @@ class Ui_MainWindow(object):
                 self.binaryErrorWindow()
                 self.r2 = ""
                 self.fileProperties.setText("")
-                self.binaryFilePathField.setText("")
+
 
     def BrowseStruct(self):
         options = QtWidgets.QFileDialog.Options()
@@ -488,9 +473,7 @@ class Ui_MainWindow(object):
         self.projectNoteLabel1 = QtWidgets.QLabel(self.detailedProjectViewGroup)
         self.projectNoteLabel1.setGeometry(QtCore.QRect(170, 620, 481, 16))
         self.projectNoteLabel1.setObjectName("projectNoteLabel1")
-        self.projectBrowseButton = QtWidgets.QPushButton(self.detailedProjectViewGroup)
-        self.projectBrowseButton.setGeometry(QtCore.QRect(840, 140, 99, 25))
-        self.projectBrowseButton.setObjectName("projectBrowseButton")
+
         self.projectDeleteButton = QtWidgets.QPushButton(self.detailedProjectViewGroup)
         self.projectDeleteButton.setGeometry(QtCore.QRect(730, 620, 113, 32))
         self.projectDeleteButton.setObjectName("projectDeleteButton")
@@ -685,9 +668,7 @@ class Ui_MainWindow(object):
         self.outputFieldDropDown.setGeometry(QtCore.QRect(200, 210, 121, 32))
         self.outputFieldDropDown.setObjectName("outputFieldDropDown")
         self.outputFieldDropDown.addItem("")
-        self.pluginStructureBrowseButton = QtWidgets.QPushButton(self.detailedPluginView)
-        self.pluginStructureBrowseButton.setGeometry(QtCore.QRect(840, 30, 99, 25))
-        self.pluginStructureBrowseButton.setObjectName("pluginStructureBrowseButton")
+
         self.deletePluginButton = QtWidgets.QPushButton(self.detailedPluginView)
         self.deletePluginButton.setGeometry(QtCore.QRect(730, 620, 113, 32))
         self.deletePluginButton.setObjectName("deletePluginButton")
@@ -720,9 +701,7 @@ class Ui_MainWindow(object):
         self.poiPluginField = QtWidgets.QTextEdit(self.detailedPluginView)
         self.poiPluginField.setGeometry(QtCore.QRect(200, 250, 641, 341))
         self.poiPluginField.setObjectName("poiPluginField")
-        self.pluginPredifinedButton = QtWidgets.QPushButton(self.pluginManagementTab)
-        self.pluginPredifinedButton.setGeometry(QtCore.QRect(1150, 70, 99, 25))
-        self.pluginPredifinedButton.setObjectName("pluginPredifinedButton")
+
         self.UI.addTab(self.pluginManagementTab, "")
 
         self.poiTab = QtWidgets.QWidget()
@@ -856,13 +835,16 @@ class Ui_MainWindow(object):
         self.projectDescriptionField.setEnabled(False)
         self.binaryFilePathField.setEnabled(False)
 
+        self.pluginStructureField.setEnabled(False)
+        self.pluginPredefinedField.setEnabled(False)
+        self.pluginNameField.setEnabled(False)
+        self.pluginDescriptionField.setEnabled(False)
+
         self.projectNewButton.clicked.connect(self.projectWindow)
 
         self.newPluginButton.clicked.connect(self.pluginWindow)
 
         self.newPOIButton.clicked.connect(self.poiWindow)
-
-        self.projectBrowseButton.clicked.connect(self.getBinaryFilePath)
 
         self.fileProperties.setText("Name\t\t\tValue\n")
 
@@ -904,15 +886,12 @@ class Ui_MainWindow(object):
     #          self.projectList.addItem(document.get("Project Name"))
 
     def setupUiCreate(self, Dialog):
-
-        self.project = ""
-
-        Dialog.setObjectName("New Project")
-        Dialog.resize(492, 300)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(528, 306)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(110, 240, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(110, 270, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.projectNameLabel = QtWidgets.QLabel(Dialog)
         self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
@@ -921,19 +900,30 @@ class Ui_MainWindow(object):
         self.projectNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
         self.projectNameEdit.setObjectName("projectNameEdit")
         self.projectDescriptionLabel = QtWidgets.QLabel(Dialog)
-        self.projectDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
+        self.projectDescriptionLabel.setGeometry(QtCore.QRect(20, 100, 131, 16))
         self.projectDescriptionLabel.setObjectName("projectDescriptionLabel")
         self.projectDescriptionEdit = QtWidgets.QTextEdit(Dialog)
-        self.projectDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
+        self.projectDescriptionEdit.setGeometry(QtCore.QRect(20, 120, 431, 141))
         self.projectDescriptionEdit.setObjectName("projectDescriptionEdit")
+        self.binaryFilePathEdit = QtWidgets.QTextEdit(Dialog)
+        self.binaryFilePathEdit.setGeometry(QtCore.QRect(20, 70, 431, 21))
+        self.binaryFilePathEdit.setObjectName("binaryFilePathEdit")
+        self.binaryFilePathLabel = QtWidgets.QLabel(Dialog)
+        self.binaryFilePathLabel.setGeometry(QtCore.QRect(20, 50, 81, 16))
+        self.binaryFilePathLabel.setObjectName("binaryFilePathLabel")
+        self.binaryFilePathBrowse = QtWidgets.QPushButton(Dialog)
+        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(450, 70, 75, 23))
+        self.binaryFilePathBrowse.setObjectName("binaryFilePathBrowse")
 
         self.retranslateUiCreate(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
+
         self.buttonBox.accepted.connect(
-            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.projectDescriptionEdit.toPlainText()))
+            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(), self.projectDescriptionEdit.toPlainText()))
 
     def setupUiPlugin(self, newPlugin):
         newPlugin.setObjectName("newPlugin")
@@ -983,8 +973,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(newPlugin)
 
         self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(), self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
 
     def setupUiPOI(self, NewPOI):
         NewPOI.setObjectName("NewPOI")
@@ -1138,7 +1127,7 @@ class Ui_MainWindow(object):
         self.binaryFilePropertiesLabel.setText(_translate("MainWindow", "Binary File Properties"))
         self.projectNoteLabel1.setText(
             _translate("MainWindow", "** User cannot modify the binary file path once the project is "))
-        self.projectBrowseButton.setText(_translate("MainWindow", "Browse"))
+
         self.projectDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.projectSaveButton.setText(_translate("MainWindow", "+ Save"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
@@ -1183,12 +1172,12 @@ class Ui_MainWindow(object):
         self.defaultOutputFieldLabel.setText(_translate("MainWindow", "Default Output Field"))
         self.poiLabel.setText(_translate("MainWindow", "Points of Interest"))
         self.outputFieldDropDown.setItemText(0, _translate("MainWindow", "Output Field"))
-        self.pluginStructureBrowseButton.setText(_translate("MainWindow", "Browse"))
+
         self.deletePluginButton.setText(_translate("MainWindow", "- Delete"))
         self.savePluginButton.setText(_translate("MainWindow", "+ Save"))
         self.detailedPluginViewLabel.setText(_translate("MainWindow", "Detailed Plugin View"))
         self.XMLEditorButton.setText(_translate("MainWindow", "XML Editor"))
-        self.pluginPredifinedButton.setText(_translate("MainWindow", "Browse"))
+
         self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
 
         self.poiView_2.setTitle(_translate("MainWindow", "Point of Interest View"))
@@ -1238,11 +1227,15 @@ class Ui_MainWindow(object):
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
+
     def retranslateUiCreate(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("New Project", "New Project"))
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.projectNameLabel.setText(_translate("Dialog", "Project Name"))
         self.projectDescriptionLabel.setText(_translate("Dialog", "Project Description"))
+        self.binaryFilePathLabel.setText(_translate("Dialog", "Binary File Path"))
+        self.binaryFilePathBrowse.setText(_translate("Dialog", "Browse"))
+
 
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
