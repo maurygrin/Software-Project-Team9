@@ -13,6 +13,7 @@ from pymongo import MongoClient
 from Script import Script
 from Plugin import Plugin
 from Project import Project
+from PointOfInterest import POI
 from BinaryFile import BinaryFile
 from Metadata import Metadata
 
@@ -32,6 +33,7 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
         self.windowPlug = QtWidgets.QDialog()
+        self.windowPOI = QtWidgets.QDialog()
         self.windowBinaryError = QtWidgets.QDialog()
         self.windowFileError = QtWidgets.QDialog()
         self.windowAnalysisResult = QtWidgets.QDialog()
@@ -43,13 +45,13 @@ class Ui_MainWindow(object):
         self.le = None
         self.path = ""
 
-    #cluster = pymongo.MongoClient("mongodb://localhost:27017")
-    #db = cluster.test
-    #collection = db["test"]
-
+    # cluster = pymongo.MongoClient("mongodb://localhost:27017")
+    # db = cluster.test
+    # collection = db["test"]
 
     def editor(self):
         print("fix editor")
+
     def isStaticButtonPressed(self):
 
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
@@ -160,6 +162,10 @@ class Ui_MainWindow(object):
         self.setupUiPlugin(self.windowPlug)
         self.windowPlug.show()
 
+    def poiWindow(self):
+        self.setupUiPOI(self.windowPOI)
+        self.windowPOI.show()
+
     def saveProject(self):
         if self.binaryFilePathField.text() == "":
             self.fileErrorWindow()
@@ -194,12 +200,13 @@ class Ui_MainWindow(object):
             self.fileErrorWindow()
         else:
             plugin = {"Plugin Name": self.plugin.name,
-                       "Plugin Description": self.plugin.description,
-                       "Structure File Path": self.plugin.structure,
-                       "Pre-Defined Dataset File Path": self.plugin.data_set}
+                      "Plugin Description": self.plugin.description,
+                      "Structure File Path": self.plugin.structure,
+                      "Pre-Defined Dataset File Path": self.plugin.data_set}
 
             self.collection.insert([plugin])
             self.pluginManagementList.addItem(self.plugin.name)
+
 
     def deletePlugin(self):
         if self.pluginNameField.text() == "":
@@ -251,6 +258,30 @@ class Ui_MainWindow(object):
             self.pluginDescriptionField.setText(self.plugin.description)
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
+
+    def createPOI(self, name, type, out):
+        if not name or not type or not out:
+            print("Failed")
+        else:
+            self.poi = POI(name, type, out)
+            self.poiNameEdit.setText(self.poi.name)
+            self.poiTypeEdit.setText(self.poi.type)
+            self.poiOutEdit.setText(self.poi.out)
+
+    def savePOI(self):
+      self.poiList.addItem(self.poi.name)
+
+    def deletePOI(self):
+        self.poiList.takeItem(self.poiList.currentRow())
+
+
+
+
+    def savePlugin(self):
+        if self.poiNameEdit.text() == "":
+            self.fileErrorWindow()
+        else:
+            self.poiList.addItem(self.poi.name)
 
     def binaryErrorWindow(self):
         self.setupUiBinaryError(self.windowBinaryError)
@@ -829,6 +860,8 @@ class Ui_MainWindow(object):
 
         self.newPluginButton.clicked.connect(self.pluginWindow)
 
+        self.newPOIButton.clicked.connect(self.poiWindow)
+
         self.projectBrowseButton.clicked.connect(self.getBinaryFilePath)
 
         self.fileProperties.setText("Name\t\t\tValue\n")
@@ -837,9 +870,13 @@ class Ui_MainWindow(object):
 
         self.savePluginButton.clicked.connect(self.savePlugin)
 
+        self.poiSaveButton.clicked.connect(self.savePOI)
+
         self.projectDeleteButton.clicked.connect(self.deleteProject)
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
+
+        self.poiDeleteButton.clicked.connect(self.deletePOI)
 
         self.XMLEditorButton.clicked.connect(self.editor)
 
@@ -863,8 +900,8 @@ class Ui_MainWindow(object):
 
         self.projectList.clicked.connect(self.clicked)
 
-#        for document in self.collection.find():
-#          self.projectList.addItem(document.get("Project Name"))
+    #        for document in self.collection.find():
+    #          self.projectList.addItem(document.get("Project Name"))
 
     def setupUiCreate(self, Dialog):
 
@@ -947,7 +984,41 @@ class Ui_MainWindow(object):
 
         self.buttonBox.accepted.connect(
             lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+
+    def setupUiPOI(self, NewPOI):
+        NewPOI.setObjectName("NewPOI")
+        NewPOI.resize(454, 184)
+        self.poiTypeLabel = QtWidgets.QLabel(NewPOI)
+        self.poiTypeLabel.setGeometry(QtCore.QRect(10, 60, 141, 16))
+        self.poiTypeLabel.setObjectName("poiTypeLabel")
+        self.poiOutLabel = QtWidgets.QLabel(NewPOI)
+        self.poiOutLabel.setGeometry(QtCore.QRect(10, 110, 81, 16))
+        self.poiOutLabel.setObjectName("poiOutLabel")
+        self.poiOutEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiOutEdit.setGeometry(QtCore.QRect(10, 130, 431, 21))
+        self.poiOutEdit.setObjectName("poiOutEdit")
+        self.buttonBox = QtWidgets.QDialogButtonBox(NewPOI)
+        self.buttonBox.setGeometry(QtCore.QRect(90, 150, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.poiTypeEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiTypeEdit.setGeometry(QtCore.QRect(10, 80, 431, 21))
+        self.poiTypeEdit.setObjectName("poiTypeEdit")
+        self.poiNameEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiNameEdit.setGeometry(QtCore.QRect(10, 30, 431, 21))
+        self.poiNameEdit.setObjectName("poiNameEdit")
+        self.poiNameLabel = QtWidgets.QLabel(NewPOI)
+        self.poiNameLabel.setGeometry(QtCore.QRect(10, 10, 121, 16))
+        self.poiNameLabel.setObjectName("poiNameLabel")
+
+        self.retranslateUiPOI(NewPOI)
+        QtCore.QMetaObject.connectSlotsByName(NewPOI)
+
+        self.buttonBox.accepted.connect(
+            lambda: self.createPOI(self.poiNameEdit.toPlainText(), self.poiTypeEdit.toPlainText(),
+                                      self.poiOutEdit.toPlainText()))
 
     def setupUiBinaryError(self, binaryFileErrorWindow):
         binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
@@ -1189,6 +1260,13 @@ class Ui_MainWindow(object):
         self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
         self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
         self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+
+    def retranslateUiPOI(self, NewPOI):
+        _translate = QtCore.QCoreApplication.translate
+        NewPOI.setWindowTitle(_translate("NewPOI", "New POI"))
+        self.poiTypeLabel.setText(_translate("NewPOI", "Poin Of Interest Description"))
+        self.poiOutLabel.setText(_translate("NewPOI", "Python Output"))
+        self.poiNameLabel.setText(_translate("NewPOI", "Point Of Interest Name"))
 
     def retranslateUiFileError(self, fileSpecifiedErrorWindow):
         _translate = QtCore.QCoreApplication.translate
