@@ -1,4 +1,5 @@
 #QUE TRANSA CON LA PANZA
+#added comments
 import os, sys, r2pipe, json
 import pymongo
 from pymongo import MongoClient
