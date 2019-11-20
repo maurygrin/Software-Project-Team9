@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 
-import os, sys, r2pipe, json
+import os, sys, r2pipe, json, base64
 import pymongo
 from pymongo import MongoClient
 from Script import Script
@@ -40,9 +40,16 @@ class Ui_MainWindow(object):
         self.contents = None
         self.le = None
         self.path = ""
-        cluster = MongoClient("mongodb+srv://Ortiz:team09@cluster0-mvofe.mongodb.net/test?retryWrites=true&w=majority")
-        db = cluster.test
-        self.collection = db["test"]
+        self.s = ""
+        self.v = ""
+        self.f = ""
+        self.d = ""
+        self.value = ""
+        self.section = ""
+        self.display = ""
+        #cluster = MongoClient("mongodb://localhost:27017/")
+        #db = cluster.test
+        #self.collection = db["test"]
 
     def isStaticButtonPressed(self):
 
@@ -59,31 +66,71 @@ class Ui_MainWindow(object):
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
             self.analysis = Script()
-            result = self.analysis.analyzeFile(self.r2)
 
             if (poiSelected=="Strings"):
-                display = "strings"
-                s = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(s)
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(30)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
             elif (poiSelected=="Variables"):
-                display = "variables"
-                v = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(v)
-                self.detailedPoiAnalysisField.repaint()
+                self.display = "variables"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.v = self.analysis.display(self.r2, self.display)
+                print(self.v)
+                #for item in self.v:
+                    #print(base64.b64decode(item["string"]).decode())
+                    #self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                #self.detailedPoiAnalysisField.setText(v)
+                #self.detailedPoiAnalysisField.repaint()
 
             elif (poiSelected=="Functions"):
-                display = "functions"
-                f = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(f)
-                self.detailedPoiAnalysisField.repaint()
+                self.display = "functions"
+                self.poiAnalysisList.clear()
+                self.f = self.analysis.display(self.r2, self.display)
+                print(self.f)
+                #display = "strings"
+                #self.f = self.analysis.display(self.r2, display)
+                #for item in self.f:
+                  #  self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                #self.detailedPoiAnalysisField.setText(f)
+                #self.detailedPoiAnalysisField.repaint()
 
             elif (poiSelected=="DLLs"):
-                display = "dlls"
-                d = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(d)
+                self.display = "dlls"
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(5)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.d = self.analysis.display(self.r2, self.display)
+                for item in self.d:
+                    self.poiAnalysisList.addItem(item["name"])
+                print(self.d)
 
             else:
                 self.detailedPoiAnalysisField.setText("")
@@ -96,28 +143,79 @@ class Ui_MainWindow(object):
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
             if (poiSelected=="Strings"):
-                display = "strings"
-                s = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(s)
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(30)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    print(item)
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
             elif (poiSelected=="Variables"):
-                display = "variables"
-                v = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(v)
+                self.display = "variables"
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(5)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.v = self.analysis.display(self.r2, self.display)
+                #self.detailedPoiAnalysisField.setText(v)
+                #self.detailedPoiAnalysisField.repaint()
 
             elif (poiSelected=="Functions"):
-                display = "functions"
-                f = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(f)
+                self.display = "functions"
+                #self.poiAnalysisList.clear()
+                self.f = self.analysis.display(self.r2, self.display)
+                self.detailedPoiAnalysisField.setText(self.f)
                 self.detailedPoiAnalysisField.repaint()
 
             elif (poiSelected=="DLLs"):
-                display = "dlls"
-                d = self.analysis.display(self.r2, display)
-                self.detailedPoiAnalysisField.setText(d)
+                self.display = "dlls"
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(20)
+                self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                self.poiAnalysisList.clear()
+                self.d = self.analysis.display(self.r2, self.display)
+                for item in self.d:
+                    self.poiAnalysisList.addItem(item["name"])
+                #self.detailedPoiAnalysisField.setText(d)
+                #self.detailedPoiAnalysisField.repaint()
 
             else:
                 self.detailedPoiAnalysisField.setText("")
@@ -125,11 +223,86 @@ class Ui_MainWindow(object):
 
 
     def isDynamicButtonPressed(self):
-        self.stopButton.setEnabled(True)
-        self.runButtonDynamic.setEnabled(False)
-        self.r2.cmd('oo')
-        x = self.r2.cmd('ood')
-        print(x)
+        #self.stopButton.setEnabled(True)
+        self.runDynamicButton.setEnabled(False)
+        self.r2 = r2pipe.open(self.path)
+        self.r2.cmd("doo")
+        self.r2.cmd("aaa")
+        self.r2.cmd("dc")
+
+        self.r2.cmd("dso")
+
+        poiSelected = self.poiTypeDropDownAnalysis.currentText()
+        self.analysis = Script()
+
+        if (poiSelected == "Strings"):
+            self.display = "strings"
+            self.detailedPoiAnalysisField.setText("")
+            self.poiAnalysisList.clear()
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Section: ")
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(30)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+            self.s = self.analysis.display(self.r2, self.display)
+            for item in self.s:
+                self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+
+        elif (poiSelected == "Variables"):
+            self.display = "variables"
+            self.detailedPoiAnalysisField.setText("")
+            self.poiAnalysisList.clear()
+            self.v = self.analysis.display(self.r2, self.display)
+            print(self.v)
+                # for item in self.v:
+                # print(base64.b64decode(item["string"]).decode())
+                # self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                # self.detailedPoiAnalysisField.setText(v)
+                # self.detailedPoiAnalysisField.repaint()
+
+        elif (poiSelected == "Functions"):
+            self.display = "functions"
+            self.poiAnalysisList.clear()
+            self.f = self.analysis.display(self.r2, self.display)
+            print(self.f)
+            # display = "strings"
+            # self.f = self.analysis.display(self.r2, display)
+            # for item in self.f:
+            #  self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+            # self.detailedPoiAnalysisField.setText(f)
+            # self.detailedPoiAnalysisField.repaint()
+
+        elif (poiSelected == "DLLs"):
+            self.display = "dlls"
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(5)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+            self.poiAnalysisList.clear()
+            self.d = self.analysis.display(self.r2, self.display)
+            for item in self.d:
+                self.poiAnalysisList.addItem(item["name"])
+            print(self.d)
+
+        else:
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.repaint()
 
     def isStopButtonPressed(self):
         self.runButtonDynamic.setEnabled(True)
@@ -177,17 +350,17 @@ class Ui_MainWindow(object):
                        "stripped" : self.project.binary.metadata.stripped,
                        "extension" : self.project.binary.metadata.type}
 
-            self.collection.insert([project])
+            #self.collection.insert([project])
 
-            self.projectList.addItem(self.project.name)
+            #self.projectList.addItem(self.project.name)
 
 
     def deleteProject(self):
         if self.binaryFilePathField.text() == "":
             self.fileErrorWindow()
         else:
-            p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
-            self.collection.delete_one(p)
+            #p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+            #self.collection.delete_one(p)
             self.projectList.takeItem(self.projectList.currentRow())
             self.projectNameField.clear()
             self.projectDescriptionField.clear()
@@ -267,12 +440,12 @@ class Ui_MainWindow(object):
                 self.fileProperties.setText("")
                 self.binaryFilePathField.setText("")
 
-    def clicked(self):
+    def clickedProject(self):
 
         #item = self.projectList.currentItem()
         #print(item.text())
 
-        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+        #p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
 
         self.projectNameField.setText(p.get("Project Name"))
 
@@ -805,10 +978,59 @@ class Ui_MainWindow(object):
 
         self.stopDynamicButton.setEnabled(False)
 
-        self.projectList.clicked.connect(self.clicked)
+        self.projectList.clicked.connect(self.clickedProject)
 
-        for document in self.collection.find():
-            self.projectList.addItem(document.get("Project Name"))
+        self.poiAnalysisList.clicked.connect(self.clickedPoi)
+
+        #self.poiAnalysisList.clicked.connect(self.poiChange(str(self.poiAnalysisList.takeItem(self.poiAnalysisList.currentRow())), self.display))
+
+        #for document in self.collection.find():
+         #   self.projectList.addItem(document.get("Project Name"))
+
+
+    def clickedPoi(self):
+        selected = self.poiAnalysisList.currentItem().text()
+        if self.display is "strings":
+            for item in self.s:
+                current = base64.b64decode(item["string"]).decode()
+                if current == selected:
+                    self.value = str(item["vaddr"])
+                    self.section = item["section"]
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Value: " + "\t" + self.value)
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Section: " + "\t" + self.section)
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(30)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+
+        if self.display is "dlls":
+            for item in self.d:
+                current = item["name"]
+                if current == selected:
+                    self.value = str(item["vaddr"])
+                    self.section = item["section"]
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Relation: ")
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(30)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
 
 
     def setupUiCreate(self, Dialog):

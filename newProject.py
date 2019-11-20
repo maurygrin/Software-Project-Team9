@@ -19,6 +19,7 @@ class Ui_newProject(object):
         else:
             self.project = Project(name, description)
 
+
     def setupUi(self, Dialog):
 
         self.project = ""
