@@ -38,7 +38,7 @@ class Ui_NewProject(object):
         self.binaryFilePathLabel.setGeometry(QtCore.QRect(20, 60, 111, 16))
         self.binaryFilePathLabel.setObjectName("binaryFilePathLabel")
         self.binaryFilePathBrowse = QtWidgets.QPushButton(NewProject)
-        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(460, 80, 75, 31))
+        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(454, 80, 81, 31))
         self.binaryFilePathBrowse.setObjectName("binaryFilePathBrowse")
 
         self.retranslateUi(NewProject)

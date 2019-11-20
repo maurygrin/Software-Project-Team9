@@ -53,13 +53,6 @@ class Ui_MainWindow(object):
             self.binaryFilePathField.setText(self.project.binary)
             self.projectDescriptionField.setText(self.project.description)
 
-    def getBinaryFilePath(self):
-        filename = QFileDialog.getOpenFileName(self.centralwidget, 'Open File', os.getenv('HOME'))
-        if filename[0]:
-            self.path = str(filename)
-            # self.analysis = Script()
-            self.path = self.path.replace("(", "").replace("'", "").split(",")[0]
-
             self.r2 = r2pipe.open(self.path)
 
             self.binaryInfo = self.r2.cmdj('ij')
@@ -77,8 +70,6 @@ class Ui_MainWindow(object):
 
             self.binary = BinaryFile(self.path, self.metadata)
 
-            # print(self.binaryInfo)
-            # print(self.binaryInfo.get("core").get("type"))
             try:
                 if (self.binary.metadata.arch != "x86") or (
                         self.binary.metadata.type != "Executable file" and self.binary.metadata.type != "EXEC (Executable file)"):
@@ -103,10 +94,21 @@ class Ui_MainWindow(object):
                     self.fileProperties.append("stripped\t\t\t" + str(self.binary.metadata.stripped) + "\n")
                     self.fileProperties.append("extension\t\t\t" + self.binary.metadata.type + "\n")
 
+                    self.binaryFilePathField.setText(self.path)
+
             except Exception as e:
                 self.binaryErrorWindow()
                 self.r2 = ""
                 self.fileProperties.setText("")
+
+    def getBinaryFilePath(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.binaryFilePathField, "Browse Binary File", "",
+                                                            "Binary Files (*.exe *.out *.class *.docx)", options = options)
+        if fileName:
+            self.path = str(fileName)
+            self.binaryFilePathEdit.setText(fileName)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -543,7 +545,7 @@ class Ui_MainWindow(object):
         self.binaryFilePathLabel.setGeometry(QtCore.QRect(20, 60, 111, 16))
         self.binaryFilePathLabel.setObjectName("binaryFilePathLabel")
         self.binaryFilePathBrowse = QtWidgets.QPushButton(NewProject)
-        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(460, 80, 75, 31))
+        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(454, 80, 81, 31))
         self.binaryFilePathBrowse.setObjectName("binaryFilePathBrowse")
 
         self.retranslateUiCreateProject(NewProject)
@@ -551,11 +553,14 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(NewProject.reject)
         QtCore.QMetaObject.connectSlotsByName(NewProject)
 
+        self.binaryFilePathEdit.setEnabled(False)
+
         self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
 
         self.buttonBox.accepted.connect(
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
-                                       self.projectDescriptionEdit.toPlainText()))
+                                       self.projectDescriptionEdit.toPlainText())
+        )
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
