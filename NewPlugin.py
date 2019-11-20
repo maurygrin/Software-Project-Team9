@@ -13,9 +13,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_newPlugin(object):
     def setupUi(self, newPlugin):
         newPlugin.setObjectName("newPlugin")
-        newPlugin.resize(492, 300)
+        newPlugin.resize(567, 444)
         self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
-        self.buttonBox.setGeometry(QtCore.QRect(110, 240, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(210, 400, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
@@ -31,6 +31,24 @@ class Ui_newPlugin(object):
         self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
         self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
         self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
+        self.structureFieldWindow = QtWidgets.QTextEdit(newPlugin)
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        self.structureFieldWindow.setObjectName("structureFieldWindow")
+        self.datasetFieldWindow = QtWidgets.QTextEdit(newPlugin)
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
+        self.pluginStructlabel.setObjectName("pluginStructlabel")
+        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
+        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        self.browseStructWindow.setObjectName("browseStructWindow")
+        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        self.brosweDSWindow.setObjectName("brosweDSWindow")
 
         self.retranslateUi(newPlugin)
         self.buttonBox.accepted.connect(newPlugin.accept)
@@ -42,6 +60,10 @@ class Ui_newPlugin(object):
         newPlugin.setWindowTitle(_translate("newPlugin", "New Plugin"))
         self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
         self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
+        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
+        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
+        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
+        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
 
 
 if __name__ == "__main__":

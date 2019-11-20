@@ -1,0 +1,39 @@
+<pointOfInterest minOccurs="1" maxOccurs="unbounded" required>
+	<name maxOccurs="1" required > String </name>
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required >
+			<name maxOccurs="1" required > String Name</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > String</datatype>
+		</attribute>
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required >
+			<name maxOccurs="1" required > String Type</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > String</datatype>
+		</attribute>
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required >
+			<name maxOccurs="1" required > String Size</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > Int</datatype>
+		</attribute>		
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required >
+			<name maxOccurs="1" required > Call From Address</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > String</datatype>
+		</attribute>	
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required >
+			<name maxOccurs="1" required > Destination Address</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > String</datatype>
+		</attribute>
+		<attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required >
+			<name maxOccurs="1" required > Section</name>
+			<guiComponentType maxOccurs="1" required > Text Box</guiComponentType >
+			<value minOccurs=”1” maxOccurs="unbounded" required > </value>
+			<valueDatatype maxOccurs="1" required > String</datatype>
+		</attribute>
+</pointOfInterest>
