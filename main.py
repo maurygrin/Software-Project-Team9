@@ -5,7 +5,18 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+import os, sys, r2pipe, json
+import pymongo
+from pymongo import MongoClient
+from Script import Script
+from Plugin import Plugin
+from Project import Project
+from PointOfInterest import POI
+from BinaryFile import BinaryFile
+from Metadata import Metadata
 
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
