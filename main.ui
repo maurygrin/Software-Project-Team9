@@ -114,8 +114,8 @@
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QLabel" name="glass">
@@ -164,7 +164,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="detailedPluginView_2">
+     <widget class="QGroupBox" name="detailedProjectView">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -339,7 +339,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </widget>
       </widget>
-      <widget class="QLabel" name="detailedProjectViewLabel_3">
+      <widget class="QLabel" name="detailedProjectViewLabel">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -365,7 +365,7 @@ p, li { white-space: pre-wrap; }
      <attribute name="title">
       <string>Analysis</string>
      </attribute>
-     <widget class="QGroupBox" name="analysisView">
+     <widget class="QGroupBox" name="analysisSection">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -377,7 +377,7 @@ p, li { white-space: pre-wrap; }
       <property name="title">
        <string/>
       </property>
-      <widget class="QLabel" name="detailedPoiViewLabel">
+      <widget class="QLabel" name="detailedAnalysisViewLabel">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -394,7 +394,7 @@ p, li { white-space: pre-wrap; }
         </font>
        </property>
        <property name="text">
-        <string>Detailed Point of Interest View</string>
+        <string>Detailed Analysis View</string>
        </property>
       </widget>
       <widget class="QLabel" name="terminalLabel">
@@ -614,7 +614,7 @@ p, li { white-space: pre-wrap; }
        <string>Stop</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="poiView">
+     <widget class="QGroupBox" name="analysisView">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -631,7 +631,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="title">
-       <string>Point of Interest View</string>
+       <string>Analysis View</string>
       </property>
       <widget class="QListWidget" name="poiAnalysisList">
        <property name="geometry">
@@ -982,7 +982,7 @@ p, li { white-space: pre-wrap; }
      <attribute name="title">
       <string>Points of Interest</string>
      </attribute>
-     <widget class="QGroupBox" name="poiView_2">
+     <widget class="QGroupBox" name="poiView">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -1003,7 +1003,7 @@ p, li { white-space: pre-wrap; }
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>620</y>
+         <y>640</y>
          <width>113</width>
          <height>32</height>
         </rect>
@@ -1035,7 +1035,7 @@ p, li { white-space: pre-wrap; }
          <x>10</x>
          <y>80</y>
          <width>231</width>
-         <height>521</height>
+         <height>551</height>
         </rect>
        </property>
        <property name="font">
@@ -1080,7 +1080,7 @@ p, li { white-space: pre-wrap; }
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>620</y>
+         <y>640</y>
          <width>113</width>
          <height>32</height>
         </rect>
@@ -1174,7 +1174,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </item>
       </widget>
-      <widget class="QLabel" name="detailedPoiViewLabel_2">
+      <widget class="QLabel" name="detailedPoiViewLabel">
        <property name="geometry">
         <rect>
          <x>40</x>
