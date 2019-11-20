@@ -19,7 +19,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
+#comment
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
