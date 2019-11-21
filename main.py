@@ -105,10 +105,8 @@ class Ui_MainWindow(object):
             self.pluginDescriptionField.setText(self.plugin.description)
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
-
-    def savePlugin(self):
-        self.pluginManagementList.addItem(self.plugin.name)
-        self.pluginDropDownAnalysis.addItem(self.plugin.name)
+            self.pluginManagementList.addItem(self.plugin.name)
+            self.pluginDropDownAnalysis.addItem(self.plugin.name)
 
     def deletePlugin(self):
         self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
@@ -564,8 +562,6 @@ class Ui_MainWindow(object):
         self.projectNewButton.clicked.connect(self.projectWindow)
 
         self.newPluginButton.clicked.connect(self.pluginWindow)
-
-        self.savePluginButton.clicked.connect(self.savePlugin)
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
 
