@@ -35,10 +35,6 @@ class Ui_MainWindow(object):
         self.setupUiCreateProject(self.windowNew)
         self.windowNew.show()
 
-    def pluginWindow(self):
-        self.setupUiCreatePlugin(self.windowPlug)
-        self.windowPlug.show()
-
     def createProject(self, name, binary, description):
         if not name or not binary or not description:
             print("Failed")
@@ -96,31 +92,6 @@ class Ui_MainWindow(object):
                 self.r2 = ""
                 self.fileProperties.setText("")
 
-    def createPlugin(self, name, description, structure, data_set):
-        if not name or not description or not structure or not data_set:
-            print("Failed")
-        else:
-            self.plugin = Plugin(name, description, structure, data_set)
-            self.pluginNameField.setText(self.plugin.name)
-            self.pluginDescriptionField.setText(self.plugin.description)
-            self.pluginStructureField.setText(self.plugin.structure)
-            self.pluginPredefinedField.setText(self.plugin.data_set)
-
-    def savePlugin(self):
-        self.pluginManagementList.addItem(self.plugin.name)
-        self.pluginDropDownAnalysis.addItem(self.plugin.name)
-
-    def deletePlugin(self):
-        self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
-        self.pluginNameField.clear()
-        self.pluginDescriptionField.clear()
-        self.pluginStructureField.clear()
-        self.pluginPredefinedField.clear()
-        self.pluginNameField.repaint()
-        self.pluginDescriptionField.repaint()
-        self.pluginStructureField.repaint()
-        self.pluginPredefinedField.repaint()
-
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
@@ -129,22 +100,6 @@ class Ui_MainWindow(object):
         if fileName:
             self.path = str(fileName)
             self.binaryFilePathEdit.setText(fileName)
-
-    def BrowseStruct(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.structureFieldWindow, "Browse XML Schema", "",
-                                                            "XML Schemas Files (*.xsd)", options=options)
-        if fileName:
-            self.structureFieldWindow.setText(fileName)
-
-    def BrowseDataSet(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
-                                                            "XML Files (*.xml)", options=options)
-        if fileName:
-            self.datasetFieldWindow.setText(fileName)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -613,57 +568,6 @@ class Ui_MainWindow(object):
                                        self.projectDescriptionEdit.toPlainText())
         )
 
-    def setupUiCreatePlugin(self, newPlugin):
-        newPlugin.setObjectName("newPlugin")
-        newPlugin.resize(541, 369)
-        self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
-        self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.projectNameLabel = QtWidgets.QLabel(newPlugin)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
-        self.projectNameLabel.setObjectName("projectNameLabel")
-        self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
-        self.pluginNameEdit.setObjectName("pluginNameEdit")
-        self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
-        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
-        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
-        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
-        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
-        self.pluginStructlabel.setObjectName("pluginStructlabel")
-        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
-        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
-        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
-        self.browseStructWindow.setObjectName("browseStructWindow")
-        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
-        self.brosweDSWindow.setObjectName("brosweDSWindow")
-        self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
-        self.structureFieldWindow.setObjectName("structureFieldWindow")
-        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
-        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
-
-        self.retranslateUiCreatePlugin(newPlugin)
-        self.buttonBox.accepted.connect(newPlugin.accept)
-        self.buttonBox.rejected.connect(newPlugin.reject)
-        QtCore.QMetaObject.connectSlotsByName(newPlugin)
-
-        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
-        self.browseStructWindow.clicked.connect(self.BrowseStruct)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "BEAT: Binary Extraction and Analysis Tool"))
@@ -762,17 +666,6 @@ class Ui_MainWindow(object):
         self.projectDescriptionLabel.setText(_translate("NewProject", "Project Description"))
         self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
         self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
-
-    def retranslateUiCreatePlugin(self, newPlugin):
-        _translate = QtCore.QCoreApplication.translate
-        newPlugin.setWindowTitle(_translate("newPlugin", "Create New Plugin"))
-        self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
-        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
-        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
-        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
-        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
-        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
-
 
 
 
