@@ -281,7 +281,7 @@ class Ui_MainWindow(object):
         if fileName:
             self.datasetFieldWindow.setText(fileName)
 
-    def clicked(self):
+    def projectClicked(self):
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
 
         self.projectNameField.setText(p.get("Project Name"))
@@ -317,6 +317,21 @@ class Ui_MainWindow(object):
         self.projectTabName = "Project - " + self.projectList.currentItem().text()
         self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
         self.retranslateUi(MainWindow)
+
+    def analysisClicked(self):
+        print("Analysis List clicked")
+
+    def runClicked(self):
+        print("Analysis Run List clicked")
+
+    def pluginClicked(self):
+        print("Plugin List clicked")
+
+    def poiClicked(self):
+        print("POI List clicked")
+
+    def documentationClicked(self):
+        print("Documentation List clicked")
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -741,7 +756,19 @@ class Ui_MainWindow(object):
         self.saveProjectButton.setEnabled(False)
 
 
-        self.projectList.clicked.connect(self.clicked)
+
+        self.projectList.clicked.connect(self.projectClicked)
+
+        self.poiAnalysisList.clicked.connect(self.analysisClicked)
+
+        self.runList.clicked.connect(self.runClicked)
+
+        self.pluginManagementList.clicked.connect(self.pluginClicked)
+
+        self.poiList.clicked.connect(self.poiClicked)
+
+        self.documentList.clicked.connect(self.documentationClicked)
+
         self.deletePluginButton.clicked.connect(self.deletePlugin)
 
         for document in self.collection.find():
