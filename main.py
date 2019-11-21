@@ -107,6 +107,10 @@ class Ui_MainWindow(object):
             self.pluginPredefinedField.setText(self.plugin.data_set)
             self.pluginManagementList.addItem(self.plugin.name)
             self.pluginDropDownAnalysis.addItem(self.plugin.name)
+            self.poiTypeDropDownAnalysis.addItem('strings')
+            self.poiTypeDropDownAnalysis.addItem('functions')
+            self.poiTypeDropDownAnalysis.addItem('variables')
+            self.poiTypeDropDownAnalysis.addItem('dlls')
 
     def deletePlugin(self):
         self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
