@@ -112,6 +112,16 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.addItem('variables')
             self.poiTypeDropDownAnalysis.addItem('dlls')
 
+            if self.pluginNameField.text() == "":
+                #self.fileErrorWindow()
+                print('Failed to load to database')
+            else:
+                pluginDB = {"Plugin Name": self.plugin.name,
+                            "Plugin Description": self.plugin.description,
+                            "Structure File Path": self.plugin.structure,
+                            "Pre-Defined Dataset File Path": self.plugin.data_set}
+                self.collection.insert([pluginDB])
+
     def deletePlugin(self):
         self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
         self.pluginNameField.clear()
