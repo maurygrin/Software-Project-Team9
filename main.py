@@ -53,6 +53,10 @@ class Ui_MainWindow(object):
         self.setupUiCreateProject(self.windowNew)
         self.windowNew.show()
 
+    def pluginWindow(self):
+        self.setupUiCreatePlugin(self.windowPlug)
+        self.windowPlug.show()
+
     def deleteConfirmation(self):
         self.setupUiDeleteProjectConfirmation(self.windowDeleteConfirmation)
         self.windowDeleteConfirmation.show()
@@ -125,6 +129,23 @@ class Ui_MainWindow(object):
 
             self.saveProject()
 
+    def createPlugin(self, name, description, structure, data_set):
+        if not name or not description or not structure or not data_set:
+            print("Failed")
+        else:
+            self.plugin = Plugin(name, description, structure, data_set)
+            self.pluginNameField.setText(self.plugin.name)
+            self.pluginDescriptionField.setText(self.plugin.description)
+            self.pluginStructureField.setText(self.plugin.structure)
+            self.pluginPredefinedField.setText(self.plugin.data_set)
+            self.pluginDropDownAnalysis.addItem(self.plugin.name)
+            self.poiTypeDropDownAnalysis.addItem('strings')
+            self.poiTypeDropDownAnalysis.addItem('functions')
+            self.poiTypeDropDownAnalysis.addItem('variables')
+            self.poiTypeDropDownAnalysis.addItem('dlls')
+
+            self.savePlugin()
+
     def saveProject(self):
         project = {"Project Name": self.project.name,
                    "Project Description": self.project.description,
@@ -162,6 +183,21 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+    def savePlugin(self):
+        pluginDB = {"Plugin Name": self.plugin.name,
+                    "Plugin Description": self.plugin.description,
+                    "Structure File Path": self.plugin.structure,
+                    "Pre-Defined Dataset File Path": self.plugin.data_set}
+        self.collection.insert([pluginDB])
+
+        it = QtWidgets.QListWidgetItem(self.plugin.name)
+
+        self.pluginManagementList.addItem(it)
+
+        it.setSelected(True)
+
+        self.retranslateUi(MainWindow)
+
     def deleteProject(self):
         self.projectDeleteButton.setEnabled(False)
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
@@ -180,6 +216,19 @@ class Ui_MainWindow(object):
         self.projectTabName = "Project"
         self.analysisTabName = "Analysis"
         self.retranslateUi(MainWindow)
+
+    def deletePlugin(self):
+        p = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
+        self.collection.delete_one(p)
+        self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
+        self.pluginNameField.clear()
+        self.pluginDescriptionField.clear()
+        self.pluginStructureField.clear()
+        self.pluginPredefinedField.clear()
+        self.pluginNameField.repaint()
+        self.pluginDescriptionField.repaint()
+        self.pluginStructureField.repaint()
+        self.pluginPredefinedField.repaint()
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -216,7 +265,21 @@ class Ui_MainWindow(object):
                 self.r2 = ""
                 self.binaryInfo = ""
 
+    def BrowseStruct(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.structureFieldWindow, "Browse XML Schema", "",
+                                                            "XML Schemas Files (*.xsd)", options=options)
+        if fileName:
+            self.structureFieldWindow.setText(fileName)
 
+    def BrowseDataSet(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
+                                                            "XML Files (*.xml)", options=options)
+        if fileName:
+            self.datasetFieldWindow.setText(fileName)
 
     def clicked(self):
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
@@ -254,7 +317,6 @@ class Ui_MainWindow(object):
         self.projectTabName = "Project - " + self.projectList.currentItem().text()
         self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
         self.retranslateUi(MainWindow)
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -669,14 +731,24 @@ class Ui_MainWindow(object):
         self.binaryFilePathField.setEnabled(False)
         self.projectDeleteButton.setEnabled(False)
 
+        self.pluginStructureField.setEnabled(False)
+        self.pluginPredefinedField.setEnabled(False)
+        self.pluginNameField.setEnabled(False)
+
         self.projectNewButton.clicked.connect(self.projectWindow)
+        self.newPluginButton.clicked.connect(self.pluginWindow)
 
         self.saveProjectButton.setEnabled(False)
 
+
         self.projectList.clicked.connect(self.clicked)
+        self.deletePluginButton.clicked.connect(self.deletePlugin)
 
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
+
+        for document in self.collection.find():
+            self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
 
@@ -750,6 +822,57 @@ class Ui_MainWindow(object):
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
                                        self.projectDescriptionEdit.toPlainText())
         )
+
+    def setupUiCreatePlugin(self, newPlugin):
+        newPlugin.setObjectName("newPlugin")
+        newPlugin.resize(541, 369)
+        self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
+        self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.projectNameLabel = QtWidgets.QLabel(newPlugin)
+        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
+        self.projectNameLabel.setObjectName("projectNameLabel")
+        self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
+        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
+        self.pluginNameEdit.setObjectName("pluginNameEdit")
+        self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
+        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
+        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
+        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
+        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
+        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
+        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
+        self.pluginStructlabel.setObjectName("pluginStructlabel")
+        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
+        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        self.browseStructWindow.setObjectName("browseStructWindow")
+        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        self.brosweDSWindow.setObjectName("brosweDSWindow")
+        self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        self.structureFieldWindow.setObjectName("structureFieldWindow")
+        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+
+        self.retranslateUiCreatePlugin(newPlugin)
+        self.buttonBox.accepted.connect(newPlugin.accept)
+        self.buttonBox.rejected.connect(newPlugin.reject)
+        QtCore.QMetaObject.connectSlotsByName(newPlugin)
+
+        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
+        self.browseStructWindow.clicked.connect(self.BrowseStruct)
+
+        self.buttonBox.accepted.connect(
+            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
+                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
 
     def setupUiBinaryError(self, binaryFileErrorWindow):
         binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
@@ -866,6 +989,16 @@ class Ui_MainWindow(object):
         self.projectDescriptionLabel.setText(_translate("NewProject", "Project Description"))
         self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
         self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
+
+    def retranslateUiCreatePlugin(self, newPlugin):
+        _translate = QtCore.QCoreApplication.translate
+        newPlugin.setWindowTitle(_translate("newPlugin", "Create New Plugin"))
+        self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
+        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
+        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
+        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
+        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
+        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
 
     def retranslateUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         _translate = QtCore.QCoreApplication.translate
