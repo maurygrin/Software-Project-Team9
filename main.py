@@ -877,7 +877,7 @@ class Ui_MainWindow(object):
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
         binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
-        self.messageLabel.setText(_translate("binaryFileErrorWindow", "The system only supports files that are of x86 architecture."))
+        self.messageLabel.setText(_translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
 
 
 if __name__ == "__main__":
