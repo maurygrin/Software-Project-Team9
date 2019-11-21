@@ -188,6 +188,7 @@ class Ui_MainWindow(object):
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
                     "Pre-Defined Dataset File Path": self.plugin.data_set}
+
         self.collection.insert([pluginDB])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
@@ -325,7 +326,23 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
-        print("Plugin List clicked")
+
+        plugin = self.collection.find_one({"Plugin Name" : self.pluginManagementList.currentItem().text()})
+
+        pluginName =plugin.get("Plugin Name")
+
+        pluginDescription = plugin.get("Plugin Description")
+
+        pluginStructure = plugin.get("Structure File Path")
+
+        pluginDataset = plugin.get("Pre-Defined Dataset File Path")
+
+        self.pluginNameField.setText(pluginName)
+        self.pluginDescriptionField.setText(pluginDescription)
+        self.pluginStructureField.setText(pluginStructure)
+        self.pluginPredefinedField.setText(pluginDataset)
+
+        self.deletePluginButton.setEnabled(True)
 
     def poiClicked(self):
         print("POI List clicked")
