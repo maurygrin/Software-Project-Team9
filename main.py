@@ -42,6 +42,8 @@ class Ui_MainWindow(object):
         self.relocs = ""
         self.stripped = ""
         self.extension = ""
+        self.projectTabName = "Project"
+        self.analysisTabName = "Analysis"
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
@@ -155,6 +157,11 @@ class Ui_MainWindow(object):
 
         self.projectDeleteButton.setEnabled(True)
 
+        self.projectTabName = "Project - " + self.project.name
+        self.analysisTabName = "Analysis - " + self.project.name
+
+        self.retranslateUi(MainWindow)
+
     def deleteProject(self):
         self.projectDeleteButton.setEnabled(False)
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
@@ -170,6 +177,9 @@ class Ui_MainWindow(object):
         self.fileProperties.repaint()
         self.r2 = ""
         self.projectList.clearSelection()
+        self.projectTabName = "Project"
+        self.analysisTabName = "Analysis"
+        self.retranslateUi(MainWindow)
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -240,6 +250,10 @@ class Ui_MainWindow(object):
         self.projectDescriptionField.setEnabled(True)
 
         self.projectDeleteButton.setEnabled(True)
+
+        self.projectTabName = "Project - " + self.projectList.currentItem().text()
+        self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
+        self.retranslateUi(MainWindow)
 
 
     def setupUi(self, MainWindow):
@@ -773,7 +787,7 @@ class Ui_MainWindow(object):
         self.binaryFilePathLabel.setText(_translate("MainWindow", "Binary File Path"))
         self.binaryFilePropertiesLabel.setText(_translate("MainWindow", "Binary File Properties"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
-        self.UI.setTabText(self.UI.indexOf(self.projectTab), _translate("MainWindow", "Project"))
+        self.UI.setTabText(self.UI.indexOf(self.projectTab), _translate("MainWindow", self.projectTabName))
         self.detailedAnalysisViewLabel.setText(_translate("MainWindow", "Detailed Analysis View"))
         self.terminalLabel.setText(_translate("MainWindow", "Terminal"))
         self.outputFieldViewButton.setText(_translate("MainWindow", "Output Field View"))
@@ -789,7 +803,7 @@ class Ui_MainWindow(object):
         self.stopDynamicButton.setText(_translate("MainWindow", "Stop"))
         self.analysisView.setTitle(_translate("MainWindow", "Analysis View"))
         self.commentViewButton.setText(_translate("MainWindow", "Comment View"))
-        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", "Analysis"))
+        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.analysisTabName))
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
         self.pluginSearch.setHtml(_translate("MainWindow",
