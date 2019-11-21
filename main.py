@@ -14,6 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
+        self.windowDeleteConfirmation = QtWidgets.QDialog()
         self.windowPlug = QtWidgets.QDialog()
         self.windowPOI = QtWidgets.QDialog()
         self.windowBinaryError = QtWidgets.QDialog()
@@ -26,24 +27,46 @@ class Ui_MainWindow(object):
         self.contents = None
         self.le = None
         self.path = ""
+        self.arch = ""
+        self.os = ""
+        self.bintype = ""
+        self.machine = ""
+        self.classVar = ""
+        self.bits = ""
+        self.language = ""
+        self.canary = ""
+        self.endian = ""
+        self.crypto = ""
+        self.nx = ""
+        self.pic = ""
+        self.relocs = ""
+        self.stripped = ""
+        self.extension = ""
+        self.projectTabName = "Project"
+        self.analysisTabName = "Analysis"
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
-        self.collection = db["test"]
+        self.collection = db["beat"]
 
     def projectWindow(self):
         self.setupUiCreateProject(self.windowNew)
         self.windowNew.show()
 
-    def pluginWindow(self):
-        self.setupUiCreatePlugin(self.windowPlug)
-        self.windowPlug.show()
+    def deleteConfirmation(self):
+        self.setupUiDeleteProjectConfirmation(self.windowDeleteConfirmation)
+        self.windowDeleteConfirmation.show()
+
+    def binaryErrorWindow(self):
+        self.setupUiBinaryError(self.windowBinaryError)
+        self.windowBinaryError.show()
 
     def createProject(self, name, binary, description):
         if not name or not binary or not description:
             print("Failed")
         else:
             self.project = Project(name, binary, description)
+
             self.projectNameField.setText(self.project.name)
             self.binaryFilePathField.setText(self.project.binary)
             self.projectDescriptionField.setText(self.project.description)
@@ -63,75 +86,100 @@ class Ui_MainWindow(object):
                                      self.binaryInfo.get("bin").get("relocs"),
                                      self.binaryInfo.get("bin").get("striped"), self.binaryInfo.get("core").get("type"))
 
-            self.binary = BinaryFile(self.path, self.metadata)
+            self.binary = BinaryFile(binary, self.metadata)
 
-            try:
-                if (self.binary.metadata.arch != "x86") or (
-                        self.binary.metadata.type != "Executable file" and self.binary.metadata.type != "EXEC (Executable file)"):
-                    self.binaryErrorWindow()
-                    self.r2 = ""
-                    self.fileProperties.setText("")
-                else:
-                    self.binaryFilePathEdit.setText(str(self.path))
-                    self.fileProperties.append("arch\t\t\t" + self.binary.metadata.arch + "\n")
-                    self.fileProperties.append("os\t\t\t" + self.binary.metadata.os + "\n")
-                    self.fileProperties.append("bintype\t\t\t" + self.binary.metadata.binaryType + "\n")
-                    self.fileProperties.append("machine\t\t\t" + self.binary.metadata.machine + "\n")
-                    self.fileProperties.append("class\t\t\t" + self.binary.metadata.classVariable + "\n")
-                    self.fileProperties.append("bits\t\t\t" + str(self.binary.metadata.bits) + "\n")
-                    self.fileProperties.append("language\t\t\t" + self.binary.metadata.language + "\n")
-                    self.fileProperties.append("canary\t\t\t" + str(self.binary.metadata.canary) + "\n")
-                    self.fileProperties.append("endian\t\t\t" + self.binary.metadata.endian + "\n")
-                    self.fileProperties.append("crypto\t\t\t" + str(self.binary.metadata.crypto) + "\n")
-                    self.fileProperties.append("nx\t\t\t" + str(self.binary.metadata.nx) + "\n")
-                    self.fileProperties.append("pic\t\t\t" + str(self.binary.metadata.pic) + "\n")
-                    self.fileProperties.append("relocs\t\t\t" + str(self.binary.metadata.relocs) + "\n")
-                    self.fileProperties.append("stripped\t\t\t" + str(self.binary.metadata.stripped) + "\n")
-                    self.fileProperties.append("extension\t\t\t" + self.binary.metadata.type + "\n")
+            self.arch = self.binary.metadata.arch
+            self.os = self.binary.metadata.os
+            self.bintype = self.binary.metadata.binaryType
+            self.machine = self.binary.metadata.machine
+            self.classVar = self.binary.metadata.classVariable
+            self.bits = self.binary.metadata.bits
+            self.language = self.binary.metadata.language
+            self.canary = self.binary.metadata.canary
+            self.endian = self.binary.metadata.endian
+            self.crypto = self.binary.metadata.crypto
+            self.nx = self.binary.metadata.nx
+            self.pic = self.binary.metadata.pic
+            self.relocs = self.binary.metadata.relocs
+            self.stripped = self.binary.metadata.stripped
+            self.extension = self.binary.metadata.type
 
-                    self.binaryFilePathField.setText(self.path)
+            self.binaryFilePathEdit.setText(self.path)
+            self.fileProperties.append("arch\t\t\t" + self.binary.metadata.arch + "\n")
+            self.fileProperties.append("os\t\t\t" + self.binary.metadata.os + "\n")
+            self.fileProperties.append("bintype\t\t\t" + self.binary.metadata.binaryType + "\n")
+            self.fileProperties.append("machine\t\t\t" + self.binary.metadata.machine + "\n")
+            self.fileProperties.append("class\t\t\t" + self.binary.metadata.classVariable + "\n")
+            self.fileProperties.append("bits\t\t\t" + str(self.binary.metadata.bits) + "\n")
+            self.fileProperties.append("language\t\t\t" + self.binary.metadata.language + "\n")
+            self.fileProperties.append("canary\t\t\t" + str(self.binary.metadata.canary) + "\n")
+            self.fileProperties.append("endian\t\t\t" + self.binary.metadata.endian + "\n")
+            self.fileProperties.append("crypto\t\t\t" + str(self.binary.metadata.crypto) + "\n")
+            self.fileProperties.append("nx\t\t\t" + str(self.binary.metadata.nx) + "\n")
+            self.fileProperties.append("pic\t\t\t" + str(self.binary.metadata.pic) + "\n")
+            self.fileProperties.append("relocs\t\t\t" + str(self.binary.metadata.relocs) + "\n")
+            self.fileProperties.append("stripped\t\t\t" + str(self.binary.metadata.stripped) + "\n")
+            self.fileProperties.append("extension\t\t\t" + self.binary.metadata.type + "\n")
 
-            except Exception as e:
-                self.binaryErrorWindow()
-                self.r2 = ""
-                self.fileProperties.setText("")
+            self.binaryFilePathField.setText(self.path)
 
-    def createPlugin(self, name, description, structure, data_set):
-        if not name or not description or not structure or not data_set:
-            print("Failed")
-        else:
-            self.plugin = Plugin(name, description, structure, data_set)
-            self.pluginNameField.setText(self.plugin.name)
-            self.pluginDescriptionField.setText(self.plugin.description)
-            self.pluginStructureField.setText(self.plugin.structure)
-            self.pluginPredefinedField.setText(self.plugin.data_set)
-            self.pluginManagementList.addItem(self.plugin.name)
-            self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            self.poiTypeDropDownAnalysis.addItem('strings')
-            self.poiTypeDropDownAnalysis.addItem('functions')
-            self.poiTypeDropDownAnalysis.addItem('variables')
-            self.poiTypeDropDownAnalysis.addItem('dlls')
+            self.saveProject()
 
-            if self.pluginNameField.text() == "":
-                #self.fileErrorWindow()
-                print('Failed to load to database')
-            else:
-                pluginDB = {"Plugin Name": self.plugin.name,
-                            "Plugin Description": self.plugin.description,
-                            "Structure File Path": self.plugin.structure,
-                            "Pre-Defined Dataset File Path": self.plugin.data_set}
-                self.collection.insert_many([pluginDB])
+    def saveProject(self):
+        project = {"Project Name": self.project.name,
+                   "Project Description": self.project.description,
+                   "Binary File Path": self.path,
+                   "arch": self.arch,
+                   "os": self.os,
+                   "bintype": self.bintype,
+                   "machine": self.machine,
+                   "class": self.classVar,
+                   "bits": self.bits,
+                   "language": self.language,
+                   "canary": self.canary,
+                   "endian": self.endian,
+                   "crypto": self.crypto,
+                   "nx": self.nx,
+                   "pic": self.pic,
+                   "relocs": self.relocs,
+                   "stripped": self.stripped,
+                   "extension": self.extension}
 
-    def deletePlugin(self):
-        self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
-        self.pluginNameField.clear()
-        self.pluginDescriptionField.clear()
-        self.pluginStructureField.clear()
-        self.pluginPredefinedField.clear()
-        self.pluginNameField.repaint()
-        self.pluginDescriptionField.repaint()
-        self.pluginStructureField.repaint()
-        self.pluginPredefinedField.repaint()
+        self.collection.insert([project])
+
+        it = QtWidgets.QListWidgetItem(self.project.name)
+
+        self.projectList.addItem(it)
+
+        it.setSelected(True)
+
+        self.projectDescriptionField.setEnabled(True)
+
+        self.projectDeleteButton.setEnabled(True)
+
+        self.projectTabName = "Project - " + self.project.name
+        self.analysisTabName = "Analysis - " + self.project.name
+
+        self.retranslateUi(MainWindow)
+
+    def deleteProject(self):
+        self.projectDeleteButton.setEnabled(False)
+        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+        self.collection.delete_one(p)
+        self.projectList.takeItem(self.projectList.currentRow())
+        self.projectNameField.clear()
+        self.projectDescriptionField.clear()
+        self.binaryFilePathField.clear()
+        self.fileProperties.clear()
+        self.projectNameField.repaint()
+        self.projectDescriptionField.repaint()
+        self.binaryFilePathField.repaint()
+        self.fileProperties.repaint()
+        self.r2 = ""
+        self.projectList.clearSelection()
+        self.projectTabName = "Project"
+        self.analysisTabName = "Analysis"
+        self.retranslateUi(MainWindow)
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -140,23 +188,73 @@ class Ui_MainWindow(object):
                                                             "Binary Files (*.exe *.out *.class *.docx)", options = options)
         if fileName:
             self.path = str(fileName)
-            self.binaryFilePathEdit.setText(fileName)
 
-    def BrowseStruct(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.structureFieldWindow, "Browse XML Schema", "",
-                                                            "XML Schemas Files (*.xsd)", options=options)
-        if fileName:
-            self.structureFieldWindow.setText(fileName)
+            self.r2 = r2pipe.open(self.path)
 
-    def BrowseDataSet(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
-                                                            "XML Files (*.xml)", options=options)
-        if fileName:
-            self.datasetFieldWindow.setText(fileName)
+            self.binaryInfo = self.r2.cmdj('ij')
+
+            try:
+                if (self.binaryInfo.get("bin").get("arch") != "x86") or (
+                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get("core").get("type") != "EXEC (Executable file)"):
+                    self.binaryErrorWindow()
+                    self.r2 = ""
+                    self.fileProperties.setText("")
+                    self.path = ""
+                    self.binaryFilePathEdit.setText("")
+                    self.r2 = ""
+                    self.binaryInfo = ""
+
+                else:
+                    self.binaryFilePathEdit.setText(fileName)
+
+            except Exception as e:
+                self.binaryErrorWindow()
+                self.r2 = ""
+                self.fileProperties.setText("")
+                self.path = ""
+                self.binaryFilePathEdit.setText("")
+                self.r2 = ""
+                self.binaryInfo = ""
+
+
+
+    def clicked(self):
+        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+
+        self.projectNameField.setText(p.get("Project Name"))
+
+        self.projectDescriptionField.setText(p.get("Project Description"))
+
+        self.binaryFilePathField.setText(p.get("Binary File Path"))
+
+        self.fileProperties.append("arch\t\t\t" + p.get("arch") + "\n")
+        self.fileProperties.append("os\t\t\t" + p.get("os") + "\n")
+        self.fileProperties.append("bintype\t\t\t" + p.get("bintype") + "\n")
+        self.fileProperties.append("machine\t\t\t" + p.get("machine") + "\n")
+        self.fileProperties.append("class\t\t\t" + p.get("class") + "\n")
+        self.fileProperties.append("bits\t\t\t" + str(p.get("bits")) + "\n")
+        self.fileProperties.append("language\t\t\t" + p.get("language") + "\n")
+        self.fileProperties.append("canary\t\t\t" + str(p.get("canary")) + "\n")
+        self.fileProperties.append("endian\t\t\t" + p.get("endian") + "\n")
+        self.fileProperties.append("crypto\t\t\t" + str(p.get("crypto")) + "\n")
+        self.fileProperties.append("nx\t\t\t" + str(p.get("nx")) + "\n")
+        self.fileProperties.append("pic\t\t\t" + str(p.get("pic")) + "\n")
+        self.fileProperties.append("relocs\t\t\t" + str(p.get("relocs")) + "\n")
+        self.fileProperties.append("stripped\t\t\t" + str(p.get("stripped")) + "\n")
+        self.fileProperties.append("extension\t\t\t" + p.get("extension") + "\n")
+
+        self.r2 = r2pipe.open(p.get("Binary File Path"))
+
+        self.detailedPoiAnalysisField.clear()
+
+        self.projectDescriptionField.setEnabled(True)
+
+        self.projectDeleteButton.setEnabled(True)
+
+        self.projectTabName = "Project - " + self.projectList.currentItem().text()
+        self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
+        self.retranslateUi(MainWindow)
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -564,20 +662,49 @@ class Ui_MainWindow(object):
         self.UI.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.fileProperties.append("Name\t\t\tValue\n")
+
         self.projectNameField.setEnabled(False)
         self.projectDescriptionField.setEnabled(False)
         self.binaryFilePathField.setEnabled(False)
-
-        self.pluginStructureField.setEnabled(False)
-        self.pluginPredefinedField.setEnabled(False)
-        self.pluginNameField.setEnabled(False)
-        self.pluginDescriptionField.setEnabled(False)
+        self.projectDeleteButton.setEnabled(False)
 
         self.projectNewButton.clicked.connect(self.projectWindow)
 
-        self.newPluginButton.clicked.connect(self.pluginWindow)
+        self.saveProjectButton.setEnabled(False)
 
-        self.deletePluginButton.clicked.connect(self.deletePlugin)
+        self.projectList.clicked.connect(self.clicked)
+
+        for document in self.collection.find():
+            self.projectList.addItem(document.get("Project Name"))
+
+        self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
+
+    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
+        DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
+        DeleteProjectConfirmation.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(DeleteProjectConfirmation)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 50, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setText("Yes")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).setText("No")
+        self.buttonBox.setObjectName("buttonBox")
+        self.messageLabel = QtWidgets.QLabel(DeleteProjectConfirmation)
+        self.messageLabel.setGeometry(QtCore.QRect(10, 10, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
+        self.messageLabel_2 = QtWidgets.QLabel(DeleteProjectConfirmation)
+        self.messageLabel_2.setGeometry(QtCore.QRect(10, 30, 371, 31))
+        self.messageLabel_2.setObjectName("messageLabel_2")
+
+        self.retranslateUiDeleteProjectConfirmation(DeleteProjectConfirmation)
+        self.buttonBox.accepted.connect(DeleteProjectConfirmation.accept)
+        self.buttonBox.rejected.connect(DeleteProjectConfirmation.reject)
+        QtCore.QMetaObject.connectSlotsByName(DeleteProjectConfirmation)
+
+        self.buttonBox.accepted.connect(
+            lambda: self.deleteProject()
+        )
 
     def setupUiCreateProject(self, NewProject):
         NewProject.setObjectName("NewProject")
@@ -587,6 +714,7 @@ class Ui_MainWindow(object):
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setText("Create")
         self.projectNameLabel = QtWidgets.QLabel(NewProject)
         self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
         self.projectNameLabel.setObjectName("projectNameLabel")
@@ -623,56 +751,22 @@ class Ui_MainWindow(object):
                                        self.projectDescriptionEdit.toPlainText())
         )
 
-    def setupUiCreatePlugin(self, newPlugin):
-        newPlugin.setObjectName("newPlugin")
-        newPlugin.resize(541, 369)
-        self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
-        self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
+    def setupUiBinaryError(self, binaryFileErrorWindow):
+        binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
+        binaryFileErrorWindow.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(binaryFileErrorWindow)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 50, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.projectNameLabel = QtWidgets.QLabel(newPlugin)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
-        self.projectNameLabel.setObjectName("projectNameLabel")
-        self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
-        self.pluginNameEdit.setObjectName("pluginNameEdit")
-        self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
-        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
-        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
-        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
-        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
-        self.pluginStructlabel.setObjectName("pluginStructlabel")
-        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
-        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
-        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
-        self.browseStructWindow.setObjectName("browseStructWindow")
-        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
-        self.brosweDSWindow.setObjectName("brosweDSWindow")
-        self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
-        self.structureFieldWindow.setObjectName("structureFieldWindow")
-        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
-        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+        self.messageLabel = QtWidgets.QLabel(binaryFileErrorWindow)
+        self.messageLabel.setGeometry(QtCore.QRect(10, 10, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
 
-        self.retranslateUiCreatePlugin(newPlugin)
-        self.buttonBox.accepted.connect(newPlugin.accept)
-        self.buttonBox.rejected.connect(newPlugin.reject)
-        QtCore.QMetaObject.connectSlotsByName(newPlugin)
-
-        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
-        self.browseStructWindow.clicked.connect(self.BrowseStruct)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+        self.retranslateUiBinaryError(binaryFileErrorWindow)
+        self.buttonBox.accepted.connect(binaryFileErrorWindow.accept)
+        self.buttonBox.rejected.connect(binaryFileErrorWindow.reject)
+        QtCore.QMetaObject.connectSlotsByName(binaryFileErrorWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -693,7 +787,7 @@ class Ui_MainWindow(object):
         self.binaryFilePathLabel.setText(_translate("MainWindow", "Binary File Path"))
         self.binaryFilePropertiesLabel.setText(_translate("MainWindow", "Binary File Properties"))
         self.detailedProjectViewLabel.setText(_translate("MainWindow", "Detailed Project View"))
-        self.UI.setTabText(self.UI.indexOf(self.projectTab), _translate("MainWindow", "Project"))
+        self.UI.setTabText(self.UI.indexOf(self.projectTab), _translate("MainWindow", self.projectTabName))
         self.detailedAnalysisViewLabel.setText(_translate("MainWindow", "Detailed Analysis View"))
         self.terminalLabel.setText(_translate("MainWindow", "Terminal"))
         self.outputFieldViewButton.setText(_translate("MainWindow", "Output Field View"))
@@ -709,7 +803,7 @@ class Ui_MainWindow(object):
         self.stopDynamicButton.setText(_translate("MainWindow", "Stop"))
         self.analysisView.setTitle(_translate("MainWindow", "Analysis View"))
         self.commentViewButton.setText(_translate("MainWindow", "Comment View"))
-        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", "Analysis"))
+        self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.analysisTabName))
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
         self.pluginSearch.setHtml(_translate("MainWindow",
@@ -773,17 +867,17 @@ class Ui_MainWindow(object):
         self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
         self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
 
-    def retranslateUiCreatePlugin(self, newPlugin):
+    def retranslateUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         _translate = QtCore.QCoreApplication.translate
-        newPlugin.setWindowTitle(_translate("newPlugin", "Create New Plugin"))
-        self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
-        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
-        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
-        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
-        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
-        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+        DeleteProjectConfirmation.setWindowTitle(_translate("deleteProjectConfirmation", "Delete Project Confirmation"))
+        self.messageLabel.setText(
+            _translate("deleteProjectConfirmation", "You are about to delete permanently a project. Are you sure"))
+        self.messageLabel_2.setText(_translate("deleteProjectConfirmation", "you want to delete it?"))
 
-
+    def retranslateUiBinaryError(self, binaryFileErrorWindow):
+        _translate = QtCore.QCoreApplication.translate
+        binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
+        self.messageLabel.setText(_translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
 
 
 if __name__ == "__main__":
