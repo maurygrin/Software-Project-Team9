@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
                             "Plugin Description": self.plugin.description,
                             "Structure File Path": self.plugin.structure,
                             "Pre-Defined Dataset File Path": self.plugin.data_set}
-                self.collection.insert([pluginDB])
+                self.collection.insert_many([pluginDB])
 
     def deletePlugin(self):
         self.pluginManagementList.takeItem(self.pluginManagementList.currentRow())
