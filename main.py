@@ -1,4 +1,4 @@
-import os, sys, r2pipe, json
+import os, sys, r2pipe, json, base64
 import pymongo
 from pymongo import MongoClient
 from Script import Script
@@ -44,6 +44,10 @@ class Ui_MainWindow(object):
         self.extension = ""
         self.projectTabName = "Project"
         self.analysisTabName = "Analysis"
+        self.s = ""
+        self.vaddr = ""
+        self.value = ""
+        self.section = ""
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
@@ -129,6 +133,65 @@ class Ui_MainWindow(object):
 
             self.saveProject()
 
+    def runStaticAnalysis(self):
+        if (self.pluginDropDownAnalysis.currentText() == "Select"):
+            self.setupPluginError(self.windowPluginError)
+            self.windowPluginError.show()
+        else:
+            self.runDynamicButton.setEnabled(True)
+
+            self.static = 1
+
+            self.terminalField.append("Static Analysis Performed!")
+            self.terminalField.append("")
+
+            self.s = self.r2.cmdj("izj")
+
+            poiSelected = self.poiTypeDropDownAnalysis.currentText()
+
+            if (poiSelected=="Strings"):
+                self.terminalField.append("Command: iz")
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(20)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+#                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+
+    def displayPOI(self):
+        if (self.static == 1):
+
+            poiSelected = self.poiTypeDropDownAnalysis.currentText()
+
+            if (poiSelected == "Strings"):
+                self.display = "strings"
+                self.terminalField.append("Command: iz")
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(20)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                #                self.s = self.analysis.display(self.r2, self.display)
+                for item in self.s:
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
             print("Failed")
@@ -139,10 +202,10 @@ class Ui_MainWindow(object):
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
             self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            self.poiTypeDropDownAnalysis.addItem('strings')
-            self.poiTypeDropDownAnalysis.addItem('functions')
-            self.poiTypeDropDownAnalysis.addItem('variables')
-            self.poiTypeDropDownAnalysis.addItem('dlls')
+            self.poiTypeDropDownAnalysis.addItem('Strings')
+            self.poiTypeDropDownAnalysis.addItem('Functions')
+            self.poiTypeDropDownAnalysis.addItem('Variables')
+            self.poiTypeDropDownAnalysis.addItem('Dlls')
 
             self.savePlugin()
 
@@ -320,7 +383,27 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
     def analysisClicked(self):
-        print("Analysis List clicked")
+        selected = self.poiAnalysisList.currentItem().text()
+        if self.display is "strings":
+            for item in self.s:
+                current = base64.b64decode(item["string"]).decode()
+                if current == selected:
+                    self.vaddr = hex(item["vaddr"])
+                    self.vaddr = str(self.vaddr)
+                    self.value = current
+                    self.section = item["section"]
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: " + self.vaddr)
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Value: " + self.value)
+            self.detailedPoiAnalysisField.append("\n")
+            self.detailedPoiAnalysisField.append("\t" + "Section: " + self.section)
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(20)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
 
     def runClicked(self):
         print("Analysis Run List clicked")
@@ -351,6 +434,9 @@ class Ui_MainWindow(object):
         print("Documentation List clicked")
 
     def setupUi(self, MainWindow):
+
+        self.static = 0
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1318, 755)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -772,7 +858,7 @@ class Ui_MainWindow(object):
 
         self.saveProjectButton.setEnabled(False)
 
-
+        self.runStaticButton.clicked.connect(self.runStaticAnalysis)
 
         self.projectList.clicked.connect(self.projectClicked)
 
@@ -788,6 +874,8 @@ class Ui_MainWindow(object):
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
 
+        self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
+
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
 
@@ -795,6 +883,8 @@ class Ui_MainWindow(object):
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
+
+        self.terminalField.setReadOnly(True)
 
     def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
@@ -861,6 +951,7 @@ class Ui_MainWindow(object):
         self.binaryFilePathEdit.setEnabled(False)
 
         self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
+
 
         self.buttonBox.accepted.connect(
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
@@ -934,6 +1025,22 @@ class Ui_MainWindow(object):
         self.buttonBox.accepted.connect(binaryFileErrorWindow.accept)
         self.buttonBox.rejected.connect(binaryFileErrorWindow.reject)
         QtCore.QMetaObject.connectSlotsByName(binaryFileErrorWindow)
+
+    def setupPluginError(self, pluginSelected):
+        pluginSelected.setObjectName("pluginSelected")
+        pluginSelected.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(pluginSelected)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 60, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.messageLabel = QtWidgets.QLabel(pluginSelected)
+        self.messageLabel.setGeometry(QtCore.QRect(30, 20, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
+
+        self.retranslatePluginError(pluginSelected)
+        self.buttonBox.accepted.connect(pluginSelected.accept)
+        QtCore.QMetaObject.connectSlotsByName(pluginSelected)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -1056,6 +1163,11 @@ class Ui_MainWindow(object):
         binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
         self.messageLabel.setText(_translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
 
+
+    def retranslatePluginError(self, pluginSelected):
+        _translate = QtCore.QCoreApplication.translate
+        pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
+        self.messageLabel.setText(_translate("pluginSelected", "You need to select a plugin before running an analysis."))
 
 if __name__ == "__main__":
     import sys
