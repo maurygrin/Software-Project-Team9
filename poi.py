@@ -43,7 +43,7 @@ class Ui_NewPOI(object):
 
     def retranslateUi(self, NewPOI):
         _translate = QtCore.QCoreApplication.translate
-        NewPOI.setWindowTitle(_translate("NewPOI", "New POI"))
+        NewPOI.setWindowTitle(_translate("NewPOI", "Dialog"))
         self.poiTypeLabel.setText(_translate("NewPOI", "Poin Of Interest Description"))
         self.poiOutLabel.setText(_translate("NewPOI", "Python Output"))
         self.poiNameLabel.setText(_translate("NewPOI", "Point Of Interest Name"))

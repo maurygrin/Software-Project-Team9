@@ -9,61 +9,47 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from Project import Project
 
-class Ui_newProject(object):
-
-    def createProject(self, name, description):
-        if not name and not description:
-            print("Failed")
-        else:
-            self.project = Project(name, description)
-
-
-    def setupUi(self, Dialog):
-
-        self.project = ""
-
-        Dialog.setObjectName("New Project")
-        Dialog.resize(492, 300)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(110, 240, 341, 32))
+class Ui_NewProject(object):
+    def setupUi(self, NewProject):
+        NewProject.setObjectName("NewProject")
+        NewProject.resize(539, 333)
+        self.buttonBox = QtWidgets.QDialogButtonBox(NewProject)
+        self.buttonBox.setGeometry(QtCore.QRect(110, 290, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.projectNameLabel = QtWidgets.QLabel(Dialog)
+        self.projectNameLabel = QtWidgets.QLabel(NewProject)
         self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
         self.projectNameLabel.setObjectName("projectNameLabel")
-        self.projectNameEdit = QtWidgets.QTextEdit(Dialog)
+        self.projectNameEdit = QtWidgets.QTextEdit(NewProject)
         self.projectNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
         self.projectNameEdit.setObjectName("projectNameEdit")
-        self.projectDescriptionLabel = QtWidgets.QLabel(Dialog)
-        self.projectDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
+        self.projectDescriptionLabel = QtWidgets.QLabel(NewProject)
+        self.projectDescriptionLabel.setGeometry(QtCore.QRect(20, 110, 131, 16))
         self.projectDescriptionLabel.setObjectName("projectDescriptionLabel")
-        self.projectDescriptionEdit = QtWidgets.QTextEdit(Dialog)
-        self.projectDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
+        self.projectDescriptionEdit = QtWidgets.QTextEdit(NewProject)
+        self.projectDescriptionEdit.setGeometry(QtCore.QRect(20, 140, 431, 141))
         self.projectDescriptionEdit.setObjectName("projectDescriptionEdit")
+        self.binaryFilePathEdit = QtWidgets.QTextEdit(NewProject)
+        self.binaryFilePathEdit.setGeometry(QtCore.QRect(20, 80, 431, 21))
+        self.binaryFilePathEdit.setObjectName("binaryFilePathEdit")
+        self.binaryFilePathLabel = QtWidgets.QLabel(NewProject)
+        self.binaryFilePathLabel.setGeometry(QtCore.QRect(20, 60, 111, 16))
+        self.binaryFilePathLabel.setObjectName("binaryFilePathLabel")
+        self.binaryFilePathBrowse = QtWidgets.QPushButton(NewProject)
+        self.binaryFilePathBrowse.setGeometry(QtCore.QRect(454, 80, 81, 31))
+        self.binaryFilePathBrowse.setObjectName("binaryFilePathBrowse")
 
-        self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(NewProject)
+        self.buttonBox.accepted.connect(NewProject.accept)
+        self.buttonBox.rejected.connect(NewProject.reject)
+        QtCore.QMetaObject.connectSlotsByName(NewProject)
 
-        self.buttonBox.accepted.connect(
-            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.projectDescriptionEdit.toPlainText()))
-
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, NewProject):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("New Project", "New Project"))
-        self.projectNameLabel.setText(_translate("Dialog", "Project Name"))
-        self.projectDescriptionLabel.setText(_translate("Dialog", "Project Description"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_newProject()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
+        NewProject.setWindowTitle(_translate("NewProject", "New Project"))
+        self.projectNameLabel.setText(_translate("NewProject", "Project Name"))
+        self.projectDescriptionLabel.setText(_translate("NewProject", "Project Description"))
+        self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
+        self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
