@@ -164,9 +164,11 @@ class Ui_MainWindow(object):
                 font.setPointSize(20)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-#                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
-                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                    item = QtWidgets.QListWidgetItem(base64.b64decode(item["string"]).decode())
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                    self.poiAnalysisList.addItem(item)
 
     def displayPOI(self):
         if (self.static == 1):
