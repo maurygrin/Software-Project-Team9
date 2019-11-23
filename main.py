@@ -360,7 +360,7 @@ class Ui_MainWindow(object):
                                                             "XML Files (*.xml)", options=options)
         if fileName:
             self.datasetFieldWindow.setText(fileName)
-            Ui_MainWindow.parseXML(str(fileName))
+            Ui_MainWindow.parseXML(fileName)
             self.pluginNameEdit.setText(list[0])
             self.pluginDescriptionEdit.setText(list[1])
 
