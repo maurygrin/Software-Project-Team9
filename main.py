@@ -199,12 +199,14 @@ class Ui_MainWindow(object):
         print(tree.getroot())
         root = tree.getroot()
         # print("tag=%s, attrib=%s" % (root.tag, root.attrib))
-
+        list=[]
         users = root.getchildren()
         for user in users:
             user_children = user.getchildren()
             for user_child in user_children:
                 print("%s=%s" % (user_child.tag, user_child.text))
+                list.append(user_child.text)
+        print(list)
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
