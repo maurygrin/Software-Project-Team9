@@ -4,7 +4,7 @@
     <description maxOccurs="1" required = "true"> </description>
     <pointOfInterest minOccurs="1" maxOccurs="unbounded" required = "true">
         <name maxOccurs="1" required = "true"> </name>
-            <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Boolean required = "true" Boolean="">
+            <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="Boolean" required = "true" Boolean="">
                 <name maxOccurs="1" required = "true"> </name>
                 <guiComponentType maxOccurs="1" required = "true"> </guiComponentType >
 <value minOccurs="1" maxOccurs="unbounded" required = "true"> </value>

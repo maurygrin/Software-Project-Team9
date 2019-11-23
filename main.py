@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from Script import Script
 from Plugin import Plugin
 from Project import Project
+import xml.etree.cElementTree as ET
 from PointOfInterest import POI
 from BinaryFile import BinaryFile
 from Metadata import Metadata
@@ -191,6 +192,19 @@ class Ui_MainWindow(object):
                 #                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
                     self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+
+    def parseXML(file_name):
+        # Parse XML with ElementTree
+        tree = ET.ElementTree(file=file_name)
+        print(tree.getroot())
+        root = tree.getroot()
+        # print("tag=%s, attrib=%s" % (root.tag, root.attrib))
+
+        users = root.getchildren()
+        for user in users:
+            user_children = user.getchildren()
+            for user_child in user_children:
+                print("%s=%s" % (user_child.tag, user_child.text))
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
