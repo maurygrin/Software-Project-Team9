@@ -69,6 +69,12 @@ class Ui_MainWindow(object):
         self.setupUiBinaryError(self.windowBinaryError)
         self.windowBinaryError.show()
 
+    def removeBreakpoint(self, item):
+       # item.checkState() == 2
+        print("changed")
+        #item.
+
+
     def createProject(self, name, binary, description):
         if not name or not binary or not description:
             print("Failed")
@@ -166,8 +172,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.s:
                     item = QtWidgets.QListWidgetItem(base64.b64decode(item["string"]).decode())
-                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                    item.setCheckState(QtCore.Qt.Unchecked)
+                    item.setCheckState(QtCore.Qt.Checked)
                     self.poiAnalysisList.addItem(item)
 
     def displayPOI(self):
@@ -190,7 +195,6 @@ class Ui_MainWindow(object):
                 font.setPointSize(20)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-                #                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
                     self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
@@ -414,7 +418,7 @@ class Ui_MainWindow(object):
 
         plugin = self.collection.find_one({"Plugin Name" : self.pluginManagementList.currentItem().text()})
 
-        pluginName =plugin.get("Plugin Name")
+        pluginName = plugin.get("Plugin Name")
 
         pluginDescription = plugin.get("Plugin Description")
 
@@ -885,6 +889,7 @@ class Ui_MainWindow(object):
         self.pluginNameField.setEnabled(False)
 
         self.projectNewButton.clicked.connect(self.projectWindow)
+
         self.newPluginButton.clicked.connect(self.pluginWindow)
 
         self.saveProjectButton.setEnabled(False)
@@ -893,7 +898,9 @@ class Ui_MainWindow(object):
 
         self.projectList.clicked.connect(self.projectClicked)
 
-        self.poiAnalysisList.clicked.connect(self.analysisClicked)
+        self.poiAnalysisList.itemSelectionChanged.connect(self.analysisClicked)
+
+        self.poiAnalysisList.itemChanged.connect(self.removeBreakpoint)
 
         self.runList.clicked.connect(self.runClicked)
 
