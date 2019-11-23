@@ -219,10 +219,27 @@ class Ui_MainWindow(object):
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
             self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            self.poiTypeDropDownAnalysis.addItem('Strings')
-            self.poiTypeDropDownAnalysis.addItem('Functions')
-            self.poiTypeDropDownAnalysis.addItem('Variables')
-            self.poiTypeDropDownAnalysis.addItem('Dlls')
+            self.poiTypeDropDownAnalysis.clear()
+            self.poiTypeDropDownAnalysis.repaint()
+            self.poiTypeDropDownAnalysis.addItem("Select")
+            self.poiTypeDropDownAnalysis.addItem(list[5])
+            self.poiTypeDropDownAnalysis.addItem(list[6])
+
+            self.pluginDropDownAnalysis.clear()
+            self.pluginDropDownAnalysis.repaint()
+            self.pluginDropDownAnalysis.addItem("Select")
+            self.poiTypeDropDownAnalysis.addItem(list[0])
+
+            self.poiPluginDropDown.clear()
+            self.poiPluginDropDown.repaint()
+            self.poiPluginDropDown.addItem("Select")
+            self.poiPluginDropDown.addItem(list[0])
+
+            self.poiFilterDropDown.clear()
+            self.poiFilterDropDown.repaint()
+            self.poiFilterDropDown.addItem("Select")
+            self.poiFilterDropDown.addItem(list[5])
+            self.poiFilterDropDown.addItem(list[6])
             self.savePlugin()
 
     def saveProject(self):
@@ -428,7 +445,6 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
-
         plugin = self.collection.find_one({"Plugin Name" : self.pluginManagementList.currentItem().text()})
 
         pluginName =plugin.get("Plugin Name")
@@ -443,6 +459,28 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+
+        self.poiTypeDropDownAnalysis.clear()
+        self.poiTypeDropDownAnalysis.repaint()
+        self.poiTypeDropDownAnalysis.addItem("Select")
+        self.poiTypeDropDownAnalysis.addItem(list[5])
+        self.poiTypeDropDownAnalysis.addItem(list[6])
+
+        self.pluginDropDownAnalysis.clear()
+        self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
+        self.pluginDropDownAnalysis.addItem(list[0])
+
+        self.poiPluginDropDown.clear()
+        self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
+        self.poiPluginDropDown.addItem(list[0])
+
+        self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
+        self.poiFilterDropDown.addItem("Select")
+        self.poiFilterDropDown.addItem(list[5])
+        self.poiFilterDropDown.addItem(list[6])
 
         self.deletePluginButton.setEnabled(True)
 

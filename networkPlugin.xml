@@ -9,4 +9,10 @@
         <functionName maxOccurs="1"> GenerateScript </functionName>
         <functionSource maxOccurs="1"> <!--[File Path to the source of the function.]-->a </functionSource>
     </output>
+    <poi minOccurs="1" maxOccurs="unbounded" default ="True">
+        <name maxOccurs="1"> String </name>
+        <name maxOccurs="1"> Functions </name>
+        <name maxOccurs="1"> Varibles</name>
+        <name maxOccurs="1"> DLLs</name>
+    </poi>>
 </plugins>

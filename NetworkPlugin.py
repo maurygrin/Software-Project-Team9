@@ -15,7 +15,7 @@ def parseXML(file_name):
         for user_child in user_children:
             print("%s=%s" % (user_child.tag, user_child.text))
             list.append(user_child.text)
-    print(list[0:3])
+    print(list[5])
 
 if __name__ == "__main__":
-   parseXML("networkPlugin.xml")
+   parseXML("netWorkPlugin.xml")
