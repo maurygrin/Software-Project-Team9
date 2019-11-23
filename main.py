@@ -435,6 +435,31 @@ class Ui_MainWindow(object):
     def documentationClicked(self):
         print("Documentation List clicked")
 
+    def filter_projects(self):  ##filtering list of project
+        for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
+            item.setHidden(True)
+        for item in self.projectList.findItems(self.projectSearch.text(), QtCore.Qt.MatchStartsWith):
+            item.setHidden(False)
+
+    def filter_plugins(self):
+        for item in self.pluginManagementList.findItems("*", QtCore.Qt.MatchWildcard):
+            item.setHidden(True)
+        for item in self.pluginManagementList.findItems(self.pluginSearch.text(), QtCore.Qt.MatchStartsWith):
+            item.setHidden(False)
+
+    def filter_POI(self):
+        for item in self.poiList.findItems("*", QtCore.Qt.MatchWildcard):
+            item.setHidden(True)
+        for item in self.poiList.findItems(self.poiSearch.text(), QtCore.Qt.MatchStartsWith):
+            item.setHidden(False)
+
+    def filter_doc(self):
+        for item in self.documentList.findItems("*", QtCore.Qt.MatchWildcard):
+            item.setHidden(True)
+        for item in self.documentList.findItems(self.documentSearch.text(), QtCore.Qt.MatchStartsWith):
+            item.setHidden(False)
+
+
     def setupUi(self, MainWindow):
 
         self.static = 0
@@ -476,9 +501,10 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         self.projectList.setFont(font)
         self.projectList.setObjectName("projectList")
-        self.projectSearch = QtWidgets.QTextEdit(self.projectViewGroup)
+        self.projectSearch = QtWidgets.QLineEdit(self.projectViewGroup)
         self.projectSearch.setGeometry(QtCore.QRect(10, 30, 231, 31))
         self.projectSearch.setObjectName("projectSearch")
+        self.projectSearch.textChanged[str].connect(self.filter_projects)
         self.glass = QtWidgets.QLabel(self.projectViewGroup)
         self.glass.setGeometry(QtCore.QRect(190, 30, 51, 31))
         self.glass.setText("")
@@ -652,9 +678,10 @@ class Ui_MainWindow(object):
         self.newPluginButton = QtWidgets.QPushButton(self.pluginView)
         self.newPluginButton.setGeometry(QtCore.QRect(10, 640, 113, 32))
         self.newPluginButton.setObjectName("newPluginButton")
-        self.pluginSearch = QtWidgets.QTextEdit(self.pluginView)
+        self.pluginSearch = QtWidgets.QLineEdit(self.pluginView)
         self.pluginSearch.setGeometry(QtCore.QRect(10, 30, 231, 31))
         self.pluginSearch.setObjectName("pluginSearch")
+        self.pluginSearch.textChanged[str].connect(self.filter_plugins)
         self.pluginManagementList = QtWidgets.QListWidget(self.pluginView)
         self.pluginManagementList.setGeometry(QtCore.QRect(10, 80, 231, 551))
         font = QtGui.QFont()
@@ -740,9 +767,10 @@ class Ui_MainWindow(object):
         self.newPOIButton = QtWidgets.QPushButton(self.poiView)
         self.newPOIButton.setGeometry(QtCore.QRect(10, 640, 113, 32))
         self.newPOIButton.setObjectName("newPOIButton")
-        self.poiSearch = QtWidgets.QTextEdit(self.poiView)
+        self.poiSearch = QtWidgets.QLineEdit(self.poiView)
         self.poiSearch.setGeometry(QtCore.QRect(10, 30, 231, 31))
         self.poiSearch.setObjectName("poiSearch")
+        self.poiSearch.textChanged[str].connect(self.filter_POI)
         self.poiList = QtWidgets.QListWidget(self.poiView)
         self.poiList.setGeometry(QtCore.QRect(10, 80, 231, 551))
         font = QtGui.QFont()
@@ -818,9 +846,10 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.documentView.setFont(font)
         self.documentView.setObjectName("documentView")
-        self.documentSearch = QtWidgets.QTextEdit(self.documentView)
+        self.documentSearch = QtWidgets.QLineEdit(self.documentView)
         self.documentSearch.setGeometry(QtCore.QRect(10, 30, 231, 31))
         self.documentSearch.setObjectName("documentSearch")
+        self.documentSearch.textChanged[str].connect(self.filter_doc)
         self.documentList = QtWidgets.QListWidget(self.documentView)
         self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 581))
         font = QtGui.QFont()
@@ -1049,12 +1078,12 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "BEAT: Binary Extraction and Analysis Tool"))
         self.projectViewGroup.setTitle(_translate("MainWindow", "Project View"))
         self.projectNewButton.setText(_translate("MainWindow", "New"))
-        self.projectSearch.setHtml(_translate("MainWindow",
-                                              "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                              "p, li { white-space: pre-wrap; }\n"
-                                              "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                              "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
+      #  self.projectSearch.setHtml(_translate("MainWindow",
+                                        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                          #    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                          #    "p, li { white-space: pre-wrap; }\n"
+                                            #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+                                            #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
         self.projectSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.projectDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.saveProjectButton.setText(_translate("MainWindow", "+ Save"))
@@ -1082,12 +1111,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.analysisTabName))
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
-        self.pluginSearch.setHtml(_translate("MainWindow",
-                                             "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                             "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                             "p, li { white-space: pre-wrap; }\n"
-                                             "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                             "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        #self.pluginSearch.setHtml(_translate("MainWindow",
+                                       #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                        #     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                         #    "p, li { white-space: pre-wrap; }\n"
+                                          #   "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+                                           #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchPluginButton.setText(_translate("MainWindow", "🔍 "))
         self.deletePluginButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginStructureLabel.setText(_translate("MainWindow", "Plugin Structure"))
@@ -1103,12 +1132,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
         self.newPOIButton.setText(_translate("MainWindow", "New"))
-        self.poiSearch.setHtml(_translate("MainWindow",
-                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          "p, li { white-space: pre-wrap; }\n"
-                                          "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                          "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+       # self.poiSearch.setHtml(_translate("MainWindow",
+                                #          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                 #         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                  #        "p, li { white-space: pre-wrap; }\n"
+                                     #     "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+                                     #     "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.poiSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginPoiLabel.setText(_translate("MainWindow", "Plugin"))
@@ -1118,20 +1147,20 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.setItemText(0, _translate("MainWindow", "Select"))
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Points of Interest View"))
         self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
-        self.documentViewField.setHtml(_translate("MainWindow",
-                                                  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                  "p, li { white-space: pre-wrap; }\n"
-                                                  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                                  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+       # self.documentViewField.setHtml(_translate("MainWindow",
+                                              #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                               #   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                               #   "p, li { white-space: pre-wrap; }\n"
+                                                #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                                #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.detailedDocumentationViewLabel.setText(_translate("MainWindow", "Detailed Documentation View"))
         self.documentView.setTitle(_translate("MainWindow", "Documentation View"))
-        self.documentSearch.setHtml(_translate("MainWindow",
-                                               "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                               "p, li { white-space: pre-wrap; }\n"
-                                               "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                               "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+      #  self.documentSearch.setHtml(_translate("MainWindow",
+                                           #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                             #  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                             #  "p, li { white-space: pre-wrap; }\n"
+                                             #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+                                              # "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
