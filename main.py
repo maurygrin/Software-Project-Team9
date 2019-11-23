@@ -12,6 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+list = []
+
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
@@ -196,10 +198,9 @@ class Ui_MainWindow(object):
     def parseXML(file_name):
         # Parse XML with ElementTree
         tree = ET.ElementTree(file=file_name)
-        print(tree.getroot())
+        #print(tree.getroot())
         root = tree.getroot()
         # print("tag=%s, attrib=%s" % (root.tag, root.attrib))
-        list=[]
         users = root.getchildren()
         for user in users:
             user_children = user.getchildren()
@@ -222,7 +223,6 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.addItem('Functions')
             self.poiTypeDropDownAnalysis.addItem('Variables')
             self.poiTypeDropDownAnalysis.addItem('Dlls')
-
             self.savePlugin()
 
     def saveProject(self):
@@ -360,6 +360,9 @@ class Ui_MainWindow(object):
                                                             "XML Files (*.xml)", options=options)
         if fileName:
             self.datasetFieldWindow.setText(fileName)
+            Ui_MainWindow.parseXML(str(fileName))
+            self.pluginNameEdit.setText(list[0])
+            self.pluginDescriptionEdit.setText(list[1])
 
     def projectClicked(self):
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
@@ -983,34 +986,34 @@ class Ui_MainWindow(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.projectNameLabel = QtWidgets.QLabel(newPlugin)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
+        self.projectNameLabel.setGeometry(QtCore.QRect(20, 100, 81, 16))
         self.projectNameLabel.setObjectName("projectNameLabel")
         self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
+        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 120, 431, 21))
         self.pluginNameEdit.setObjectName("pluginNameEdit")
         self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
+        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 150, 131, 16))
         self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
         self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
+        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 170, 431, 141))
         self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
         self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 20, 81, 16))
         self.pluginStructlabel.setObjectName("pluginStructlabel")
         self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 60, 81, 16))
         self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
         self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 40, 75, 23))
         self.browseStructWindow.setObjectName("browseStructWindow")
         self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 80, 75, 23))
         self.brosweDSWindow.setObjectName("brosweDSWindow")
         self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 40, 431, 21))
         self.structureFieldWindow.setObjectName("structureFieldWindow")
         self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 80, 431, 21))
         self.datasetFieldWindow.setObjectName("datasetFieldWindow")
 
         self.retranslateUiCreatePlugin(newPlugin)
@@ -1187,7 +1190,6 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
