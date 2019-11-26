@@ -14,6 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 list = []
 
+
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
@@ -152,7 +153,7 @@ class Ui_MainWindow(object):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected=="Strings"):
+            if (poiSelected == "Strings"):
                 self.terminalField.append("Command: iz")
                 self.display = "strings"
                 self.detailedPoiAnalysisField.setText("")
@@ -167,7 +168,7 @@ class Ui_MainWindow(object):
                 font.setPointSize(20)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-#                self.s = self.analysis.display(self.r2, self.display)
+                #                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
                     self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
@@ -198,7 +199,7 @@ class Ui_MainWindow(object):
     def parseXML(file_name):
         # Parse XML with ElementTree
         tree = ET.ElementTree(file=file_name)
-        #print(tree.getroot())
+        # print(tree.getroot())
         root = tree.getroot()
         # print("tag=%s, attrib=%s" % (root.tag, root.attrib))
         users = root.getchildren()
@@ -228,7 +229,7 @@ class Ui_MainWindow(object):
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
             self.pluginDropDownAnalysis.addItem("Select")
-            self.poiTypeDropDownAnalysis.addItem(list[0])
+            self.pluginDropDownAnalysis.addItem(list[0])
 
             self.poiPluginDropDown.clear()
             self.poiPluginDropDown.repaint()
@@ -331,7 +332,8 @@ class Ui_MainWindow(object):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.binaryFilePathField, "Browse Binary File", "",
-                                                            "Binary Files (*.exe *.out *.class *.docx)", options = options)
+                                                            "Binary Files (*.exe *.out *.class *.docx)",
+                                                            options=options)
         if fileName:
             self.path = str(fileName)
 
@@ -341,7 +343,8 @@ class Ui_MainWindow(object):
 
             try:
                 if (self.binaryInfo.get("bin").get("arch") != "x86") or (
-                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get("core").get("type") != "EXEC (Executable file)"):
+                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get(
+                    "core").get("type") != "EXEC (Executable file)"):
                     self.binaryErrorWindow()
                     self.r2 = ""
                     self.fileProperties.setText("")
@@ -445,9 +448,9 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
-        plugin = self.collection.find_one({"Plugin Name" : self.pluginManagementList.currentItem().text()})
+        plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
 
-        pluginName =plugin.get("Plugin Name")
+        pluginName = plugin.get("Plugin Name")
 
         pluginDescription = plugin.get("Plugin Description")
 
@@ -481,6 +484,7 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(list[5])
         self.poiFilterDropDown.addItem(list[6])
+
 
         self.deletePluginButton.setEnabled(True)
 
@@ -909,6 +913,7 @@ class Ui_MainWindow(object):
         self.pluginStructureField.setEnabled(False)
         self.pluginPredefinedField.setEnabled(False)
         self.pluginNameField.setEnabled(False)
+        self.deletePluginButton.setEnabled(False)
 
         self.projectNewButton.clicked.connect(self.projectWindow)
         self.newPluginButton.clicked.connect(self.pluginWindow)
@@ -1009,7 +1014,6 @@ class Ui_MainWindow(object):
 
         self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
 
-
         self.buttonBox.accepted.connect(
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
                                        self.projectDescriptionEdit.toPlainText())
@@ -1021,7 +1025,7 @@ class Ui_MainWindow(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
         self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.projectNameLabel = QtWidgets.QLabel(newPlugin)
         self.projectNameLabel.setGeometry(QtCore.QRect(20, 100, 81, 16))
@@ -1217,17 +1221,21 @@ class Ui_MainWindow(object):
 
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
-        binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
-        self.messageLabel.setText(_translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
-
+        binaryFileErrorWindow.setWindowTitle(
+            _translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
+        self.messageLabel.setText(
+            _translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
 
     def retranslatePluginError(self, pluginSelected):
         _translate = QtCore.QCoreApplication.translate
         pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
-        self.messageLabel.setText(_translate("pluginSelected", "You need to select a plugin before running an analysis."))
+        self.messageLabel.setText(
+            _translate("pluginSelected", "You need to select a plugin before running an analysis."))
+
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
