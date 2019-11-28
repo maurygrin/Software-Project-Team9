@@ -11,7 +11,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
+
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
         self.windowDeleteConfirmation = QtWidgets.QDialog()
@@ -433,7 +435,30 @@ class Ui_MainWindow(object):
         print("POI List clicked")
 
     def documentationClicked(self):
-        print("Documentation List clicked")
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test  # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+
+        query_result = collection.find_one(query)
+        if query_result is not None:
+            self.documentViewField.setText(query_result["contents"])
+        else:
+            text_file_doc = {"file_name": "documentation", "contents": ""}
+            collection.insert_one(text_file_doc)
+
+    def saveDocument(self):
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+        # build a document to be inserted
+        text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
+        # insert the contents into the "file" collection
+        if collection.count_documents(query) > 0:
+            collection.replace_one(query, text_file_doc)
+        else:
+            collection.insert_one(query, text_file_doc)
 
     def filter_projects(self):  ##filtering list of project
         for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -829,9 +854,17 @@ class Ui_MainWindow(object):
         self.detailedDocumentView.setGeometry(QtCore.QRect(310, 10, 991, 681))
         self.detailedDocumentView.setTitle("")
         self.detailedDocumentView.setObjectName("detailedDocumentView")
+
+
         self.documentViewField = QtWidgets.QTextEdit(self.detailedDocumentView)
         self.documentViewField.setGeometry(QtCore.QRect(20, 30, 911, 631))
         self.documentViewField.setObjectName("documentViewField")
+
+        self.documentViewField.textChanged.connect(self.saveDocument)
+
+
+
+
         self.detailedDocumentationViewLabel = QtWidgets.QLabel(self.detailedDocumentView)
         self.detailedDocumentationViewLabel.setGeometry(QtCore.QRect(10, 0, 261, 21))
         font = QtGui.QFont()
@@ -846,6 +879,7 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.documentView.setFont(font)
         self.documentView.setObjectName("documentView")
+
         self.documentSearch = QtWidgets.QLineEdit(self.documentView)
         self.documentSearch.setGeometry(QtCore.QRect(10, 30, 231, 31))
         self.documentSearch.setObjectName("documentSearch")
@@ -901,6 +935,8 @@ class Ui_MainWindow(object):
 
         self.poiList.clicked.connect(self.poiClicked)
 
+        self.searchDocumentButton.clicked.connect(self.filter_doc)
+
         self.documentList.clicked.connect(self.documentationClicked)
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
@@ -913,8 +949,22 @@ class Ui_MainWindow(object):
         for document in self.collection.find():
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
-        self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
 
+        ####################################
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test  # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+        query_result = collection.find_one(query)
+        if query_result is not None:
+            self.documentList.addItem(query_result["file_name"])
+        else:
+            text_file_doc = {"file_name": "documentation", "contents": ""}
+            collection.insert_one(text_file_doc)
+            self.documentList.addItem(text_file_doc["file_name"])
+        ####################################
+
+        self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         self.terminalField.setReadOnly(True)
 
     def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
