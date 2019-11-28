@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1052</width>
-    <height>444</height>
+    <width>541</width>
+    <height>369</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Plugin</string>
+   <string>Create New Plugin</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>400</y>
-     <width>341</width>
+     <x>370</x>
+     <y>330</y>
+     <width>161</width>
      <height>32</height>
     </rect>
    </property>
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
+     <y>100</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>30</y>
+     <y>120</y>
      <width>431</width>
      <height>21</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>60</y>
+     <y>150</y>
      <width>131</width>
      <height>16</height>
     </rect>
@@ -69,29 +69,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>80</y>
+     <y>170</y>
      <width>431</width>
      <height>141</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="structureFieldWindow">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>250</y>
-     <width>431</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="datasetFieldWindow">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>290</y>
-     <width>431</width>
-     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -99,7 +79,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>230</y>
+     <y>20</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -112,7 +92,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>270</y>
+     <y>60</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -125,7 +105,7 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>250</y>
+     <y>40</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -138,13 +118,33 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>290</y>
+     <y>80</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
     <string>Browse</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="structureFieldWindow">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>431</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="datasetFieldWindow">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>431</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
