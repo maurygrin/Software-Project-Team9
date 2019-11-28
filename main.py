@@ -12,9 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-list = []
-
-
+list=[]
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
@@ -220,6 +218,7 @@ class Ui_MainWindow(object):
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
             self.pluginDropDownAnalysis.addItem(self.plugin.name)
+
             self.poiTypeDropDownAnalysis.clear()
             self.poiTypeDropDownAnalysis.repaint()
             self.poiTypeDropDownAnalysis.addItem("Select")
@@ -241,6 +240,7 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem("Select")
             self.poiFilterDropDown.addItem(list[5])
             self.poiFilterDropDown.addItem(list[6])
+
             self.savePlugin()
 
     def saveProject(self):
@@ -284,7 +284,9 @@ class Ui_MainWindow(object):
         pluginDB = {"Plugin Name": self.plugin.name,
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
-                    "Pre-Defined Dataset File Path": self.plugin.data_set}
+                    "Pre-Defined Dataset File Path": self.plugin.data_set,
+                    "POI Strings": list[5],
+                    "POI Functions": list[6]}
 
         self.collection.insert([pluginDB])
 
@@ -458,6 +460,11 @@ class Ui_MainWindow(object):
 
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
 
+        pluginString = plugin.get("POI Strings")
+
+        pluginFunction = plugin.get("POI Functions")
+
+
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
@@ -466,25 +473,24 @@ class Ui_MainWindow(object):
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.repaint()
         self.poiTypeDropDownAnalysis.addItem("Select")
-        self.poiTypeDropDownAnalysis.addItem(list[5])
-        self.poiTypeDropDownAnalysis.addItem(list[6])
+        self.poiTypeDropDownAnalysis.addItem(pluginString)
+        self.poiTypeDropDownAnalysis.addItem(pluginFunction)
 
         self.pluginDropDownAnalysis.clear()
         self.pluginDropDownAnalysis.repaint()
         self.pluginDropDownAnalysis.addItem("Select")
-        self.pluginDropDownAnalysis.addItem(list[0])
+        self.pluginDropDownAnalysis.addItem(pluginName)
 
         self.poiPluginDropDown.clear()
         self.poiPluginDropDown.repaint()
         self.poiPluginDropDown.addItem("Select")
-        self.poiPluginDropDown.addItem(list[0])
+        self.poiPluginDropDown.addItem(pluginName)
 
         self.poiFilterDropDown.clear()
         self.poiFilterDropDown.repaint()
         self.poiFilterDropDown.addItem("Select")
-        self.poiFilterDropDown.addItem(list[5])
-        self.poiFilterDropDown.addItem(list[6])
-
+        self.poiFilterDropDown.addItem(pluginString)
+        self.poiFilterDropDown.addItem(pluginFunction)
 
         self.deletePluginButton.setEnabled(True)
 
@@ -945,6 +951,7 @@ class Ui_MainWindow(object):
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
+        # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
 
