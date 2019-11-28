@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from Script import Script
 from Plugin import Plugin
 from Project import Project
+import xml.etree.cElementTree as ET
 from PointOfInterest import POI
 from BinaryFile import BinaryFile
 from Metadata import Metadata
@@ -11,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+list=[]
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
@@ -155,7 +157,7 @@ class Ui_MainWindow(object):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected=="Strings"):
+            if (poiSelected == "Strings"):
                 self.terminalField.append("Command: iz")
                 self.display = "strings"
                 self.detailedPoiAnalysisField.setText("")
@@ -170,6 +172,7 @@ class Ui_MainWindow(object):
                 font.setPointSize(20)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
+                #                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
                     item = QtWidgets.QListWidgetItem(base64.b64decode(item["string"]).decode())
                     item.setCheckState(QtCore.Qt.Checked)
@@ -198,6 +201,20 @@ class Ui_MainWindow(object):
                 for item in self.s:
                     self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
 
+    def parseXML(file_name):
+        # Parse XML with ElementTree
+        tree = ET.ElementTree(file=file_name)
+        # print(tree.getroot())
+        root = tree.getroot()
+        # print("tag=%s, attrib=%s" % (root.tag, root.attrib))
+        users = root.getchildren()
+        for user in users:
+            user_children = user.getchildren()
+            for user_child in user_children:
+                print("%s=%s" % (user_child.tag, user_child.text))
+                list.append(user_child.text)
+        print(list)
+
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
             print("Failed")
@@ -208,10 +225,28 @@ class Ui_MainWindow(object):
             self.pluginStructureField.setText(self.plugin.structure)
             self.pluginPredefinedField.setText(self.plugin.data_set)
             self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            self.poiTypeDropDownAnalysis.addItem('Strings')
-            self.poiTypeDropDownAnalysis.addItem('Functions')
-            self.poiTypeDropDownAnalysis.addItem('Variables')
-            self.poiTypeDropDownAnalysis.addItem('Dlls')
+
+            self.poiTypeDropDownAnalysis.clear()
+            self.poiTypeDropDownAnalysis.repaint()
+            self.poiTypeDropDownAnalysis.addItem("Select")
+            self.poiTypeDropDownAnalysis.addItem(list[5])
+            self.poiTypeDropDownAnalysis.addItem(list[6])
+
+            self.pluginDropDownAnalysis.clear()
+            self.pluginDropDownAnalysis.repaint()
+            self.pluginDropDownAnalysis.addItem("Select")
+            self.pluginDropDownAnalysis.addItem(list[0])
+
+            self.poiPluginDropDown.clear()
+            self.poiPluginDropDown.repaint()
+            self.poiPluginDropDown.addItem("Select")
+            self.poiPluginDropDown.addItem(list[0])
+
+            self.poiFilterDropDown.clear()
+            self.poiFilterDropDown.repaint()
+            self.poiFilterDropDown.addItem("Select")
+            self.poiFilterDropDown.addItem(list[5])
+            self.poiFilterDropDown.addItem(list[6])
 
             self.savePlugin()
 
@@ -256,7 +291,9 @@ class Ui_MainWindow(object):
         pluginDB = {"Plugin Name": self.plugin.name,
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
-                    "Pre-Defined Dataset File Path": self.plugin.data_set}
+                    "Pre-Defined Dataset File Path": self.plugin.data_set,
+                    "POI Strings": list[5],
+                    "POI Functions": list[6]}
 
         self.collection.insert([pluginDB])
 
@@ -304,7 +341,8 @@ class Ui_MainWindow(object):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.binaryFilePathField, "Browse Binary File", "",
-                                                            "Binary Files (*.exe *.out *.class *.docx)", options = options)
+                                                            "Binary Files (*.exe *.out *.class *.docx)",
+                                                            options=options)
         if fileName:
             self.path = str(fileName)
 
@@ -314,7 +352,8 @@ class Ui_MainWindow(object):
 
             try:
                 if (self.binaryInfo.get("bin").get("arch") != "x86") or (
-                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get("core").get("type") != "EXEC (Executable file)"):
+                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get(
+                    "core").get("type") != "EXEC (Executable file)"):
                     self.binaryErrorWindow()
                     self.r2 = ""
                     self.fileProperties.setText("")
@@ -350,6 +389,9 @@ class Ui_MainWindow(object):
                                                             "XML Files (*.xml)", options=options)
         if fileName:
             self.datasetFieldWindow.setText(fileName)
+            Ui_MainWindow.parseXML(fileName)
+            self.pluginNameEdit.setText(list[0])
+            self.pluginDescriptionEdit.setText(list[1])
 
     def projectClicked(self):
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
@@ -415,8 +457,7 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
-
-        plugin = self.collection.find_one({"Plugin Name" : self.pluginManagementList.currentItem().text()})
+        plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
 
         pluginName = plugin.get("Plugin Name")
 
@@ -426,10 +467,37 @@ class Ui_MainWindow(object):
 
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
 
+        pluginString = plugin.get("POI Strings")
+
+        pluginFunction = plugin.get("POI Functions")
+
+
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+
+        self.poiTypeDropDownAnalysis.clear()
+        self.poiTypeDropDownAnalysis.repaint()
+        self.poiTypeDropDownAnalysis.addItem("Select")
+        self.poiTypeDropDownAnalysis.addItem(pluginString)
+        self.poiTypeDropDownAnalysis.addItem(pluginFunction)
+
+        self.pluginDropDownAnalysis.clear()
+        self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
+        self.pluginDropDownAnalysis.addItem(pluginName)
+
+        self.poiPluginDropDown.clear()
+        self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
+        self.poiPluginDropDown.addItem(pluginName)
+
+        self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
+        self.poiFilterDropDown.addItem("Select")
+        self.poiFilterDropDown.addItem(pluginString)
+        self.poiFilterDropDown.addItem(pluginFunction)
 
         self.deletePluginButton.setEnabled(True)
 
@@ -438,6 +506,33 @@ class Ui_MainWindow(object):
 
     def documentationClicked(self):
         print("Documentation List clicked")
+
+    def documentationClicked(self):
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test  # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+
+        query_result = collection.find_one(query)
+        if query_result is not None:
+            self.documentViewField.setText(query_result["contents"])
+        else:
+            text_file_doc = {"file_name": "documentation", "contents": ""}
+            collection.insert_one(text_file_doc)
+
+    def saveDocument(self):
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+        # build a document to be inserted
+        text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
+        # insert the contents into the "file" collection
+        if collection.count_documents(query) > 0:
+            collection.replace_one(query, text_file_doc)
+        else:
+            collection.insert_one(query, text_file_doc)
+
 
     def filter_projects(self):  ##filtering list of project
         for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -836,6 +931,7 @@ class Ui_MainWindow(object):
         self.documentViewField = QtWidgets.QTextEdit(self.detailedDocumentView)
         self.documentViewField.setGeometry(QtCore.QRect(20, 30, 911, 631))
         self.documentViewField.setObjectName("documentViewField")
+        self.documentViewField.textChanged.connect(self.saveDocument)
         self.detailedDocumentationViewLabel = QtWidgets.QLabel(self.detailedDocumentView)
         self.detailedDocumentationViewLabel.setGeometry(QtCore.QRect(10, 0, 261, 21))
         font = QtGui.QFont()
@@ -887,6 +983,7 @@ class Ui_MainWindow(object):
         self.pluginStructureField.setEnabled(False)
         self.pluginPredefinedField.setEnabled(False)
         self.pluginNameField.setEnabled(False)
+        self.deletePluginButton.setEnabled(False)
 
         self.projectNewButton.clicked.connect(self.projectWindow)
 
@@ -920,7 +1017,22 @@ class Ui_MainWindow(object):
         for document in self.collection.find():
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
+        ####################################
+        client = MongoClient("mongodb://localhost:27017")
+        db = client.test  # use a database called "test_database"
+        collection = db.documentation  # and inside that DB, a collection called "files"
+        query = {"file_name": "documentation"}
+        query_result = collection.find_one(query)
+        if query_result is not None:
+            self.documentList.addItem(query_result["file_name"])
+        else:
+            text_file_doc = {"file_name": "documentation", "contents": ""}
+            collection.insert_one(text_file_doc)
+            self.documentList.addItem(text_file_doc["file_name"])
+        ####################################
+
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
+        # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
 
@@ -990,7 +1102,6 @@ class Ui_MainWindow(object):
 
         self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
 
-
         self.buttonBox.accepted.connect(
             lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
                                        self.projectDescriptionEdit.toPlainText())
@@ -1002,37 +1113,37 @@ class Ui_MainWindow(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
         self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.projectNameLabel = QtWidgets.QLabel(newPlugin)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 81, 16))
+        self.projectNameLabel.setGeometry(QtCore.QRect(20, 100, 81, 16))
         self.projectNameLabel.setObjectName("projectNameLabel")
         self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 431, 21))
+        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 120, 431, 21))
         self.pluginNameEdit.setObjectName("pluginNameEdit")
         self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 60, 131, 16))
+        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 150, 131, 16))
         self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
         self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 80, 431, 141))
+        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 170, 431, 141))
         self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
         self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 20, 81, 16))
         self.pluginStructlabel.setObjectName("pluginStructlabel")
         self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 60, 81, 16))
         self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
         self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 40, 75, 23))
         self.browseStructWindow.setObjectName("browseStructWindow")
         self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 80, 75, 23))
         self.brosweDSWindow.setObjectName("brosweDSWindow")
         self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 40, 431, 21))
         self.structureFieldWindow.setObjectName("structureFieldWindow")
         self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 80, 431, 21))
         self.datasetFieldWindow.setObjectName("datasetFieldWindow")
 
         self.retranslateUiCreatePlugin(newPlugin)
@@ -1104,6 +1215,7 @@ class Ui_MainWindow(object):
         self.terminalLabel.setText(_translate("MainWindow", "Terminal"))
         self.outputFieldViewButton.setText(_translate("MainWindow", "Output Field View"))
         self.deleteAnalysisResultButton.setText(_translate("MainWindow", "Delete Analysis Result"))
+        self.deleteAnalysisResultButton.clicked.connect(self.saveAnalysisPopUp)  #*
         self.pluginLabel.setText(_translate("MainWindow", "Plugin"))
         self.staticAnalysisLabel.setText(_translate("MainWindow", "Static Analysis"))
         self.poiTypeLabel.setText(_translate("MainWindow", "POI Type"))
@@ -1198,14 +1310,138 @@ class Ui_MainWindow(object):
 
     def retranslateUiBinaryError(self, binaryFileErrorWindow):
         _translate = QtCore.QCoreApplication.translate
-        binaryFileErrorWindow.setWindowTitle(_translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
-        self.messageLabel.setText(_translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
-
+        binaryFileErrorWindow.setWindowTitle(
+            _translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
+        self.messageLabel.setText(
+            _translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
 
     def retranslatePluginError(self, pluginSelected):
         _translate = QtCore.QCoreApplication.translate
         pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
-        self.messageLabel.setText(_translate("pluginSelected", "You need to select a plugin before running an analysis."))
+        self.messageLabel.setText(
+            _translate("pluginSelected", "You need to select a plugin before running an analysis."))
+
+#*
+    def setupSaveAnalysis(self, newPAnalysis):
+        print("went inside setup save analysis")
+        newPAnalysis.setObjectName("newPlugin")
+        newPAnalysis.resize(541, 369)
+        self.buttonBox = QtWidgets.QDialogButtonBox(newPAnalysis)
+        self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Save)
+        self.buttonBox.setObjectName("buttonBox")
+        self.projectNameLabel = QtWidgets.QLabel(newPAnalysis)
+        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 181, 16))  #
+        self.projectNameLabel.setObjectName("projectNameLabel")
+        self.pluginNameEdit = QtWidgets.QTextEdit(newPAnalysis)
+        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 500, 21))  # Name Field(Right, Down, right, Down)
+        self.pluginNameEdit.setObjectName("pluginNameEdit")
+        self.pluginDescriptionLabel = QtWidgets.QLabel(newPAnalysis)
+        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 70, 151, 16))  ## String Description
+        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
+        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPAnalysis)
+        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 90, 500, 220))  ##Description Field 20, 170, 500, 141))
+        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
+        #####delete
+        self.pluginStructlabel = QtWidgets.QLabel(newPAnalysis)
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))  #
+        self.pluginStructlabel.setObjectName("pluginStructlabel")
+        self.pluginDatasetLabel = QtWidgets.QLabel(newPAnalysis)
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
+        self.browseStructWindow = QtWidgets.QPushButton(newPAnalysis)
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        self.browseStructWindow.setObjectName("browseStructWindow")
+        self.brosweDSWindow = QtWidgets.QPushButton(newPAnalysis)
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        self.brosweDSWindow.setObjectName("brosweDSWindow")
+
+        self.structureFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        self.structureFieldWindow.setObjectName("structureFieldWindow")
+        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+
+        #####delete
+        self.retranslateUiSaveAnalysis(newPAnalysis)
+        self.buttonBox.accepted.connect(newPAnalysis.accept)
+        self.buttonBox.rejected.connect(newPAnalysis.reject)
+        QtCore.QMetaObject.connectSlotsByName(newPAnalysis)
+
+        ####delete
+        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
+        self.browseStructWindow.clicked.connect(self.BrowseStruct)
+        #####delete
+
+        self.buttonBox.accepted.connect(
+            lambda: self.createAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
+                                        self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+
+    def createAnalysis(self, name, description, structure, data_set):
+        if not name or not description or not structure or not data_set:
+            print("Failed")
+        else:
+            self.plugin = Plugin(name, description, structure, data_set)
+            self.pluginNameField.setText(self.plugin.name)
+            self.pluginDescriptionField.setText(self.plugin.description)
+            self.pluginStructureField.setText(self.plugin.structure)
+            self.pluginPredefinedField.setText(self.plugin.data_set)
+            self.pluginDropDownAnalysis.addItem(self.plugin.name)
+            self.poiTypeDropDownAnalysis.addItem('Strings')
+            self.poiTypeDropDownAnalysis.addItem('Functions')
+            self.poiTypeDropDownAnalysis.addItem('Variables')
+            self.poiTypeDropDownAnalysis.addItem('Dlls')
+            self.saveAnalysis()
+
+    def saveAnalysis(self):
+        pluginDB = {"Plugin Name": self.plugin.name,
+                    "Plugin Description": self.plugin.description,
+                    "Structure File Path": self.plugin.structure,
+                    "Pre-Defined Dataset File Path": self.plugin.data_set}
+
+        self.collection.insert([pluginDB])
+
+        it = QtWidgets.QListWidgetItem(self.plugin.name)
+
+        self.runList.addItem(it)
+
+        it.setSelected(True)
+
+        self.retranslateUi(MainWindow)
+
+    def retranslateUiSaveAnalysis(self, newPlugin):  #####
+        _translate = QtCore.QCoreApplication.translate
+        newPlugin.setWindowTitle(_translate("newPlugin", "Save Analysis"))
+        self.projectNameLabel.setText(_translate("newPlugin", "Analysis Name"))
+        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Analysis Description"))
+
+        #Delete #*
+        # self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
+        # self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
+        # self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
+        # self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+
+    def saveAnalysisPopUp(self): #*
+
+        self.setupSaveAnalysis(self.windowPlug)
+        self.windowPlug.show()
+
+        myclient = MongoClient("mongodb://localhost:27017/")
+        mydb = myclient["mydatabase"]
+
+        # post1 = ("_id":5, "name":"joe")
+        # post2 = ("_id":6, "name":"joe")
+
+        print("Hello pop ups!")
+
+        print(myclient.list_database_names())
+
+        # msg = QMessageBox()
+        # msg.setWindowTitle("This is a tutorial yo.")
+        # msg.setText("This is the main text, yo.")
+        # x = msg.exec_()
 
 if __name__ == "__main__":
     import sys
