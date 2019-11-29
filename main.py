@@ -1344,69 +1344,16 @@ class Ui_MainWindow(object):
         self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPAnalysis)
         self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 90, 500, 220))  ##Description Field 20, 170, 500, 141))
         self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
-        # ####delete
-        # self.pluginStructlabel = QtWidgets.QLabel(newPAnalysis)
-        # self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))  #
-        # self.pluginStructlabel.setObjectName("pluginStructlabel")
-        # self.pluginDatasetLabel = QtWidgets.QLabel(newPAnalysis)
-        # self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
-        # self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
-        # self.browseStructWindow = QtWidgets.QPushButton(newPAnalysis)
-        # self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
-        # self.browseStructWindow.setObjectName("browseStructWindow")
-        # self.brosweDSWindow = QtWidgets.QPushButton(newPAnalysis)
-        # self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
-        # self.brosweDSWindow.setObjectName("brosweDSWindow")
-        #
-        # self.structureFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
-        # self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
-        # self.structureFieldWindow.setObjectName("structureFieldWindow")
-        # self.datasetFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
-        # self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
-        # self.datasetFieldWindow.setObjectName("datasetFieldWindow")
 
-        #####delete
         self.retranslateUiSaveAnalysis(newPAnalysis)
         self.buttonBox.accepted.connect(newPAnalysis.accept)
         self.buttonBox.rejected.connect(newPAnalysis.reject)
         QtCore.QMetaObject.connectSlotsByName(newPAnalysis)
 
-        # ####delete
-        # self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
-        # self.browseStructWindow.clicked.connect(self.BrowseStruct)
-        ####delete
-
-        # self.buttonBox.accepted.connect(
-        #     lambda: self.createAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-        #                                 self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
-
         self.buttonBox.accepted.connect(
             lambda: self.saveAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText()))
 
-    #def createAnalysis(self, name, description):
-        # if not name or not description or not structure or not data_set:
-        #     print("Failed")
-        # else:
-        # self.DA = DynamicAnalysis(name, description)
-        # print(name)
-        # print("works so far")
 
-        # if not name or not description or not structure or not data_set:
-        #     print("Failed")
-        # else:
-            # self.plugin = Plugin(name, description, structure, data_set)
-            # self.pluginNameField.setText(self.plugin.name)
-            # self.pluginDescriptionField.setText(self.plugin.description)
-            # self.pluginStructureField.setText(self.plugin.structure)
-            # self.pluginPredefinedField.setText(self.plugin.data_set)
-            # self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            # self.poiTypeDropDownAnalysis.addItem('Strings')
-            # self.poiTypeDropDownAnalysis.addItem('Functions')
-            # self.poiTypeDropDownAnalysis.addItem('Variables')
-            # self.poiTypeDropDownAnalysis.addItem('Dlls')
-            # self.saveAnalysis()
-
-    #def saveAnalysis(self):
     def saveAnalysis(self, name, description):
 
         self.DA = DynamicAnalysis(name, description)
@@ -1418,14 +1365,16 @@ class Ui_MainWindow(object):
 
         #print(collection)
 
-        collection.insert_one({'x':1})
-        collection.insert_one({"_id": 17, "name": name, "score": description})
+        collection.insert_one({"DAName": name, "DADescription": description})
+        # collection.insert_one({'x':1})
+        # collection.insert_one({"_id": 20, "name": name, "score": description})
         # collection.insert_one({"_id": 14, "name": "joe", "score": 6})
         #print(collection)
 
-        results = collection.find({"_id": "17"})
-        for result in results:
-            print(result["name"])
+        # results = collection.find({"_id": "20"})
+        # for result in results:
+        #     item = result["name"]
+        #     print(item)
 
         print("works so far")
 
@@ -1436,9 +1385,8 @@ class Ui_MainWindow(object):
         #
         # self.collection.insert([pluginDB])
         #
-        # it = QtWidgets.QListWidgetItem(self.plugin.name)
-        #
-        # self.runList.addItem(it)
+        it = QtWidgets.QListWidgetItem(name)
+        self.runList.addItem(it)
         #
         # it.setSelected(True)
         #
