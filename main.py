@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from Script import Script
 from Plugin import Plugin
 from Project import Project
+from DynamicAnalysis import DynamicAnalysis
 import xml.etree.cElementTree as ET
 from PointOfInterest import POI
 from BinaryFile import BinaryFile
@@ -1343,26 +1344,26 @@ class Ui_MainWindow(object):
         self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPAnalysis)
         self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 90, 500, 220))  ##Description Field 20, 170, 500, 141))
         self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
-        #####delete
-        self.pluginStructlabel = QtWidgets.QLabel(newPAnalysis)
-        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))  #
-        self.pluginStructlabel.setObjectName("pluginStructlabel")
-        self.pluginDatasetLabel = QtWidgets.QLabel(newPAnalysis)
-        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
-        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
-        self.browseStructWindow = QtWidgets.QPushButton(newPAnalysis)
-        self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
-        self.browseStructWindow.setObjectName("browseStructWindow")
-        self.brosweDSWindow = QtWidgets.QPushButton(newPAnalysis)
-        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
-        self.brosweDSWindow.setObjectName("brosweDSWindow")
-
-        self.structureFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
-        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
-        self.structureFieldWindow.setObjectName("structureFieldWindow")
-        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
-        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
-        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+        # ####delete
+        # self.pluginStructlabel = QtWidgets.QLabel(newPAnalysis)
+        # self.pluginStructlabel.setGeometry(QtCore.QRect(20, 230, 81, 16))  #
+        # self.pluginStructlabel.setObjectName("pluginStructlabel")
+        # self.pluginDatasetLabel = QtWidgets.QLabel(newPAnalysis)
+        # self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 270, 81, 16))
+        # self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
+        # self.browseStructWindow = QtWidgets.QPushButton(newPAnalysis)
+        # self.browseStructWindow.setGeometry(QtCore.QRect(460, 250, 75, 23))
+        # self.browseStructWindow.setObjectName("browseStructWindow")
+        # self.brosweDSWindow = QtWidgets.QPushButton(newPAnalysis)
+        # self.brosweDSWindow.setGeometry(QtCore.QRect(460, 290, 75, 23))
+        # self.brosweDSWindow.setObjectName("brosweDSWindow")
+        #
+        # self.structureFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
+        # self.structureFieldWindow.setGeometry(QtCore.QRect(20, 250, 431, 21))
+        # self.structureFieldWindow.setObjectName("structureFieldWindow")
+        # self.datasetFieldWindow = QtWidgets.QTextBrowser(newPAnalysis)
+        # self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 290, 431, 21))
+        # self.datasetFieldWindow.setObjectName("datasetFieldWindow")
 
         #####delete
         self.retranslateUiSaveAnalysis(newPAnalysis)
@@ -1370,46 +1371,79 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(newPAnalysis.reject)
         QtCore.QMetaObject.connectSlotsByName(newPAnalysis)
 
+        # ####delete
+        # self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
+        # self.browseStructWindow.clicked.connect(self.BrowseStruct)
         ####delete
-        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
-        self.browseStructWindow.clicked.connect(self.BrowseStruct)
-        #####delete
+
+        # self.buttonBox.accepted.connect(
+        #     lambda: self.createAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
+        #                                 self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
 
         self.buttonBox.accepted.connect(
-            lambda: self.createAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                        self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+            lambda: self.saveAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText()))
 
-    def createAnalysis(self, name, description, structure, data_set):
-        if not name or not description or not structure or not data_set:
-            print("Failed")
-        else:
-            self.plugin = Plugin(name, description, structure, data_set)
-            self.pluginNameField.setText(self.plugin.name)
-            self.pluginDescriptionField.setText(self.plugin.description)
-            self.pluginStructureField.setText(self.plugin.structure)
-            self.pluginPredefinedField.setText(self.plugin.data_set)
-            self.pluginDropDownAnalysis.addItem(self.plugin.name)
-            self.poiTypeDropDownAnalysis.addItem('Strings')
-            self.poiTypeDropDownAnalysis.addItem('Functions')
-            self.poiTypeDropDownAnalysis.addItem('Variables')
-            self.poiTypeDropDownAnalysis.addItem('Dlls')
-            self.saveAnalysis()
+    #def createAnalysis(self, name, description):
+        # if not name or not description or not structure or not data_set:
+        #     print("Failed")
+        # else:
+        # self.DA = DynamicAnalysis(name, description)
+        # print(name)
+        # print("works so far")
 
-    def saveAnalysis(self):
-        pluginDB = {"Plugin Name": self.plugin.name,
-                    "Plugin Description": self.plugin.description,
-                    "Structure File Path": self.plugin.structure,
-                    "Pre-Defined Dataset File Path": self.plugin.data_set}
+        # if not name or not description or not structure or not data_set:
+        #     print("Failed")
+        # else:
+            # self.plugin = Plugin(name, description, structure, data_set)
+            # self.pluginNameField.setText(self.plugin.name)
+            # self.pluginDescriptionField.setText(self.plugin.description)
+            # self.pluginStructureField.setText(self.plugin.structure)
+            # self.pluginPredefinedField.setText(self.plugin.data_set)
+            # self.pluginDropDownAnalysis.addItem(self.plugin.name)
+            # self.poiTypeDropDownAnalysis.addItem('Strings')
+            # self.poiTypeDropDownAnalysis.addItem('Functions')
+            # self.poiTypeDropDownAnalysis.addItem('Variables')
+            # self.poiTypeDropDownAnalysis.addItem('Dlls')
+            # self.saveAnalysis()
 
-        self.collection.insert([pluginDB])
+    #def saveAnalysis(self):
+    def saveAnalysis(self, name, description):
 
-        it = QtWidgets.QListWidgetItem(self.plugin.name)
+        self.DA = DynamicAnalysis(name, description)
+        print(name)
 
-        self.runList.addItem(it)
+        myclient = MongoClient('localhost', 27017)
+        db = myclient['DA']  #Create database called db
+        collection = db["DAC"] #Create Collection in database
 
-        it.setSelected(True)
+        #print(collection)
 
-        self.retranslateUi(MainWindow)
+        collection.insert_one({'x':1})
+        collection.insert_one({"_id": 17, "name": name, "score": description})
+        # collection.insert_one({"_id": 14, "name": "joe", "score": 6})
+        #print(collection)
+
+        results = collection.find({"_id": "17"})
+        for result in results:
+            print(result["name"])
+
+        print("works so far")
+
+        # pluginDB = {"Plugin Name": self.plugin.name,
+        #             "Plugin Description": self.plugin.description,
+        #             "Structure File Path": self.plugin.structure,
+        #             "Pre-Defined Dataset File Path": self.plugin.data_set}
+        #
+        # self.collection.insert([pluginDB])
+        #
+        # it = QtWidgets.QListWidgetItem(self.plugin.name)
+        #
+        # self.runList.addItem(it)
+        #
+        # it.setSelected(True)
+        #
+        # self.retranslateUi(MainWindow)
+
 
     def retranslateUiSaveAnalysis(self, newPlugin):  #####
         _translate = QtCore.QCoreApplication.translate
@@ -1428,15 +1462,25 @@ class Ui_MainWindow(object):
         self.setupSaveAnalysis(self.windowPlug)
         self.windowPlug.show()
 
-        myclient = MongoClient("mongodb://localhost:27017/")
-        mydb = myclient["mydatabase"]
+        myclient = MongoClient('localhost', 27017)
+        db = myclient['DA']  #Create database called db
+        collection = db["DAC"] #Create Collection in database
 
-        # post1 = ("_id":5, "name":"joe")
-        # post2 = ("_id":6, "name":"joe")
+        print(collection)
+
+        collection.insert_one({'x':1})
+        # collection.insert_one({"_id": 13, "name": "pau", "score": 5})
+        # collection.insert_one({"_id": 14, "name": "joe", "score": 6})
+        print(collection)
+
+        results = collection.find({"name": "pau"})
+        for result in results:
+            print(result["_id"])
+
 
         print("Hello pop ups!")
 
-        print(myclient.list_database_names())
+       # print(myclient.list_database_names())
 
         # msg = QMessageBox()
         # msg.setWindowTitle("This is a tutorial yo.")
