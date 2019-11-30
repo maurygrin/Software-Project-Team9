@@ -402,18 +402,18 @@ class Ui_MainWindow(object):
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
                     "POI Strings": list[4],
                     "POI Functions": list[5],
-                    "POI One": listFunctions[0:9],
+                    #"POI One": listFunctions[0:9],
 
-                    "Strings": {
-                            "name": listFunctions[0],
-                            "type": listFunctions[1],
-                            "output": listFunctions[2]
-                    }
+                    #"Strings": {
+                     #       "name": listFunctions[0],
+                      #      "type": listFunctions[1],
+                       #     "output": listFunctions[2]
+                    #}
                 }
         self.collection.insert_many([pluginDB])
 
-        for i in listFunctions:
-            self.collection.insert_one(listFunctions[i])
+        #for i in listFunctions:
+         #   self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
 
@@ -607,13 +607,13 @@ class Ui_MainWindow(object):
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
         pluginString = plugin.get("POI Strings")
         pluginFunction = plugin.get("POI Functions")
-        poiOne = plugin.get("POI One")
+       # poiOne = plugin.get("POI One")
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
-        self.poiPluginField.setText(poiOne)
+        #self.poiPluginField.setText(poiOne)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.repaint()
