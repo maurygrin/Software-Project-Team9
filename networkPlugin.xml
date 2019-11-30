@@ -105,8 +105,4 @@
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
-    <item>
-        <nameFunctions>Ping</nameFunctions>
-        <typeFunctions>Function</typeFunctions>
-    </item>
 </plugins>

@@ -205,7 +205,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.f:
-                    print(item);
+                    #print(item);
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
@@ -305,19 +305,22 @@ class Ui_MainWindow(object):
         for user in users:
             user_children = user.getchildren()
             for user_child in user_children:
-                print("%s=%s" % (user_child.tag, user_child.text))
+                #print("%s=%s" % (user_child.tag, user_child.text))
                 if user_child.tag == "network":
                     list.append(user_child.text)
                 if user_child.tag == "nameFunctions" or user_child.tag == "typeFunctions" or user_child.tag == "outputFunctions":
-                 listFunctions.append(user_child.text)
+                    listFunctions.append(user_child.text)
                 if user_child.tag == "nameStrings" or user_child.tag == "typeStrings" or user_child.tag == "outputString":
-                 listStrings.append(user_child.text)
-        print(list)
-        print(listFunctions)
+                    listStrings.append(user_child.text)
+        #print(list)
+        print("Parse: ")
         print(listStrings)
+        print(listFunctions)
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
+            listStrings = []
+            listFunctions = []
             print("Failed")
         else:
             self.plugin = Plugin(name, description, structure, data_set)
@@ -402,14 +405,29 @@ class Ui_MainWindow(object):
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
                     "POI Strings": list[4],
                     "POI Functions": list[5],
-                    #"POI One": listFunctions[0:9],
+                    "Strings": [],# Nested Document
+                    "Functions": [] # Nested Document
+                    }
+        i = 0
 
-                    #"Strings": {
-                     #       "name": listFunctions[0],
-                      #      "type": listFunctions[1],
-                       #     "output": listFunctions[2]
-                    #}
-                }
+        while i < len(listStrings):
+            docStrings = {
+                "Name": listStrings[i],
+                "Type": listStrings[i+1],
+                "Output": listStrings[i+2]
+            }
+            i += 3
+            pluginDB["Strings"].append(docStrings) # Insert Nested Document
+
+        i = 0
+        while i < len(listFunctions):
+            docFunctions = {
+                "Name": listFunctions[i],
+                "Type": listFunctions[i+1],
+                "Output": listFunctions[i+2]
+            }
+            i += 3
+            pluginDB["Functions"].append(docFunctions) # Insert Nested Document
         self.collection.insert_many([pluginDB])
 
         #for i in listFunctions:
@@ -598,6 +616,11 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
+        listStrings = [] # Re-Initialize list
+        listFunctions = [] # Re-Initialize list
+        print("Clicked Vacio: ")
+        print(listStrings) # Test
+        print(listFunctions) # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
@@ -605,8 +628,34 @@ class Ui_MainWindow(object):
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
+
+        ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
+
         pluginString = plugin.get("POI Strings")
         pluginFunction = plugin.get("POI Functions")
+
+        for item in plugin.get("Strings"):  # Get Nested Document values
+            listStrings.append(item.get("Name"))
+            listStrings.append(item.get("Type"))
+            listStrings.append(item.get("Output"))
+
+        for item in plugin.get("Functions"):    # Get Nested Document values
+            listFunctions.append(item.get("Name"))
+            listFunctions.append(item.get("Type"))
+            listFunctions.append(item.get("Output"))
+        print("Clicked: ")
+        print(listStrings)  # Test
+        print(listFunctions)    # Test
+
+        #######... until here. After you commented this, run the program again and delete the plugins in the system. #####
+        ####### Then, uncomment the previous code and now it should work find when you create a plugin, close the system, #####
+        ####### and select a plugin from the list..... AAAAAAAHHHHH PERRROOOOOOOO!!! ##########
+
+
+
+        #for document in self.collection.find():
+            #self.pluginManagementList.addItem(document.get("Plugin Name"))
+
        # poiOne = plugin.get("POI One")
 
         self.pluginNameField.setText(pluginName)
