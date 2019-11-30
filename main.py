@@ -351,7 +351,7 @@ class Ui_MainWindow(object):
 
             self.documentList.addItem("Plugin Structure")
 
-            self.poiPluginField.setText(listFunctions[0])
+            #self.poiPluginField.setText(listFunctions[0])
 
 
 
@@ -402,9 +402,18 @@ class Ui_MainWindow(object):
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
                     "POI Strings": list[4],
                     "POI Functions": list[5],
-                    "POI One": listFunctions[0]}
+                    "POI One": listFunctions[0:9],
 
+                    "Strings": {
+                            "name": listFunctions[0],
+                            "type": listFunctions[1],
+                            "output": listFunctions[2]
+                    }
+                }
         self.collection.insert_many([pluginDB])
+
+        for i in listFunctions:
+            self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
 
