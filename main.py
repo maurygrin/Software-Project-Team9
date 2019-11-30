@@ -190,9 +190,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.append("\t" + "\n")
                 self.detailedPoiAnalysisField.append("\t" + "Function: ")
                 self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Order of Parameters: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Parameter Type: ")
+                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
                 self.detailedPoiAnalysisField.append("\t" + "\n")
                 self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
                 self.detailedPoiAnalysisField.append("\t" + "\n")
@@ -210,6 +208,8 @@ class Ui_MainWindow(object):
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
                     self.poiAnalysisList.addItem(item)
+
+
     def runDynamicAnalysis(self):
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
             self.setupPluginError(self.windowPluginError)
@@ -221,7 +221,11 @@ class Ui_MainWindow(object):
 
             self.terminalField.append("Dynamic Analysis Performed!")
             self.terminalField.append("")
-            self.r2.cmd("aaa")
+            self.r2 = r2pipe.open(self.path)
+            self.r2.cmdj("ood")
+            self.r2.cmdj("aaa")
+            self.r2.cmdj("dc")
+            self.r2.cmdj("dso")
             self.fd = self.r2.cmdj("aflj")
             self.sd = self.r2.cmdj("izj")
 
@@ -276,6 +280,11 @@ class Ui_MainWindow(object):
                 self.poiAnalysisList.clear()
                 self.detailedPoiAnalysisField.append("\t" + "\n")
                 self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Function: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
                 font = self.detailedPoiAnalysisField.font()
                 font.setPointSize(12)
                 self.detailedPoiAnalysisField.setFont(font)
@@ -543,17 +552,17 @@ class Ui_MainWindow(object):
                     self.vaddr = hex(item["minbound"])
                     self.vaddr = str(self.vaddr)
                     self.function = str(item["name"])
-                    #self.orderOfP = str(item["datarefs"])
-                    #self.paramType = str(item["call type"])
-                    #self.paramValue = str(item["signature value"])
-                    #self.returnValue = str(item["callrefs"])
-                    #self.orderNum = str(item["offset"])
+                    self.signature = str(item["signature"])
+                    self.temp = self.signature.split('(')[1];
+                    self.temp2 = self.temp.split(')')[0];
                     break
             self.detailedPoiAnalysisField.setText("")
             self.detailedPoiAnalysisField.append("\t" + "\n")
             self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
             self.detailedPoiAnalysisField.append("\t" + "\n")
             self.detailedPoiAnalysisField.append("Function: " + self.function)
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
             font = self.detailedPoiAnalysisField.font()
             font.setPointSize(12)
             self.detailedPoiAnalysisField.setFont(font)
@@ -1098,6 +1107,8 @@ class Ui_MainWindow(object):
         self.saveProjectButton.setEnabled(False)
 
         self.runStaticButton.clicked.connect(self.runStaticAnalysis)
+
+        self.runDynamicButton.clicked.connect(self.runDynamicAnalysis)
 
         self.projectList.clicked.connect(self.projectClicked)
 
