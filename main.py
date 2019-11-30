@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 list=[]
+listStrings=[]
+listFunctions=[]
 class Ui_MainWindow(object):
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
@@ -212,8 +214,15 @@ class Ui_MainWindow(object):
             user_children = user.getchildren()
             for user_child in user_children:
                 print("%s=%s" % (user_child.tag, user_child.text))
-                list.append(user_child.text)
+                if user_child.tag == "network":
+                    list.append(user_child.text)
+                if user_child.tag == "nameFunctions" or user_child.tag == "typeFunctions" or user_child.tag == "outputFunctions":
+                 listFunctions.append(user_child.text)
+                if user_child.tag == "nameStrings" or user_child.tag == "typeStrings" or user_child.tag == "outputString":
+                 listStrings.append(user_child.text)
         print(list)
+        print(listFunctions)
+        print(listStrings)
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
@@ -229,8 +238,8 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.clear()
             self.poiTypeDropDownAnalysis.repaint()
             self.poiTypeDropDownAnalysis.addItem("Select")
+            self.poiTypeDropDownAnalysis.addItem(list[4])
             self.poiTypeDropDownAnalysis.addItem(list[5])
-            self.poiTypeDropDownAnalysis.addItem(list[6])
 
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
@@ -245,10 +254,17 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.clear()
             self.poiFilterDropDown.repaint()
             self.poiFilterDropDown.addItem("Select")
+            self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
-            self.poiFilterDropDown.addItem(list[6])
+
+            self.documentList.addItem("Plugin Structure")
+
+            self.poiPluginField.setText(listFunctions[0])
+
+
 
             self.savePlugin()
+
 
     def saveProject(self):
         project = {"Project Name": self.project.name,
@@ -270,7 +286,7 @@ class Ui_MainWindow(object):
                    "stripped": self.stripped,
                    "extension": self.extension}
 
-        self.collection.insert([project])
+        self.collection.insert_many([project])
 
         it = QtWidgets.QListWidgetItem(self.project.name)
 
@@ -292,10 +308,11 @@ class Ui_MainWindow(object):
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
-                    "POI Strings": list[5],
-                    "POI Functions": list[6]}
+                    "POI Strings": list[4],
+                    "POI Functions": list[5],
+                    "POI One": listFunctions[0]}
 
-        self.collection.insert([pluginDB])
+        self.collection.insert_many([pluginDB])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
 
@@ -458,24 +475,21 @@ class Ui_MainWindow(object):
 
     def pluginClicked(self):
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
-
+        self.poiPluginField.clear()
+        self.poiPluginField.repaint()
         pluginName = plugin.get("Plugin Name")
-
         pluginDescription = plugin.get("Plugin Description")
-
         pluginStructure = plugin.get("Structure File Path")
-
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
-
         pluginString = plugin.get("POI Strings")
-
         pluginFunction = plugin.get("POI Functions")
-
+        poiOne = plugin.get("POI One")
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+        self.poiPluginField.setText(poiOne)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.repaint()
@@ -499,6 +513,25 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
 
+
+        #self.display = "strings"
+        #self.terminalField.append("Command: iz")
+        #self.poiPluginField.setText("")
+        #self.poiAnalysisList.clear()
+        #self.poiPluginField.append("\t" + "\n")
+        #self.poiPluginField.append("\t" + "Name: ")
+        #self.poiPluginField.append("\t" + "\n")
+        #self.poiPluginField.append("\t" + "Type: ")
+        #self.poiPluginField.append("\n")
+        #self.poiPluginField.append("\t" + "Output: ")
+        #font = self.poiPluginField.font()
+        #font.setPointSize(20)
+        #self.poiPluginField.setFont(font)
+        #self.poiPluginField.repaint()
+
+        #for item in self.s:
+         #   self.poiPluginField.addItem(base64.b64decode(item["string"]).decode())
+          #  self.poiPluginField.append(list[9])
         self.deletePluginButton.setEnabled(True)
 
     def poiClicked(self):
@@ -508,30 +541,24 @@ class Ui_MainWindow(object):
         print("Documentation List clicked")
 
     def documentationClicked(self):
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test  # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
         query = {"file_name": "documentation"}
 
-        query_result = collection.find_one(query)
+        query_result = self.collection.find_one(query)
         if query_result is not None:
             self.documentViewField.setText(query_result["contents"])
         else:
             text_file_doc = {"file_name": "documentation", "contents": ""}
-            collection.insert_one(text_file_doc)
+            self.collection.insert_one(text_file_doc)
 
     def saveDocument(self):
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
         query = {"file_name": "documentation"}
         # build a document to be inserted
         text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
         # insert the contents into the "file" collection
-        if collection.count_documents(query) > 0:
-            collection.replace_one(query, text_file_doc)
+        if self.collection.count_documents(query) > 0:
+            self.collection.replace_one(query, text_file_doc)
         else:
-            collection.insert_one(query, text_file_doc)
+            self.collection.insert_one(query, text_file_doc)
 
 
     def filter_projects(self):  ##filtering list of project
@@ -1010,6 +1037,7 @@ class Ui_MainWindow(object):
         self.deletePluginButton.clicked.connect(self.deletePlugin)
 
         self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
+
 
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
