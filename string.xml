@@ -1,37 +1,37 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <pointOfInterest minOccurs="1" maxOccurs="unbounded" required= "True">
     <name maxOccurs="1" required = "True"> String </name>
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="Yes" required = "True">
             <name maxOccurs="1" required = "True"> String Name</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
             <datatype maxOccurs="1" required = "True"> String</datatype>
         </attribute>
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="Yes" required = "True">
             <name maxOccurs="1" required = "True"> String Type</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
             <datatype maxOccurs="1" required = "True"> String</datatype>
         </attribute>
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=Yes required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="Yes" required = "True">
             <name maxOccurs="1" required = "True"> String Size</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
             <datatype maxOccurs="1" required = "True"> Int</datatype>
         </attribute>        
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="No" required = "True">
             <name maxOccurs="1" required = "True"> Call From Address</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
             <datatype maxOccurs="1" required = "True"> String</datatype>
         </attribute>    
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="No" required = "True">
             <name maxOccurs="1" required = "True"> Destination Address</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
             <datatype maxOccurs="1" required = "True"> String</datatype>
         </attribute>
-        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup=No required = "True">
+        <attribute minOccurs="1" maxOccurs="unbounded" isInSetup="No" required = "True">
             <name maxOccurs="1" required = "True"> Section</name>
             <guiComponentType maxOccurs="1" required = "True"> Text Box</guiComponentType >
             <value minOccurs="1" maxOccurs="unbounded" required = "True"> </value>
