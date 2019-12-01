@@ -215,7 +215,6 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.repaint()
                 counter =0
                 for item in self.functionsStatic:
-                    print(item)
                     staticFunctionList.append(item)
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
@@ -228,7 +227,7 @@ class Ui_MainWindow(object):
 
 
 
-    def brianaFunction(self, sanchez):
+    def brianaFunction(self, staticFunctionList):
         keys = ['fName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
                 'locType', 'locNum', 'locVal']
         # will be used to add each function dictionary
@@ -239,48 +238,44 @@ class Ui_MainWindow(object):
         self.r2.cmd("aaa")  # initial analysis
 
         # start analysis process
-        for i in range(len(sanchez)):
-            funD['fName'] = (sanchez[i])
-            funInfo = self.r2.cmd("afvj @ " + str(sanchez[i]))
+        for i in range(len(staticFunctionList)):
+            funD['fName'] = (staticFunctionList[i]['name'])
+            funInfo = self.r2.cmd("afvj @ " + str(staticFunctionList[i]['name']))
             formatInfo = json.loads(funInfo)
-
             for key in formatInfo.keys():
-                tempList = formatInfo[key]
-                # print(tempList)
-                argNames = []
-                argTypes = []
-                localVarNames = []
-                localVarTypes = []
-                for j in range(len(tempList)):
-                    if tempList[j]['kind'] == 'reg':
-                        argCounter += 1
-                        funD['argNum'] = argCounter
-                        argNames.append(tempList[j]['name'].encode('utf-8'))
-                        argTypes.append(tempList[j]['type'].encode('utf-8'))
-                        funD['argName'] = argNames
-                        funD['argType'] = argTypes
-                    if tempList[j]['kind'] == 'var':
-                        locCounter += 1
-                        funD['locNum'] = locCounter
-                        localVarNames.append(tempList[j]['name'].encode('utf-8'))
-                        localVarTypes.append(tempList[j]['type'].encode('utf-8'))
-                        funD['locName'] = localVarNames
-                        funD['locType'] = localVarTypes
+                if(key == "reg"):
+                    tempList = formatInfo[key]
+                    argNames = []
+                    argTypes = []
+                    localVarNames = []
+                    localVarTypes = []
+                    for j in range(len(tempList)):
+                        if tempList[j]['kind'] == 'reg':
+                            argCounter += 1
+                            funD['argNum'] = argCounter
+                            argNames.append(tempList[j]['name'])
+                            argTypes.append(tempList[j]['type'])
+                            funD['argName'] = argNames
+                            funD['argType'] = argTypes
+                        if tempList[j]['kind'] == 'var':
+                            locCounter += 1
+                            funD['locNum'] = locCounter
+                            localVarNames.append(tempList[j]['name'])
+                            localVarTypes.append(tempList[j]['type'])
+                            funD['locName'] = localVarNames
+                            funD['locType'] = localVarTypes
 
             argCounter = 0
             locCounter = 0
-            print(funD)
             dictList.append(funD)
             funD = dict.fromkeys(keys, [])
-            print(len(dictList))
 
     def runDynamicAnalysis(self):
-        brianaFlag = True
+        #brianaFlag = True
         self.detailedPoiAnalysisField.setText("")
         self.poiAnalysisList.clear()
         self.r2.cmd("aaa")
 
-        print(len(dictList))
         for i in range(len(dictList)):  # iterate over list of functions
             self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
             self.r2.cmd("ood")  # open in debug mode
@@ -289,7 +284,7 @@ class Ui_MainWindow(object):
             self.r2.cmd("dc")  # continue to run
             self.r2.cmd("dcr")  # get values at this point
             returnVal = self.r2.cmd("dr rax")
-            returnVal = returnVal.rstrip("\n").encode('utf-8')
+            returnVal = returnVal.rstrip("\n")
             # start running after breakpoint get arguments first
             templistOfVals = []
             templistOfLoc = []
@@ -297,11 +292,10 @@ class Ui_MainWindow(object):
             for j in range(dictList[i]['argNum']):
                 # set return value
                 dictList[i]['retVal'] = returnVal
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "return value: ")
-                commandToVal = self.r2.cmd("afvd " + dictList[i]['argName'][j])
+                commandToVal = self.r2.cmd("afvd " + str(dictList[i]['argName'][j]))
                 commandList = commandToVal.split(" ")
-                validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                commandListTemp = commandToVal.split(" ")
+                validCommand = commandList[0] + "j " + commandListTemp[0] + " " + commandListTemp[1]
                 lineWithval = self.r2.cmd(validCommand)
                 formattedVal = json.loads(lineWithval)
                 templistOfVals.append(formattedVal[0]['value'])
@@ -317,10 +311,7 @@ class Ui_MainWindow(object):
                 dictList[i]['locVal'] = templistOfLoc
 
             self.r2.cmd("db-*")
-        print(len(dictList))
-        for item in range(len(dictList)):
-            print("Briana")
-            print(dictList[item]['fName'])
+        #for item in range(len(dictList)):
             #staticFunctionList.append(item)
             #item = QtWidgets.QListWidgetItem(item["name"])
             #item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
