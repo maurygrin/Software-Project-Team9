@@ -317,6 +317,17 @@ class Ui_MainWindow(object):
         print(listStrings)
         print(listFunctions)
 
+    def writeXML(file_name):
+        tree = ET.parse(file_name)
+
+        root = tree.getroot()
+        child = ET.Element("item")
+        child.text = "3"
+
+        root.append(child)
+
+        tree.write(file_name)
+
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
             listStrings = []
@@ -416,8 +427,12 @@ class Ui_MainWindow(object):
                 "Type": listStrings[i+1],
                 "Output": listStrings[i+2]
             }
+            self.poiPluginField.append(str(docStrings))
+            self.poiList.addItem(str(listStrings[i]))
             i += 3
             pluginDB["Strings"].append(docStrings) # Insert Nested Document
+            #self.poiPluginField.append(listStrings[i])
+
 
         i = 0
         while i < len(listFunctions):
@@ -426,6 +441,8 @@ class Ui_MainWindow(object):
                 "Type": listFunctions[i+1],
                 "Output": listFunctions[i+2]
             }
+            self.poiPluginField.append(str(docFunctions))
+            self.poiList.addItem(str(listFunctions[i]))
             i += 3
             pluginDB["Functions"].append(docFunctions) # Insert Nested Document
         self.collection.insert_many([pluginDB])
@@ -472,6 +489,10 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
+        self.poiPluginField.clear()
+        self.poiPluginField.repaint()
+        self.poiList.clear()
+        self.poiList.repaint()
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -616,14 +637,16 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
-        listStrings = [] # Re-Initialize list
-        listFunctions = [] # Re-Initialize list
+        listStrings = []# Re-Initialize list
+        listFunctions = []# Re-Initialize list
         print("Clicked Vacio: ")
         print(listStrings) # Test
         print(listFunctions) # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
+        self.poiList.clear()
+        self.poiList.repaint()
         pluginName = plugin.get("Plugin Name")
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
@@ -644,8 +667,20 @@ class Ui_MainWindow(object):
             listFunctions.append(item.get("Type"))
             listFunctions.append(item.get("Output"))
         print("Clicked: ")
-        print(listStrings)  # Test
-        print(listFunctions)    # Test
+
+        self.poiPluginField.append(str(listStrings))  # Test
+        self.poiPluginField.append(str(listFunctions))    # Test
+
+        i = 0
+
+        while i < len(listStrings):
+            self.poiList.addItem(str(listStrings[i]))
+            i += 3
+
+        i = 0
+        while i < len(listFunctions):
+            self.poiList.addItem(str(listFunctions[i]))
+            i+= 3
 
         #######... until here. After you commented this, run the program again and delete the plugins in the system. #####
         ####### Then, uncomment the previous code and now it should work find when you create a plugin, close the system, #####
@@ -653,16 +688,14 @@ class Ui_MainWindow(object):
 
 
 
-        #for document in self.collection.find():
-            #self.pluginManagementList.addItem(document.get("Plugin Name"))
+       # for document in self.collection.find():
+        #    self.pluginManagementList.addItem(document.get("Plugin Name"))
 
-       # poiOne = plugin.get("POI One")
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
-        #self.poiPluginField.setText(poiOne)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.repaint()
@@ -686,29 +719,28 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
 
-
-        #self.display = "strings"
-        #self.terminalField.append("Command: iz")
-        #self.poiPluginField.setText("")
-        #self.poiAnalysisList.clear()
-        #self.poiPluginField.append("\t" + "\n")
-        #self.poiPluginField.append("\t" + "Name: ")
-        #self.poiPluginField.append("\t" + "\n")
-        #self.poiPluginField.append("\t" + "Type: ")
-        #self.poiPluginField.append("\n")
-        #self.poiPluginField.append("\t" + "Output: ")
-        #font = self.poiPluginField.font()
-        #font.setPointSize(20)
-        #self.poiPluginField.setFont(font)
-        #self.poiPluginField.repaint()
-
-        #for item in self.s:
-         #   self.poiPluginField.addItem(base64.b64decode(item["string"]).decode())
-          #  self.poiPluginField.append(list[9])
         self.deletePluginButton.setEnabled(True)
 
     def poiClicked(self):
         print("POI List clicked")
+        #self.display = "strings"
+        #self.terminalField.append("Command: iz")
+        #self.poiList.setText("")
+        self.poiViewField.clear()
+        self.poiViewField.append("\t" + "\n")
+        self.poiViewField.append("\t" + "Name: ")
+        self.poiViewField.append("\t" + "\n")
+        self.poiViewField.append("\t" + "Type: ")
+        self.poiViewField.append("\n")
+        self.poiViewField.append("\t" + "Output: ")
+        font = self.poiViewField.font()
+        font.setPointSize(20)
+        self.poiViewField.setFont(font)
+        self.poiViewField.repaint()
+
+        #for item in self.s:
+         #   self.poiViewField.append(base64.b64decode(item["string"]).decode())
+          #  self.poiViewField.append(listStrings[0])
 
     def documentationClicked(self):
         print("Documentation List clicked")

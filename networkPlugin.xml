@@ -1,19 +1,18 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
 <plugins>
-    <plugin maxOccurs="1" required = "true">
+    <plugin maxOccurs="1" required="true">
         <network maxOccurs="1">Network Plugin </network>
-        <network maxOccurs="1" required = "true">Points of interest related to network</network>
+        <network maxOccurs="1" required="true">Points of interest related to network</network>
         <network maxOccurs="1"> Script </network>
         <network maxOccurs="1"> GenerateScript </network>
     </plugin>
-    <POItypeFunctionss minOccurs="1" maxOccurs="unbounded" default ="True">
+    <POItypeFunctions default="True" maxOccurs="unbounded" minOccurs="1">
         <network maxOccurs="1">Strings</network>
         <network maxOccurs="1">Functions</network>
         <network maxOccurs="1">Varibles</network>
         <network maxOccurs="1">DLLs</network>
-    </POItypeFunctionss>>
+    </POItypeFunctions>;
 
-    
+
     <item>
         <nameFunctions>sym.imp.socket</nameFunctions>
         <typeFunctions>Function</typeFunctions>
@@ -105,4 +104,5 @@
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
+
 </plugins>
