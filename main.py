@@ -14,8 +14,13 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 list=[]
+listStrings=[]
+listFunctions=[]
 class Ui_MainWindow(object):
     def __init__(self):
+        self.documentationTextChangeTimer = QtCore.QTimer()
+        self.documentationTextChangeTimer.setSingleShot(True)
+        self.documentationTextChangeTimer.timeout.connect(self.saveDocument)
         self.windowNew = QtWidgets.QDialog()
         self.windowDeleteConfirmation = QtWidgets.QDialog()
         self.windowPlug = QtWidgets.QDialog()
@@ -142,6 +147,7 @@ class Ui_MainWindow(object):
 
             self.saveProject()
 
+
     def runStaticAnalysis(self):
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
             self.setupPluginError(self.windowPluginError)
@@ -153,12 +159,13 @@ class Ui_MainWindow(object):
 
             self.terminalField.append("Static Analysis Performed!")
             self.terminalField.append("")
-
+            self.r2.cmd("aaa")
+            self.f = self.r2.cmdj("aflj")
             self.s = self.r2.cmdj("izj")
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected == "Strings"):
+            if (poiSelected=="Strings"):
                 self.terminalField.append("Command: iz")
                 self.display = "strings"
                 self.detailedPoiAnalysisField.setText("")
@@ -170,13 +177,84 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Section: ")
                 font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(20)
+                font.setPointSize(12)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-                #                self.s = self.analysis.display(self.r2, self.display)
                 for item in self.s:
-                    item = QtWidgets.QListWidgetItem(base64.b64decode(item["string"]).decode())
-                    item.setCheckState(QtCore.Qt.Checked)
+                    item = QtWidgets.QListWidgetItem(item["string"])
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                    self.poiAnalysisList.addItem(item)
+
+            elif (poiSelected=="Functions"):
+                self.terminalField.append("Command: afl")
+                self.display = "functions"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Function: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Order num: ")
+                self.detailedPoiAnalysisField.append("\n")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                for item in self.f:
+                    #print(item);
+                    item = QtWidgets.QListWidgetItem(item["name"])
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                    self.poiAnalysisList.addItem(item)
+
+
+    def runDynamicAnalysis(self):
+        if (self.pluginDropDownAnalysis.currentText() == "Select"):
+            self.setupPluginError(self.windowPluginError)
+            self.windowPluginError.show()
+        else:
+            self.runDynamicButton.setEnabled(True)
+
+            self.static = 1
+
+            self.terminalField.append("Dynamic Analysis Performed!")
+            self.terminalField.append("")
+            self.r2 = r2pipe.open(self.path)
+            self.r2.cmdj("ood")
+            self.r2.cmdj("aaa")
+            self.r2.cmdj("dc")
+            self.r2.cmdj("dso")
+            self.fd = self.r2.cmdj("aflj")
+            self.sd = self.r2.cmdj("izj")
+
+            poiSelected = self.poiTypeDropDownAnalysis.currentText()
+
+            if (poiSelected=="Strings"):
+                self.display = "strings"
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                self.detailedPoiAnalysisField.append("\t" + "Section: ")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                for item in self.sd:
+                    item = QtWidgets.QListWidgetItem(item["string"])
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Unchecked)
                     self.poiAnalysisList.addItem(item)
 
     def displayPOI(self):
@@ -196,11 +274,30 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.append("\n")
                 self.detailedPoiAnalysisField.append("\t" + "Section: ")
                 font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(20)
+                font.setPointSize(12)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.s:
-                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
+                    self.poiAnalysisList.addItem(item["string"])
+            elif (poiSelected == "Functions"):
+                self.display = "functions"
+                self.terminalField.append("Command: afl")
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Function: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                for item in self.f:
+                    self.poiAnalysisList.addItem(item["name"])
+
 
     def parseXML(file_name):
         # Parse XML with ElementTree
@@ -212,12 +309,22 @@ class Ui_MainWindow(object):
         for user in users:
             user_children = user.getchildren()
             for user_child in user_children:
-                print("%s=%s" % (user_child.tag, user_child.text))
-                list.append(user_child.text)
-        print(list)
+                #print("%s=%s" % (user_child.tag, user_child.text))
+                if user_child.tag == "network":
+                    list.append(user_child.text)
+                if user_child.tag == "nameFunctions" or user_child.tag == "typeFunctions" or user_child.tag == "outputFunctions":
+                    listFunctions.append(user_child.text)
+                if user_child.tag == "nameStrings" or user_child.tag == "typeStrings" or user_child.tag == "outputString":
+                    listStrings.append(user_child.text)
+        #print(list)
+        print("Parse: ")
+        print(listStrings)
+        print(listFunctions)
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
+            listStrings = []
+            listFunctions = []
             print("Failed")
         else:
             self.plugin = Plugin(name, description, structure, data_set)
@@ -230,8 +337,8 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.clear()
             self.poiTypeDropDownAnalysis.repaint()
             self.poiTypeDropDownAnalysis.addItem("Select")
+            self.poiTypeDropDownAnalysis.addItem(list[4])
             self.poiTypeDropDownAnalysis.addItem(list[5])
-            self.poiTypeDropDownAnalysis.addItem(list[6])
 
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
@@ -246,10 +353,14 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.clear()
             self.poiFilterDropDown.repaint()
             self.poiFilterDropDown.addItem("Select")
+            self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
             self.poiFilterDropDown.addItem(list[6])
 
+            #self.poiPluginField.setText(listFunctions[0])
             self.savePlugin()
+
+
 
     def saveProject(self):
         project = {"Project Name": self.project.name,
@@ -271,7 +382,7 @@ class Ui_MainWindow(object):
                    "stripped": self.stripped,
                    "extension": self.extension}
 
-        self.collection.insert([project])
+        self.collection.insert_many([project])
 
         it = QtWidgets.QListWidgetItem(self.project.name)
 
@@ -293,17 +404,45 @@ class Ui_MainWindow(object):
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
-                    "POI Strings": list[5],
-                    "POI Functions": list[6]}
+                    "POI Strings": list[4],
+                    "POI Functions": list[5],
+                    "Strings": [],# Nested Document
+                    "Functions": [] # Nested Document
+                    }
+        i = 0
 
-        self.collection.insert([pluginDB])
+        while i < len(listStrings):
+            docStrings = {
+                "Name": listStrings[i],
+                "Type": listStrings[i+1],
+                "Output": listStrings[i+2]
+            }
+            i += 3
+            pluginDB["Strings"].append(docStrings) # Insert Nested Document
+
+        i = 0
+        while i < len(listFunctions):
+            docFunctions = {
+                "Name": listFunctions[i],
+                "Type": listFunctions[i+1],
+                "Output": listFunctions[i+2]
+            }
+            i += 3
+            pluginDB["Functions"].append(docFunctions) # Insert Nested Document
+        self.collection.insert_many([pluginDB])
+
+        #for i in listFunctions:
+         #   self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
-
         self.pluginManagementList.addItem(it)
-
+        self.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)
-
+        currentDocument = self.documentList.currentItem()
+        self.hidePluginStructure(False)
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
         self.retranslateUi(MainWindow)
 
     def deleteProject(self):
@@ -337,6 +476,12 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.documentViewField.clear()
+                self.hidePluginStructure(True)
+        self.hidePluginStructure(True)
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -435,7 +580,7 @@ class Ui_MainWindow(object):
         selected = self.poiAnalysisList.currentItem().text()
         if self.display is "strings":
             for item in self.s:
-                current = base64.b64decode(item["string"]).decode()
+                current = item["string"]
                 if current == selected:
                     self.vaddr = hex(item["vaddr"])
                     self.vaddr = str(self.vaddr)
@@ -450,7 +595,30 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.append("\n")
             self.detailedPoiAnalysisField.append("\t" + "Section: " + self.section)
             font = self.detailedPoiAnalysisField.font()
-            font.setPointSize(20)
+            font.setPointSize(12)
+            self.detailedPoiAnalysisField.setFont(font)
+            self.detailedPoiAnalysisField.repaint()
+
+        elif self.display is "functions":
+            for item in self.f:
+                current = item["name"]
+                if current == selected:
+                    self.vaddr = hex(item["minbound"])
+                    self.vaddr = str(self.vaddr)
+                    self.function = str(item["name"])
+                    self.signature = str(item["signature"])
+                    self.temp = self.signature.split('(')[1];
+                    self.temp2 = self.temp.split(')')[0];
+                    break
+            self.detailedPoiAnalysisField.setText("")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("Function: " + self.function)
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
+            font = self.detailedPoiAnalysisField.font()
+            font.setPointSize(12)
             self.detailedPoiAnalysisField.setFont(font)
             self.detailedPoiAnalysisField.repaint()
 
@@ -458,25 +626,53 @@ class Ui_MainWindow(object):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
+        listStrings = [] # Re-Initialize list
+        listFunctions = [] # Re-Initialize list
+        print("Clicked Vacio: ")
+        print(listStrings) # Test
+        print(listFunctions) # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
-
+        self.poiPluginField.clear()
+        self.poiPluginField.repaint()
         pluginName = plugin.get("Plugin Name")
-
         pluginDescription = plugin.get("Plugin Description")
-
         pluginStructure = plugin.get("Structure File Path")
-
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
 
-        pluginString = plugin.get("POI Strings")
+        ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
 
+        pluginString = plugin.get("POI Strings")
         pluginFunction = plugin.get("POI Functions")
 
+        for item in plugin.get("Strings"):  # Get Nested Document values
+            listStrings.append(item.get("Name"))
+            listStrings.append(item.get("Type"))
+            listStrings.append(item.get("Output"))
+
+        for item in plugin.get("Functions"):    # Get Nested Document values
+            listFunctions.append(item.get("Name"))
+            listFunctions.append(item.get("Type"))
+            listFunctions.append(item.get("Output"))
+        print("Clicked: ")
+        print(listStrings)  # Test
+        print(listFunctions)    # Test
+
+        #######... until here. After you commented this, run the program again and delete the plugins in the system. #####
+        ####### Then, uncomment the previous code and now it should work find when you create a plugin, close the system, #####
+        ####### and select a plugin from the list..... AAAAAAAHHHHH PERRROOOOOOOO!!! ##########
+
+
+
+        #for document in self.collection.find():
+            #self.pluginManagementList.addItem(document.get("Plugin Name"))
+
+       # poiOne = plugin.get("POI One")
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+        #self.poiPluginField.setText(poiOne)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.repaint()
@@ -500,40 +696,119 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
 
+
+        #self.display = "strings"
+        #self.terminalField.append("Command: iz")
+        #self.poiPluginField.setText("")
+        #self.poiAnalysisList.clear()
+        #self.poiPluginField.append("\t" + "\n")
+        #self.poiPluginField.append("\t" + "Name: ")
+        #self.poiPluginField.append("\t" + "\n")
+        #self.poiPluginField.append("\t" + "Type: ")
+        #self.poiPluginField.append("\n")
+        #self.poiPluginField.append("\t" + "Output: ")
+        #font = self.poiPluginField.font()
+        #font.setPointSize(20)
+        #self.poiPluginField.setFont(font)
+        #self.poiPluginField.repaint()
+
+        #for item in self.s:
+         #   self.poiPluginField.addItem(base64.b64decode(item["string"]).decode())
+          #  self.poiPluginField.append(list[9])
         self.deletePluginButton.setEnabled(True)
+
+        self.hidePluginStructure(False)
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
 
     def poiClicked(self):
         print("POI List clicked")
 
+    # Documentation Related Function #
     def documentationClicked(self):
-        print("Documentation List clicked")
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            self.documentViewField.setReadOnly(False)
+            self.saveButton.setEnabled(True)
+            self.restoreButton.setEnabled(True)
+            collection = self.collection
+            query = {"file_name": currentDocument}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                self.documentViewField.setText(query_result["contents"])
+            else:
+                text_file_doc = {"file_name": currentDocument, "contents": ""}
+                collection.insert_one(text_file_doc)
+        elif currentDocument == "Plugin Structure":
+            self.loadPluginStructureDocumentation()
 
-    def documentationClicked(self):
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test  # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
-        query = {"file_name": "documentation"}
-
-        query_result = collection.find_one(query)
-        if query_result is not None:
-            self.documentViewField.setText(query_result["contents"])
+    def loadPluginStructureDocumentation(self):
+        self.documentViewField.setReadOnly(True)
+        self.saveButton.setEnabled(False)
+        self.restoreButton.setEnabled(False)
+        currentPlugin = self.pluginManagementList.currentItem()
+        if currentPlugin is not None:
+            collection = self.collection
+            query = {"Plugin Name": currentPlugin.text()}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                pluginXsdPath = query_result["Structure File Path"]
+                try:
+                    with open(pluginXsdPath, 'r') as pluginXsd:
+                        content = pluginXsd.read()
+                    self.documentViewField.setText(content)
+                except FileNotFoundError as err:
+                    self.documentViewField.setText("Structure File Path Not Found")
+            else:
+                self.documentViewField.setText("Plugin Not Found")
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
-            collection.insert_one(text_file_doc)
+            self.documentViewField.setText("No Plugin Selected")
+
+    def restoreBeatDocumentation(self):
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            default_beat_documentation_path = "BEATDocumentationDefault.txt"
+            try:
+                with open(default_beat_documentation_path, 'r') as default_beat_documentation:
+                    content = default_beat_documentation.read()
+                collection = self.collection
+                query = {"file_name": currentDocument}
+                text_file_doc = {"file_name": currentDocument, "contents": content}
+                # insert the contents into the "file" collection
+                if collection.count_documents(query) > 0:
+                    collection.replace_one(query, text_file_doc)
+                else:
+                    collection.insert_one(query, text_file_doc)
+                self.documentViewField.setText(content)
+            except FileNotFoundError:
+                print("Could Not Restore BEAT Documentation, BEATDocumentationDefault.txt file not found")
+
+    def handleDocumentationEdit(self):
+        self.documentationTextChangeTimer.start(7500)
+        pass
 
     def saveDocument(self):
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
-        query = {"file_name": "documentation"}
+        if self.documentList.currentItem() is None:
+            return
+        currentDocument = self.documentList.currentItem().text()
+        if currentDocument == "Plugin Structure":
+            return
+        documentContent = self.documentViewField.toPlainText()
+        collection = self.collection
+        query = {"file_name": currentDocument}
         # build a document to be inserted
-        text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
+        text_file_doc = {"file_name": currentDocument, "contents": documentContent}
         # insert the contents into the "file" collection
-        if collection.count_documents(query) > 0:
-            collection.replace_one(query, text_file_doc)
+        if self.collection.count_documents(query) > 0:
+            self.collection.replace_one(query, text_file_doc)
         else:
-            collection.insert_one(query, text_file_doc)
+            self.collection.insert_one(query, text_file_doc)
 
+    # End of Documentation Related Function #
 
     def filter_projects(self):  ##filtering list of project
         for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -952,7 +1227,22 @@ class Ui_MainWindow(object):
         self.documentSearch.setObjectName("documentSearch")
         self.documentSearch.textChanged[str].connect(self.filter_doc)
         self.documentList = QtWidgets.QListWidget(self.documentView)
-        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 581))
+        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 535))
+        ######
+        self.restoreButton = QtWidgets.QPushButton(self.documentView)
+        self.restoreButton.setGeometry(QtCore.QRect(10, 90 + self.documentList.height(), 110, 45))
+        self.restoreButton.setObjectName("restoreButton")
+        self.restoreButton.setText("Restore")
+        self.restoreButton.clicked.connect(self.restoreBeatDocumentation)
+        margin_between_buttons = 11
+        self.saveButton = QtWidgets.QPushButton(self.documentView)
+        self.saveButton.setGeometry(
+            QtCore.QRect(10 + margin_between_buttons + self.restoreButton.width(), 90 + self.documentList.height(), 110,
+                         45))
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.setText("Save")
+        self.saveButton.clicked.connect(self.saveDocument)
+        ######
         font = QtGui.QFont()
         font.setPointSize(11)
         self.documentList.setFont(font)
@@ -994,6 +1284,8 @@ class Ui_MainWindow(object):
 
         self.runStaticButton.clicked.connect(self.runStaticAnalysis)
 
+        self.runDynamicButton.clicked.connect(self.runDynamicAnalysis)
+
         self.projectList.clicked.connect(self.projectClicked)
 
         self.poiAnalysisList.itemSelectionChanged.connect(self.analysisClicked)
@@ -1012,6 +1304,7 @@ class Ui_MainWindow(object):
 
         self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
 
+
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
 
@@ -1019,25 +1312,30 @@ class Ui_MainWindow(object):
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         ####################################
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test  # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
-        query = {"file_name": "documentation"}
+        collection = self.collection  # and inside that DB, a collection called "files"
+        query = {"file_name": "BEAT Documentation"}
         query_result = collection.find_one(query)
         if query_result is not None:
             self.documentList.addItem(query_result["file_name"])
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
+            text_file_doc = {"file_name": "BEAT Documentation", "contents": ""}
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
-        ####################################
+        self.documentList.addItem("Plugin Structure")
+        self.hidePluginStructure(True)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
 
-    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation): ###
+    def hidePluginStructure(self, hidden):
+        items = self.documentList.findItems("Plugin Structure", QtCore.Qt.MatchExactly)
+        if len(items) > 0:
+            for item in items:
+                item.setHidden(hidden)
+
+    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
         DeleteProjectConfirmation.resize(400, 99)
         self.buttonBox = QtWidgets.QDialogButtonBox(DeleteProjectConfirmation)
