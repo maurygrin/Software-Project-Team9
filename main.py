@@ -1037,7 +1037,7 @@ class Ui_MainWindow(object):
 
         self.terminalField.setReadOnly(True)
 
-    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
+    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation): ###
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
         DeleteProjectConfirmation.resize(400, 99)
         self.buttonBox = QtWidgets.QDialogButtonBox(DeleteProjectConfirmation)
@@ -1322,6 +1322,7 @@ class Ui_MainWindow(object):
         self.messageLabel.setText(
             _translate("pluginSelected", "You need to select a plugin before running an analysis."))
 
+###
 #*
     def setupSaveAnalysis(self, newPAnalysis):
         print("went inside setup save analysis")
@@ -1355,43 +1356,27 @@ class Ui_MainWindow(object):
 
 
     def saveAnalysis(self, name, description):
+        DAProperties = {"DAName": name,
+                        "DADescription": description,
+                        "DA": "Dynamic Analysis Goes Here"}
 
-        self.DA = DynamicAnalysis(name, description)
-        print(name)
+        self.collection.insert([DAProperties])
 
-        myclient = MongoClient('localhost', 27017)
-        db = myclient['DA']  #Create database called db
-        collection = db["DAC"] #Create Collection in database
+        print("About to print.")
 
-        #print(collection)
+        print(self.collection)
 
-        collection.insert_one({"DAName": name, "DADescription": description})
-        # collection.insert_one({'x':1})
-        # collection.insert_one({"_id": 20, "name": name, "score": description})
-        # collection.insert_one({"_id": 14, "name": "joe", "score": 6})
-        #print(collection)
+        print("Printed!")
 
-        # results = collection.find({"_id": "20"})
-        # for result in results:
-        #     item = result["name"]
-        #     print(item)
+        results = self.collection.find({"DAName": "test"})
+        for result in results:
+            print("went inside")
+            print(result["DA"])
 
-        print("works so far")
-
-        # pluginDB = {"Plugin Name": self.plugin.name,
-        #             "Plugin Description": self.plugin.description,
-        #             "Structure File Path": self.plugin.structure,
-        #             "Pre-Defined Dataset File Path": self.plugin.data_set}
-        #
-        # self.collection.insert([pluginDB])
-        #
         it = QtWidgets.QListWidgetItem(name)
         self.runList.addItem(it)
-        #
-        # it.setSelected(True)
-        #
-        # self.retranslateUi(MainWindow)
 
+        print("works so far")
 
     def retranslateUiSaveAnalysis(self, newPlugin):  #####
         _translate = QtCore.QCoreApplication.translate
@@ -1405,35 +1390,10 @@ class Ui_MainWindow(object):
         # self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
         # self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
 
-    def saveAnalysisPopUp(self): #*
+    def saveAnalysisPopUp(self):
 
         self.setupSaveAnalysis(self.windowPlug)
         self.windowPlug.show()
-
-        myclient = MongoClient('localhost', 27017)
-        db = myclient['DA']  #Create database called db
-        collection = db["DAC"] #Create Collection in database
-
-        print(collection)
-
-        collection.insert_one({'x':1})
-        # collection.insert_one({"_id": 13, "name": "pau", "score": 5})
-        # collection.insert_one({"_id": 14, "name": "joe", "score": 6})
-        print(collection)
-
-        results = collection.find({"name": "pau"})
-        for result in results:
-            print(result["_id"])
-
-
-        print("Hello pop ups!")
-
-       # print(myclient.list_database_names())
-
-        # msg = QMessageBox()
-        # msg.setWindowTitle("This is a tutorial yo.")
-        # msg.setText("This is the main text, yo.")
-        # x = msg.exec_()
 
 if __name__ == "__main__":
     import sys
