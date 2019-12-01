@@ -16,6 +16,7 @@ list=[]
 listStrings=[]
 listFunctions=[]
 staticFunctionList=[]
+dictList = []
 class Ui_MainWindow(object):
     def __init__(self):
         self.briana = None
@@ -57,6 +58,7 @@ class Ui_MainWindow(object):
         self.function = ""
         self.functionsStatic = ""
         self.temp2 = ""
+        self.brianaFlag = False
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
@@ -187,7 +189,7 @@ class Ui_MainWindow(object):
                 for item in self.stringsStatic:
                     item = QtWidgets.QListWidgetItem(item["string"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                    item.setCheckState(QtCore.Qt.Unchecked)
+                    item.setCheckState(QtCore.Qt.Checked)
                     self.poiAnalysisList.addItem(item)
             elif (poiSelected=="Functions"):
                 self.terminalField.append("Command: afl")
@@ -214,11 +216,11 @@ class Ui_MainWindow(object):
                 counter =0
                 for item in self.functionsStatic:
                     print(item)
+                    staticFunctionList.append(item)
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                    item.setCheckState(QtCore.Qt.Unchecked)
+                    item.setCheckState(QtCore.Qt.Checked)
                     self.poiAnalysisList.addItem(item)
-                    staticFunctionList.insert(counter, str(item["name"]))
                     counter = counter +1
                 self.brianaFunction(staticFunctionList);
 
@@ -230,7 +232,6 @@ class Ui_MainWindow(object):
         keys = ['fName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
                 'locType', 'locNum', 'locVal']
         # will be used to add each function dictionary
-        dictList = []
         argCounter = 0
         locCounter = 0
         # create a dictionary with keys that correspond to fields needed for the functions
@@ -239,9 +240,8 @@ class Ui_MainWindow(object):
 
         # start analysis process
         for i in range(len(sanchez)):
-            print("briana")
             funD['fName'] = (sanchez[i])
-            funInfo = self.r2.cmd("afvj @ " + sanchez[i])
+            funInfo = self.r2.cmd("afvj @ " + str(sanchez[i]))
             formatInfo = json.loads(funInfo)
 
             for key in formatInfo.keys():
@@ -269,85 +269,89 @@ class Ui_MainWindow(object):
 
             argCounter = 0
             locCounter = 0
-
+            print(funD)
             dictList.append(funD)
             funD = dict.fromkeys(keys, [])
+            print(len(dictList))
 
     def runDynamicAnalysis(self):
-        self.args = ""
-        if (self.pluginDropDownAnalysis.currentText() == "Select"):
-            self.setupPluginError(self.windowPluginError)
-            self.windowPluginError.show()
-        else:
-            self.stopDynamicButton.setEnabled(True)
+        brianaFlag = True
+        self.detailedPoiAnalysisField.setText("")
+        self.poiAnalysisList.clear()
+        self.r2.cmd("aaa")
 
-            self.static = 1
+        print(len(dictList))
+        for i in range(len(dictList)):  # iterate over list of functions
+            self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
+            self.r2.cmd("ood")  # open in debug mode
+            breakpointString = "db " + str((dictList[i]['fName']))
+            self.r2.cmd(breakpointString)  # first set the breakpoint
+            self.r2.cmd("dc")  # continue to run
+            self.r2.cmd("dcr")  # get values at this point
+            returnVal = self.r2.cmd("dr rax")
+            returnVal = returnVal.rstrip("\n").encode('utf-8')
+            # start running after breakpoint get arguments first
+            templistOfVals = []
+            templistOfLoc = []
+            # for arguments
+            for j in range(dictList[i]['argNum']):
+                # set return value
+                dictList[i]['retVal'] = returnVal
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "return value: ")
+                commandToVal = self.r2.cmd("afvd " + dictList[i]['argName'][j])
+                commandList = commandToVal.split(" ")
+                validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                lineWithval = self.r2.cmd(validCommand)
+                formattedVal = json.loads(lineWithval)
+                templistOfVals.append(formattedVal[0]['value'])
+                dictList[i]['argVal'] = templistOfVals
+            # for local variables
+            for k in range(dictList[i]['locNum']):
+                commandToVal = self.r2.cmd("afvd " + dictList[i]['locName'][j])
+                commandList = commandToVal.split(" ")
+                validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                lineWithval = self.r2.cmd(validCommand)
+                formattedVal = json.loads(lineWithval)
+                templistOfLoc.append(formattedVal[0]['value'])
+                dictList[i]['locVal'] = templistOfLoc
 
-            self.terminalField.append("Dynamic Analysis Performed!")
-            self.terminalField.append("")
+            self.r2.cmd("db-*")
+        print(len(dictList))
+        for item in range(len(dictList)):
+            print("Briana")
+            print(dictList[item]['fName'])
+            #staticFunctionList.append(item)
+            #item = QtWidgets.QListWidgetItem(item["name"])
+            #item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            #item.setCheckState(QtCore.Qt.Checked)
+            #self.poiAnalysisList.addItem(item)
+            #counter = counter + 1
 
 
-            self.r2.cmd('ood')
-            self.r2.cmd("dc")
-            self.r2.cmd("dso")
-            self.fd = self.r2.cmdj("aflj")
-            self.sd = self.r2.cmdj("izzj")
 
-            poiSelected = self.poiTypeDropDownAnalysis.currentText()
-
-            if (poiSelected=="Strings"):
-                self.display = "strings"
-                self.detailedPoiAnalysisField.setText("")
-                self.poiAnalysisList.clear()
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Value: ")
-                self.detailedPoiAnalysisField.append("\n")
-                self.detailedPoiAnalysisField.append("\t" + "Section: ")
-                font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(12)
-                self.detailedPoiAnalysisField.setFont(font)
-                self.detailedPoiAnalysisField.repaint()
-                for item in self.sd:
-                    item = QtWidgets.QListWidgetItem(item["string"])
-                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                    self.poiAnalysisList.addItem(item)
-
-            elif (poiSelected=="Functions"):
-                self.terminalField.append("Command: afl")
-                self.display = "functions"
-                self.detailedPoiAnalysisField.setText("")
-                self.poiAnalysisList.clear()
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Function: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Order num: ")
-                self.detailedPoiAnalysisField.append("\n")
-                font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(12)
-                self.detailedPoiAnalysisField.setFont(font)
-                self.detailedPoiAnalysisField.repaint()
-                for item in self.f:
-                    print(item);
-                    item = QtWidgets.QListWidgetItem(item["name"])
-                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                    self.poiAnalysisList.addItem(item)
 
     def displayPOI(self):
         if (self.static == 1):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
+            if (self.brianaFlag==True):
+                if (poiSelected == "Functions"):
+                    self.display = "functions"
+                    self.terminalField.append("Command: afl")
+                    self.detailedPoiAnalysisField.setText("")
+                    self.poiAnalysisList.clear()
+                    self.detailedPoiAnalysisField.append("\t" + "\n")
+                    self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                    self.detailedPoiAnalysisField.append("\t" + "\n")
+                    self.detailedPoiAnalysisField.append("\t" + "Function: ")
+                    self.detailedPoiAnalysisField.append("\t" + "\n")
+                    self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
+                    self.detailedPoiAnalysisField.append("\t" + "\n")
+                    font = self.detailedPoiAnalysisField.font()
+                    font.setPointSize(12)
+                    self.detailedPoiAnalysisField.setFont(font)
+                    self.detailedPoiAnalysisField.repaint()
 
             if (poiSelected == "Strings"):
                 self.display = "strings"
@@ -632,7 +636,32 @@ class Ui_MainWindow(object):
 
     def analysisClicked(self):
         selected = self.poiAnalysisList.currentItem().text()
-        if self.display is "strings":
+        if (self.brianaFlag == True):
+            if (self.poiSelected == "Functions"):
+                self.display = "functions"
+                for item in self.functionsStatic:
+                    current = item["name"]
+                    if current == selected:
+                        self.vaddr = hex(item["minbound"])
+                        self.vaddr = str(self.vaddr)
+                        self.function = str(item["name"])
+                        self.signature = str(item["signature"])
+                        self.temp = self.signature.split('(')[1];
+                        self.temp2 = self.temp.split(')')[0];
+                        break
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Function: " + self.function)
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+
+        elif self.display is "strings":
             for item in self.stringsStatic:
                 current = item["string"]
                 if current == selected:
