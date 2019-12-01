@@ -1394,6 +1394,7 @@ class Ui_MainWindow(object):
 
         self.setupSaveAnalysis(self.windowPlug)
         self.windowPlug.show()
+###
 
 if __name__ == "__main__":
     import sys
