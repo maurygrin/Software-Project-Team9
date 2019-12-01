@@ -355,13 +355,9 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
-            self.documentList.addItem("Plugin Structure")
-
             #self.poiPluginField.setText(listFunctions[0])
-
-
-
             self.savePlugin()
+
 
 
     def saveProject(self):
@@ -437,11 +433,14 @@ class Ui_MainWindow(object):
          #   self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
-
         self.pluginManagementList.addItem(it)
-
+        self.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)
-
+        currentDocument = self.documentList.currentItem()
+        self.hidePluginStructure(False)
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
         self.retranslateUi(MainWindow)
 
     def deleteProject(self):
@@ -475,6 +474,12 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.documentViewField.clear()
+                self.hidePluginStructure(True)
+        self.hidePluginStructure(True)
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -709,6 +714,12 @@ class Ui_MainWindow(object):
          #   self.poiPluginField.addItem(base64.b64decode(item["string"]).decode())
           #  self.poiPluginField.append(list[9])
         self.deletePluginButton.setEnabled(True)
+
+        self.hidePluginStructure(False)
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
 
     def poiClicked(self):
         print("POI List clicked")
@@ -1309,12 +1320,18 @@ class Ui_MainWindow(object):
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
         self.documentList.addItem("Plugin Structure")
-        ####################################
+        self.hidePluginStructure(True)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
+
+    def hidePluginStructure(self, hidden):
+        items = self.documentList.findItems("Plugin Structure", QtCore.Qt.MatchExactly)
+        if len(items) > 0:
+            for item in items:
+                item.setHidden(hidden)
 
     def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
