@@ -7,6 +7,12 @@ from views.PluginTab import PluginTab
 from views.POITab import POITab
 from views.DocumentationTab import DocumentationTab
 
+from controllers.ProjectController import ProjectController
+from controllers.AnalysisController import AnalysisController
+from controllers.PluginController import PluginController
+from controllers.POIController import POIController
+from controllers.DocumentationController import DocumentationController
+
 
 class Ui_MainWindow(object):
     def setupMain(self, MainWindow):
@@ -74,6 +80,14 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.project_controller = ProjectController(self.project_tab)
+        self.analysis_controller = AnalysisController(self.analysis_tab)
+        self.plugin_controller = PluginController(self.plugin_tab)
+        self.poi_controller = POIController(self.poi_tab)
+        self.documentation_controller = DocumentationController(self.documentation_tab)
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
