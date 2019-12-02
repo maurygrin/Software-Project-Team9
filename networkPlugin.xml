@@ -5,12 +5,12 @@
         <network maxOccurs="1"> Script </network>
         <network maxOccurs="1"> GenerateScript </network>
     </plugin>
-    <POItypeFunctions default="True" maxOccurs="unbounded" minOccurs="1">
+    <POItypeFunctionss default="True" maxOccurs="unbounded" minOccurs="1">
         <network maxOccurs="1">Strings</network>
         <network maxOccurs="1">Functions</network>
-        <network maxOccurs="1">Variables</network>
+        <network maxOccurs="1">Varibles</network>
         <network maxOccurs="1">DLLs</network>
-    </POItypeFunctions>;
+    </POItypeFunctionss>&gt;
 
 
     <item>
@@ -86,7 +86,7 @@
     <item>
         <nameStrings>IP</nameStrings>
         <typeStrings>String</typeStrings>
-<outputString>ipaddress.ip_address</outputString>
+        <outputString>ipaddress.ip_address</outputString>
     </item>
 
     <item>
@@ -104,4 +104,4 @@
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
-<item><nameStrings>Ping</nameStrings><typeStrings /><outputString>Pong</outputString></item></plugins>
+</plugins>
