@@ -1681,36 +1681,6 @@ class Ui_MainWindow(object):
             #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
 
-        # print("the item selected is:")
-        # print(self.runList.currentItem().text())
-
-
-
-        #self.projectList.currentItem().text()})
-
-        # it = QtWidgets.QListWidgetItem(self.plugin.name)
-        # self.pluginManagementList.addItem(it)
-        # self.pluginManagementList.setCurrentItem(it)
-
-        # it = QtWidgets.QListWidgetItem(name)
-        # self.runList.addItem(it)
-
-        #print("works so far")
-        #self.detailedPoiAnalysisField.setText(description)
-###
-    # self.detailedPoiAnalysisField.setText("")
-    # self.poiAnalysisList.clear()
-    # self.detailedPoiAnalysisField.append("\t" + "\n")
-    # self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
-    # self.detailedPoiAnalysisField.append("\t" + "\n")
-    # self.detailedPoiAnalysisField.append("\t" + "Value: ")
-    # self.detailedPoiAnalysisField.append("\n")
-    # self.detailedPoiAnalysisField.append("\t" + "Section: ")
-    # font = self.detailedPoiAnalysisField.font()
-    # font.setPointSize(12)
-    # self.detailedPoiAnalysisField.setFont(font)
-    # self.detailedPoiAnalysisField.repaint()
-
     def retranslateUiSaveAnalysis(self, newAnalysis):  #####
         _translate = QtCore.QCoreApplication.translate
         newAnalysis.setWindowTitle(_translate("newAnalysis", "Save Analysis"))
