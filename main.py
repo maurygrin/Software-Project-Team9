@@ -185,7 +185,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.s:
-                    item = QtWidgets.QListWidgetItem(item["string"])
+                    item = QtWidgets.QListWidgetItem(base64.b64decode(item["string"]).decode())
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
                     self.poiAnalysisList.addItem(item)
@@ -214,6 +214,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.f:
                     # print(item);
+                    self.poiAnalysisList.addItem(base64.b64decode(item["string"]).decode())
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
@@ -374,6 +375,11 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.addItem(list[4])
             self.poiTypeDropDownAnalysis.addItem(list[5])
 
+            self.outputFieldDropDown.clear()
+            self.outputFieldDropDown.addItem(list[2])
+            print(list[2])
+            self.outputFieldDropDown.repaint()
+
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
             self.pluginDropDownAnalysis.addItem(list[0])
@@ -490,6 +496,7 @@ class Ui_MainWindow(object):
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
+                    "pluginOutput": list[2],
                     "POI Strings": list[4],
                     "POI Functions": list[5],
                     "Strings": [],  # Nested Document
@@ -569,8 +576,30 @@ class Ui_MainWindow(object):
         self.poiList.clear()
         self.poiList.repaint()
 
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
+        self.outputFieldDropDown.addItem("Output Field")
+
+        self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
+        self.poiFilterDropDown.addItem("Select")
+
+        self.poiTypeDropDownAnalysis.clear()
+        self.poiTypeDropDownAnalysis.repaint()
+        self.poiTypeDropDownAnalysis.addItem("Select")
+
+        self.pluginDropDownAnalysis.clear()
+        self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
+
+        self.poiPluginDropDown.clear()
+        self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
+
     def deletePOI(self):
         self.poiList.takeItem(self.poiList.currentRow())
+        self.poiViewField.clear()
+        self.poiViewField.repaint()
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
@@ -672,7 +701,7 @@ class Ui_MainWindow(object):
         selected = self.poiAnalysisList.currentItem().text()
         if self.display is "strings":
             for item in self.s:
-                current = item["string"]
+                current = base64.b64decode(item["string"]).decode()
                 if current == selected:
                     self.vaddr = hex(item["vaddr"])
                     self.vaddr = str(self.vaddr)
@@ -720,11 +749,10 @@ class Ui_MainWindow(object):
     def pluginClicked(self):
         listStrings.clear()
         listFunctions.clear()
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
         self.poiViewField.clear()
         self.poiViewField.repaint()
-        print("Clicked Vacio: ")
-        print(listStrings)  # Test
-        print(listFunctions)  # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
@@ -734,6 +762,7 @@ class Ui_MainWindow(object):
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
+        pluginOutput = plugin.get("pluginOutput")
 
         ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
 
@@ -749,7 +778,7 @@ class Ui_MainWindow(object):
             listFunctions.append(item.get("Name"))
             listFunctions.append(item.get("Type"))
             listFunctions.append(item.get("Output"))
-        print("Clicked: ")
+        print("Clicked: Plugin")
 
         self.poiPluginField.append(str(listStrings))  # Test
         self.poiPluginField.append(str(listFunctions))  # Test
@@ -765,6 +794,7 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+        self.outputFieldDropDown.addItem(pluginOutput)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.addItem("Select")
@@ -1324,6 +1354,7 @@ class Ui_MainWindow(object):
         self.documentList.clicked.connect(self.documentationClicked)
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
+        self.poiDeleteButton.clicked.connect(self.deletePOI)
 
         self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
 

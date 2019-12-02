@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-  <xs:element name="plugin">
+  <xs:element name="plugins">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="name"/>
-        <xs:element ref="description"/>
-        <xs:element maxOccurs="unbounded" ref="point_of_interest"/>
+        <xs:element ref="network"/>
+        <xs:element ref="network"/>
+        <xs:element maxOccurs="unbounded" ref="item"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="description" type="xs:string"/>
-  <xs:element name="point_of_interest">
+  <xs:element name="item">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="name"/>
-        <xs:element ref="type"/>
-        <xs:element ref="pythonOutput"/>
+        <xs:element ref="nameStrings"/>
+        <xs:element ref="typeStrings"/>
+        <xs:element ref="outputStrings"/>
+        <xs:element ref="nameFunctions"/>
+        <xs:element ref="nameStrings"/>
+        <xs:element ref="outputFucntions"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="type" type="xs:NCName"/>
-  <xs:element name="pythonOutput" type="xs:string"/>
+  <xs:element name="output" type="xs:string"/>
   <xs:element name="name" type="xs:string"/>
+  <xs:element name="network"/>
+  <xs:element name="nameStrings"/>
+  <xs:element name="typeStrings"/>
+  <xs:element name="outputStrings"/>
+  <xs:element name="nameFunctions"/>
+  <xs:element name="outputFucntions"/>
 </xs:schema>
