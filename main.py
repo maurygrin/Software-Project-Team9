@@ -589,6 +589,8 @@ class Ui_MainWindow(object):
 
     def deletePOI(self):
         self.poiList.takeItem(self.poiList.currentRow())
+        self.poiViewField.clear()
+        self.poiViewField.repaint()
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
