@@ -377,14 +377,17 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.addItem(list[4])
             self.poiTypeDropDownAnalysis.addItem(list[5])
 
+            self.outputFieldDropDown.clear()
+            self.outputFieldDropDown.addItem(list[2])
+            print(list[2])
+            self.outputFieldDropDown.repaint()
+
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
-            self.pluginDropDownAnalysis.addItem("Select")
             self.pluginDropDownAnalysis.addItem(list[0])
 
             self.poiPluginDropDown.clear()
             self.poiPluginDropDown.repaint()
-            self.poiPluginDropDown.addItem("Select")
             self.poiPluginDropDown.addItem(list[0])
 
             self.poiFilterDropDown.clear()
@@ -393,9 +396,10 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
+            self.documentList.addItem("Plugin Structure")
+
             # self.poiPluginField.setText(listFunctions[0])
 
-            #self.poiPluginField.setText(listFunctions[0])
             self.savePlugin()
 
     def createPOI(self, name, typeP, out):
