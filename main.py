@@ -210,7 +210,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.repaint()
                 counter =0
                 for item in self.functionsStatic:
-                    staticFunctionList.append(item)
+                    staticFunctionList.append(item["name"])
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Checked)
@@ -229,12 +229,12 @@ class Ui_MainWindow(object):
         locCounter = 0
         # create a dictionary with keys that correspond to fields needed for the functions
         funD = dict.fromkeys(keys, [])
-        self.r2.cmd("aaa")  # initial analysis
+        #self.r2.cmd("aaa")  # initial analysis
 
         # start analysis process
         for i in range(len(staticFunctionList)):
-            funD['fName'] = (staticFunctionList[i]['name'])
-            funInfo = self.r2.cmd("afvj @ " + str(staticFunctionList[i]['name']))
+            funD['fName'] = (staticFunctionList[i])
+            funInfo = self.r2.cmd("afvj @ " + str(staticFunctionList[i]))
             formatInfo = json.loads(funInfo)
             for key in formatInfo.keys():
                 tempList = formatInfo[key]
@@ -255,14 +255,12 @@ class Ui_MainWindow(object):
                         locCounter += 1
                         funD['locNum'] = locCounter
                         localVarNames.append(tempList[j]['name'])
-                        print(tempList[j]['name'])
                         localVarTypes.append(tempList[j]['type'])
                         funD['locName'] = localVarNames
                         funD['locType'] = localVarTypes
             argCounter = 0
             locCounter = 0
             dictList.append(funD)
-            print("list appending: " + str(funD))
             funD = dict.fromkeys(keys, [])
 
 
@@ -307,17 +305,18 @@ class Ui_MainWindow(object):
             # for local variables
             if(validFlag2):
                 for k in range(dictList[i]['locNum']):
-                        commandToVal = self.r2.cmd("afvd " + dictList[i]['locName'][j])
+                        commandToVal = self.r2.cmd("afvd " + dictList[i]['locName'][k])
                         if commandToVal != "" :
                             commandList = commandToVal.split(" ")
                             validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                            print(dictList[i]['locName'][k])
+                            print(validCommand)
                             lineWithval = self.r2.cmd(validCommand)
                             formattedVal = json.loads(lineWithval)
                             templistOfLoc.append(formattedVal[0]['value'])
                             dictList[i]['locVal'] = templistOfLoc
 
                 self.r2.cmd("db-*")
-
         print(dictList)
         #when it reaches this point, dynamic analysis has been done for all breakpoints.
         # display?
@@ -537,7 +536,7 @@ class Ui_MainWindow(object):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.binaryFilePathField, "Browse Binary File", "",
-                                                            "Binary Files (*.exe *.out *.class *.docx)",
+                                                            "All Files (*.exe *.out *.class *.docx)",
                                                             options=options)
         if fileName:
             self.path = str(fileName)
