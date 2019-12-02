@@ -34,6 +34,7 @@ class Ui_MainWindow(object):
         self.windowComment = QtWidgets.QDialog()
         self.windowPluginError = QtWidgets.QDialog()
         self.windowSaveAnalysis = QtWidgets.QDialog()
+        self.windowComment = QtWidgets.QDialog()
 
         self.text = None
         self.contents = None
@@ -190,10 +191,11 @@ class Ui_MainWindow(object):
                 font.setPointSize(12)
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
-                for item in self.s:
+                for item in self.s: #^
                     item = QtWidgets.QListWidgetItem(item["string"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
+                    item.setIcon(QtGui.QIcon('comment.png'))
                     self.poiAnalysisList.addItem(item)
 
             elif (poiSelected == "Functions"):
@@ -1175,7 +1177,7 @@ class Ui_MainWindow(object):
         self.commentViewButton = QtWidgets.QPushButton(self.analysisView)
         self.commentViewButton.setGeometry(QtCore.QRect(100, 640, 141, 30))
         self.commentViewButton.setObjectName("commentViewButton")
-        self.commentViewButton.clicked.connect(self.saveAnalysisPopUp)  # *
+        self.commentViewButton.clicked.connect(self.commentPopUp)  # *
         self.UI.addTab(self.analysisTab, "")
         self.pluginManagementTab = QtWidgets.QWidget()
         self.pluginManagementTab.setObjectName("pluginManagementTab")
@@ -1856,15 +1858,69 @@ class Ui_MainWindow(object):
         self.analysisDescriptionLabel.setText(_translate("newAnalysis", "Analysis Description"))
 
     def deleteAnalysisPopUp(self):
-        msg = QMessageBox()
-        msg.setWindowTitle("Delete Analysis")
-        msg.setText("An analysis must be selected first.")
-        x = msg.exec_()
+        self.setupSaveAnalysis(self.windowSaveAnalysis)  #Delete and put the commented section in.
+        self.windowSaveAnalysis.show()
+
+        # msg = QMessageBox()
+        # msg.setWindowTitle("Delete Analysis")
+        # msg.setText("An analysis must be selected first.")
+        # x = msg.exec_()
 
     def saveAnalysisPopUp(self):
         self.setupSaveAnalysis(self.windowSaveAnalysis)
         self.windowSaveAnalysis.show()
 
+    def setupComment(self, newComment):
+        newComment.setObjectName("newComment")
+        newComment.resize(541, 369)
+        self.CButtonBox = QtWidgets.QDialogButtonBox(newComment)
+        self.CButtonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
+        self.CButtonBox.setOrientation(QtCore.Qt.Horizontal)
+
+        self.CButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Save | QtWidgets.QDialogButtonBox.Ok)
+        self.CButtonBox.button(QtWidgets.QDialogButtonBox.Ok).setText("Clear")
+
+        self.CButtonBox.setObjectName("commentButtonBox")
+        self.commentLabel = QtWidgets.QLabel(newComment)
+        self.commentLabel.setGeometry(QtCore.QRect(20, 80, 151, 16))  ## String Description
+        self.commentLabel.setObjectName("commentDescriptionLabel")
+        self.commentEdit = QtWidgets.QTextEdit(newComment)
+        self.commentEdit.setGeometry(QtCore.QRect(20, 50, 500, 220))  ##Description Field 20, 170, 500, 141))
+        self.commentEdit.setObjectName("commentDescriptionEdit")
+
+        self.retranslateUiComment(newComment)
+        self.CButtonBox.accepted.connect(newComment.accept)
+        self.CButtonBox.rejected.connect(newComment.reject)
+        QtCore.QMetaObject.connectSlotsByName(newComment)
+
+        self.CButtonBox.accepted.connect(
+            lambda: self.saveComment(self.commentEdit.toPlainText()))
+
+    def retranslateUiComment(self, newComment):  #####
+        _translate = QtCore.QCoreApplication.translate
+        newComment.setWindowTitle(_translate("newAnalysis", "Comment View"))
+
+    def saveComment(self, description):
+        print("Saved not!")
+        print(description)
+        Comment = {"ID": "test2", "Comment": description}
+
+        self.collection.insert([Comment])
+
+        print(self.collection)
+
+        results = self.collection.find({"ID": "test2"})
+        for result in results:
+            print("went inside")
+            print(result["Comment"])
+            # self.detailedPoiAnalysisField.setText(result["DADescription"])
+            #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+            break
+
+    def commentPopUp(self):
+        self.setupComment(self.windowComment)
+        self.windowComment.show()
+        print("Hello comment pop-ups!")
 ###
 
 if __name__ == "__main__":
