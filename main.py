@@ -31,6 +31,8 @@ class Ui_MainWindow(object):
         self.windowOutputField = QtWidgets.QDialog()
         self.windowComment = QtWidgets.QDialog()
         self.windowPluginError = QtWidgets.QDialog()
+        self.windowSaveAnalysis = QtWidgets.QDialog()
+
         self.text = None
         self.contents = None
         self.le = None
@@ -1041,6 +1043,7 @@ class Ui_MainWindow(object):
         self.commentViewButton = QtWidgets.QPushButton(self.analysisView)
         self.commentViewButton.setGeometry(QtCore.QRect(100, 640, 141, 30))
         self.commentViewButton.setObjectName("commentViewButton")
+        self.commentViewButton.clicked.connect(self.saveAnalysisPopUp)  # *
         self.UI.addTab(self.analysisTab, "")
         self.pluginManagementTab = QtWidgets.QWidget()
         self.pluginManagementTab.setObjectName("pluginManagementTab")
@@ -1514,7 +1517,7 @@ class Ui_MainWindow(object):
         self.terminalLabel.setText(_translate("MainWindow", "Terminal"))
         self.outputFieldViewButton.setText(_translate("MainWindow", "Output Field View"))
         self.deleteAnalysisResultButton.setText(_translate("MainWindow", "Delete Analysis Result"))
-        self.deleteAnalysisResultButton.clicked.connect(self.saveAnalysisPopUp)  #*
+        self.deleteAnalysisResultButton.clicked.connect(self.deleteAnalysisPopUp)  #*
         self.pluginLabel.setText(_translate("MainWindow", "Plugin"))
         self.staticAnalysisLabel.setText(_translate("MainWindow", "Static Analysis"))
         self.poiTypeLabel.setText(_translate("MainWindow", "POI Type"))
@@ -1624,25 +1627,25 @@ class Ui_MainWindow(object):
 #*
     def setupSaveAnalysis(self, newPAnalysis):
         print("went inside setup save analysis")
-        newPAnalysis.setObjectName("newPlugin")
+        newPAnalysis.setObjectName("newAnalysis")
         newPAnalysis.resize(541, 369)
         self.buttonBox = QtWidgets.QDialogButtonBox(newPAnalysis)
         self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Save)
-        self.buttonBox.setObjectName("buttonBox")
-        self.projectNameLabel = QtWidgets.QLabel(newPAnalysis)
-        self.projectNameLabel.setGeometry(QtCore.QRect(20, 10, 181, 16))  #
-        self.projectNameLabel.setObjectName("projectNameLabel")
+        self.buttonBox.setObjectName("analysisButtonBox")
+        self.analysisNameLabel = QtWidgets.QLabel(newPAnalysis)
+        self.analysisNameLabel.setGeometry(QtCore.QRect(20, 10, 181, 16))  #
+        self.analysisNameLabel.setObjectName("analysisName")
         self.pluginNameEdit = QtWidgets.QTextEdit(newPAnalysis)
         self.pluginNameEdit.setGeometry(QtCore.QRect(20, 30, 500, 21))  # Name Field(Right, Down, right, Down)
-        self.pluginNameEdit.setObjectName("pluginNameEdit")
-        self.pluginDescriptionLabel = QtWidgets.QLabel(newPAnalysis)
-        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 70, 151, 16))  ## String Description
-        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
-        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPAnalysis)
-        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 90, 500, 220))  ##Description Field 20, 170, 500, 141))
-        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
+        self.pluginNameEdit.setObjectName("analysisNameEdit")
+        self.analysisDescriptionLabel = QtWidgets.QLabel(newPAnalysis)
+        self.analysisDescriptionLabel.setGeometry(QtCore.QRect(20, 70, 151, 16))  ## String Description
+        self.analysisDescriptionLabel.setObjectName("analysisDescriptionLabel")
+        self.analysisDescriptionEdit = QtWidgets.QTextEdit(newPAnalysis)
+        self.analysisDescriptionEdit.setGeometry(QtCore.QRect(20, 90, 500, 220))  ##Description Field 20, 170, 500, 141))
+        self.analysisDescriptionEdit.setObjectName("analysisDescriptionEdit")
 
         self.retranslateUiSaveAnalysis(newPAnalysis)
         self.buttonBox.accepted.connect(newPAnalysis.accept)
@@ -1650,7 +1653,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(newPAnalysis)
 
         self.buttonBox.accepted.connect(
-            lambda: self.saveAnalysis(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText()))
+            lambda: self.saveAnalysis(self.pluginNameEdit.toPlainText(), self.analysisDescriptionEdit.toPlainText()))
 
 
     def saveAnalysis(self, name, description):
@@ -1676,22 +1679,22 @@ class Ui_MainWindow(object):
 
         print("works so far")
 
-    def retranslateUiSaveAnalysis(self, newPlugin):  #####
+    def retranslateUiSaveAnalysis(self, newAnalysis):  #####
         _translate = QtCore.QCoreApplication.translate
-        newPlugin.setWindowTitle(_translate("newPlugin", "Save Analysis"))
-        self.projectNameLabel.setText(_translate("newPlugin", "Analysis Name"))
-        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Analysis Description"))
+        newAnalysis.setWindowTitle(_translate("newAnalysis", "Save Analysis"))
+        self.analysisNameLabel.setText(_translate("newAnalysis", "Analysis Name"))
+        self.analysisDescriptionLabel.setText(_translate("newAnalysis", "Analysis Description"))
 
-        #Delete #*
-        # self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
-        # self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
-        # self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
-        # self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+    def deleteAnalysisPopUp(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Delete Analysis")
+        msg.setText("An analysis must be selected first.")
+        x = msg.exec_()
 
     def saveAnalysisPopUp(self):
+        self.setupSaveAnalysis(self.windowSaveAnalysis)
+        self.windowSaveAnalysis.show()
 
-        self.setupSaveAnalysis(self.windowPlug)
-        self.windowPlug.show()
 ###
 
 if __name__ == "__main__":
