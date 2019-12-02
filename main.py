@@ -164,11 +164,6 @@ class Ui_MainWindow(object):
             self.r2.cmd("aaa")
             self.functionsStatic = self.r2.cmdj("afllj")
             self.stringsStatic = self.r2.cmdj("izzj")
-            for i in range(len(self.stringsStatic)):
-                try:
-                    self.stringsStatic[i]['strings'] = base64.b64decode(self.stringsStatic[i]['strings']).decode("utf-8")
-                except:
-                    pass
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
             if (poiSelected=="Strings"):
@@ -221,9 +216,10 @@ class Ui_MainWindow(object):
                     item.setCheckState(QtCore.Qt.Checked)
                     self.poiAnalysisList.addItem(item)
                     counter = counter +1
-                print(dictList)
+                print("Dictionary before: " + str(dictList))
                 self.brianaFunction(staticFunctionList);
-                print(dictList)
+                print("Dictionary after: " + str(dictList))
+
 
     def brianaFunction(self, staticFunctionList):
         keys = ['fName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
@@ -236,7 +232,6 @@ class Ui_MainWindow(object):
         self.r2.cmd("aaa")  # initial analysis
 
         # start analysis process
-        print("going into loop")
         for i in range(len(staticFunctionList)):
             funD['fName'] = (staticFunctionList[i]['name'])
             funInfo = self.r2.cmd("afvj @ " + str(staticFunctionList[i]['name']))
@@ -247,6 +242,7 @@ class Ui_MainWindow(object):
                 argTypes = []
                 localVarNames = []
                 localVarTypes = []
+
                 for j in range(len(tempList)):
                     if tempList[j]['kind'] == 'reg':
                         argCounter += 1
@@ -259,68 +255,73 @@ class Ui_MainWindow(object):
                         locCounter += 1
                         funD['locNum'] = locCounter
                         localVarNames.append(tempList[j]['name'])
+                        print(tempList[j]['name'])
                         localVarTypes.append(tempList[j]['type'])
                         funD['locName'] = localVarNames
                         funD['locType'] = localVarTypes
-
             argCounter = 0
             locCounter = 0
             dictList.append(funD)
+            print("list appending: " + str(funD))
             funD = dict.fromkeys(keys, [])
 
-    def runDynamicAnalysis(self):
-        brianaFlag = True
 
+    def runDynamicAnalysis(self, ):
         for i in range(len(dictList)):  # iterate over list of functions
-            #self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
+            validFlag = True #is arg num populated flag
+            if(dictList[i]['argNum'] == []): #check to see if there is anything populated
+                validFlag = False
+
+            validFlag2 = True #is locNum populated flag
+            if(dictList[i]['locNum'] == []): # check to see if there is anything populated
+                validFlag2 = False
+
+
+            self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
             self.r2.cmd("ood")  # open in debug mode
             self.r2.cmd("aaa")
             breakpointString = "db " + str((dictList[i]['fName']))
-            print(breakpointString)
+            #if (the item is checked then ):
+                #place breakpoint
             self.r2.cmd(breakpointString)  # first set the breakpoint
-            self.r2.cmd("dc")  # continue to run
-            #self.r2.cmd("dcr")  # get values at this point
+            self.r2.cmd("dc")  # Run until the first breakpoint
             returnVal = self.r2.cmd("dr rax")
             returnVal = returnVal.rstrip("\n")
             #start running after breakpoint get arguments first
             templistOfVals = []
             templistOfLoc = []
             # for arguments
-            for j in range(dictList[i]['argNum']):
-                # set return value
-                dictList[i]['retVal'] = returnVal
-                print(str(dictList[i]['argName'][j]))
-                commandToVal = self.r2.cmd("afvd " + str(dictList[i]['argName'][j]))
-                print(str(commandToVal))
-                commandList = commandToVal.split(" ")
-                commandListTemp = commandToVal.split(" ")
-                validCommand = commandList[0] + "j " + commandListTemp[0] + " " + commandListTemp[1]
+            if(validFlag):
+                for j in range(dictList[i]['argNum']):
+                    # set return value
+                    dictList[i]['retVal'] = returnVal
+                    commandToVal = self.r2.cmd("afvd " + dictList[i]['argName'][j])
+                    if commandToVal != "" :
+                        commandList = commandToVal.split(" ")
+                        validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                        lineWithval = self.r2.cmd(validCommand)
+                        formattedVal = json.loads(lineWithval)
+                        templistOfVals.append(formattedVal[0]['value'])
+                        dictList[i]['argVal'] = templistOfVals
 
-                lineWithval = self.r2.cmd(validCommand)
-                formattedVal = json.loads(lineWithval)
-                templistOfVals.append(formattedVal[0]['value'])
-                dictList[i]['argVal'] = templistOfVals
             # for local variables
-            for k in range(dictList[i]['locNum']):
-                commandToVal = self.r2.cmd("afvd " + dictList[i]['locName'][j])
-                commandList = commandToVal.split(" ")
-                validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
-                lineWithval = self.r2.cmd(validCommand)
-                formattedVal = json.loads(lineWithval)
-                templistOfLoc.append(formattedVal[0]['value'])
-                dictList[i]['locVal'] = templistOfLoc
+            if(validFlag2):
+                for k in range(dictList[i]['locNum']):
+                        commandToVal = self.r2.cmd("afvd " + dictList[i]['locName'][j])
+                        if commandToVal != "" :
+                            commandList = commandToVal.split(" ")
+                            validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                            lineWithval = self.r2.cmd(validCommand)
+                            formattedVal = json.loads(lineWithval)
+                            templistOfLoc.append(formattedVal[0]['value'])
+                            dictList[i]['locVal'] = templistOfLoc
 
-            self.r2.cmd("db-*")
-        #for item in range(len(dictList)):
-            #staticFunctionList.append(item)
-            #item = QtWidgets.QListWidgetItem(item["name"])
-            #item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
-            #item.setCheckState(QtCore.Qt.Checked)
-            #self.poiAnalysisList.addItem(item)
-            #counter = counter + 1
+                self.r2.cmd("db-*")
 
-
-
+        print(dictList)
+        #when it reaches this point, dynamic analysis has been done for all breakpoints.
+        # display?
+        #call function to save dynamic analysis
 
     def displayPOI(self):
         if (self.static == 1):
