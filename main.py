@@ -1677,8 +1677,8 @@ class Ui_MainWindow(object):
         results = self.collection.find({"DAName": name})
         for result in results:
             print("went inside")
-            self.detailedPoiAnalysisField.setText(result["DADescription"])
-            #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+            #self.detailedPoiAnalysisField.setText(result["DADescription"])
+            self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
 
     def retranslateUiSaveAnalysis(self, newAnalysis):  #####
