@@ -8,7 +8,7 @@
     <POItypeFunctions default="True" maxOccurs="unbounded" minOccurs="1">
         <network maxOccurs="1">Strings</network>
         <network maxOccurs="1">Functions</network>
-        <network maxOccurs="1">Varibles</network>
+        <network maxOccurs="1">Variables</network>
         <network maxOccurs="1">DLLs</network>
     </POItypeFunctions>;
 
@@ -104,5 +104,4 @@
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
-
-</plugins>
+<item><nameStrings>Ping</nameStrings><typeStrings /><outputString>Pong</outputString></item></plugins>
