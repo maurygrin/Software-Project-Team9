@@ -624,8 +624,16 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.setFont(font)
             self.detailedPoiAnalysisField.repaint()
 
+    #*
     def runClicked(self):
-        print("Analysis Run List clicked")
+        currItem = self.runList.currentItem().text()
+        print(currItem)
+
+        results = self.collection.find({"DAName": currItem})
+        for result in results:
+            print("went inside")
+            self.detailedPoiAnalysisField.setText(result["DADescription"])
+            break
 
     def pluginClicked(self):
         listStrings = [] # Re-Initialize list
@@ -1623,10 +1631,8 @@ class Ui_MainWindow(object):
         self.messageLabel.setText(
             _translate("pluginSelected", "You need to select a plugin before running an analysis."))
 
-###
 #*
     def setupSaveAnalysis(self, newPAnalysis):
-        print("went inside setup save analysis")
         newPAnalysis.setObjectName("newAnalysis")
         newPAnalysis.resize(541, 369)
         self.buttonBox = QtWidgets.QDialogButtonBox(newPAnalysis)
@@ -1655,7 +1661,6 @@ class Ui_MainWindow(object):
         self.buttonBox.accepted.connect(
             lambda: self.saveAnalysis(self.pluginNameEdit.toPlainText(), self.analysisDescriptionEdit.toPlainText()))
 
-
     def saveAnalysis(self, name, description):
         DAProperties = {"DAName": name,
                         "DADescription": description,
@@ -1669,15 +1674,42 @@ class Ui_MainWindow(object):
 
         print("Printed!")
 
-        results = self.collection.find({"DAName": "test"})
+        results = self.collection.find({"DAName": name})
         for result in results:
             print("went inside")
-            print(result["DA"])
+            self.detailedPoiAnalysisField.setText(result["DADescription"])
+            #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+            break
 
-        it = QtWidgets.QListWidgetItem(name)
-        self.runList.addItem(it)
+        # print("the item selected is:")
+        # print(self.runList.currentItem().text())
 
-        print("works so far")
+
+
+        #self.projectList.currentItem().text()})
+
+        # it = QtWidgets.QListWidgetItem(self.plugin.name)
+        # self.pluginManagementList.addItem(it)
+        # self.pluginManagementList.setCurrentItem(it)
+
+        # it = QtWidgets.QListWidgetItem(name)
+        # self.runList.addItem(it)
+
+        #print("works so far")
+        #self.detailedPoiAnalysisField.setText(description)
+###
+    # self.detailedPoiAnalysisField.setText("")
+    # self.poiAnalysisList.clear()
+    # self.detailedPoiAnalysisField.append("\t" + "\n")
+    # self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+    # self.detailedPoiAnalysisField.append("\t" + "\n")
+    # self.detailedPoiAnalysisField.append("\t" + "Value: ")
+    # self.detailedPoiAnalysisField.append("\n")
+    # self.detailedPoiAnalysisField.append("\t" + "Section: ")
+    # font = self.detailedPoiAnalysisField.font()
+    # font.setPointSize(12)
+    # self.detailedPoiAnalysisField.setFont(font)
+    # self.detailedPoiAnalysisField.repaint()
 
     def retranslateUiSaveAnalysis(self, newAnalysis):  #####
         _translate = QtCore.QCoreApplication.translate
