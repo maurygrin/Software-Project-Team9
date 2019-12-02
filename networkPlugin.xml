@@ -2,7 +2,7 @@
     <plugin maxOccurs="1" required="true">
         <network maxOccurs="1">Network Plugin </network>
         <network maxOccurs="1" required="true">Points of interest related to network</network>
-        <network maxOccurs="1"> Script </network>
+        <network maxOccurs="1"> Python Script </network>
         <network maxOccurs="1"> GenerateScript </network>
     </plugin>
     <POItypeFunctionss default="True" maxOccurs="unbounded" minOccurs="1">
@@ -12,12 +12,33 @@
         <network maxOccurs="1">DLLs</network>
     </POItypeFunctionss>&gt;
 
-
     <item>
         <nameFunctions>sym.imp.socket</nameFunctions>
         <typeFunctions>Function</typeFunctions>
         <outputFunctions>sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</outputFunctions>
     </item>
+
+
+    <item>
+        <nameFunctions>sym.open.clientfd</nameFunctions>
+        <typeFunctions>Function</typeFunctions>
+        <outputFunctions>(cliaddr:cliport, servaddr:servport)</outputFunctions>
+    </item>
+
+    <item>
+        <nameFunctions>ssym.imp.fopen</nameFunctions>
+        <typeFunctions>Function</typeFunctions>
+        <outputFunctions>fopen( string $filename , string $mode [, bool $use_include_path = FALSE [, resource $context ]] )</outputFunctions>
+    </item>
+
+    <item>
+        <nameFunctions>sym.imp.gethostbyname</nameFunctions>
+        <typeFunctions>Function</typeFunctions>
+        <outputFunctions>socket.gethostbyname(hostname)</outputFunctions>
+    </item>
+
+
+
     <item>
         <nameFunctions>sym.imp.bind</nameFunctions>
         <typeFunctions>Function</typeFunctions>
@@ -78,6 +99,25 @@
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
+
+    <item>
+        <nameStrings>Request</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
+    <item>
+        <nameStrings>Connected</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
+    <item>
+        <nameStrings>Binding</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
     <item>
         <nameStrings>Connection</nameStrings>
         <typeStrings>String</typeStrings>
@@ -90,10 +130,29 @@
     </item>
 
     <item>
+        <nameStrings>Request</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
+    <item>
+        <nameStrings>Port</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
+    <item>
         <nameStrings>Address</nameStrings>
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
     </item>
+
+    <item>
+        <nameStrings>TCP</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
+    </item>
+
     <item>
         <nameStrings>Session</nameStrings>
         <typeStrings>String</typeStrings>
@@ -103,5 +162,11 @@
         <nameStrings>Socket</nameStrings>
         <typeStrings>String</typeStrings>
         <outputString>socketserver.TCPServer</outputString>
+    </item>
+
+    <item>
+        <nameStrings>exit</nameStrings>
+        <typeStrings>String</typeStrings>
+        <outputString> </outputString>
     </item>
 </plugins>
