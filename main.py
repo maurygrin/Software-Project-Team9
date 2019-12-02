@@ -19,6 +19,9 @@ listFunctions = []
 
 class Ui_MainWindow(object):
     def __init__(self):
+        self.documentationTextChangeTimer = QtCore.QTimer()
+        self.documentationTextChangeTimer.setSingleShot(True)
+        self.documentationTextChangeTimer.timeout.connect(self.saveDocument)
         self.windowNew = QtWidgets.QDialog()
         self.windowDeleteConfirmation = QtWidgets.QDialog()
         self.windowPlug = QtWidgets.QDialog()
@@ -382,10 +385,12 @@ class Ui_MainWindow(object):
 
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
+            self.pluginDropDownAnalysis.addItem("Select")
             self.pluginDropDownAnalysis.addItem(list[0])
 
             self.poiPluginDropDown.clear()
             self.poiPluginDropDown.repaint()
+            self.poiPluginDropDown.addItem("Select")
             self.poiPluginDropDown.addItem(list[0])
 
             self.poiFilterDropDown.clear()
@@ -394,10 +399,9 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
-            self.documentList.addItem("Plugin Structure")
-
             # self.poiPluginField.setText(listFunctions[0])
 
+            #self.poiPluginField.setText(listFunctions[0])
             self.savePlugin()
 
     def createPOI(self, name, typeP, out):
@@ -453,6 +457,7 @@ class Ui_MainWindow(object):
             tree.write("networkPlugin.xml")
             self.poiList.addItem(self.poi.name)
             self.poiList.repaint()
+
 
     def saveProject(self):
         project = {"Project Name": self.project.name,
@@ -533,11 +538,14 @@ class Ui_MainWindow(object):
         #   self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
-
         self.pluginManagementList.addItem(it)
-
+        self.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)
-
+        currentDocument = self.documentList.currentItem()
+        self.hidePluginStructure(False)
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
         self.retranslateUi(MainWindow)
 
     def deleteProject(self):
@@ -571,6 +579,12 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.documentViewField.clear()
+                self.hidePluginStructure(True)
+        self.hidePluginStructure(True)
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
         self.poiList.clear()
@@ -804,19 +818,28 @@ class Ui_MainWindow(object):
 
         self.pluginDropDownAnalysis.clear()
         self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
         self.pluginDropDownAnalysis.addItem(pluginName)
 
         self.poiPluginDropDown.clear()
         self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
         self.poiPluginDropDown.addItem(pluginName)
 
         self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
         self.poiFilterDropDown.repaint()
 
         self.deletePluginButton.setEnabled(True)
+
+        self.hidePluginStructure(False)
+        currentDocument = self.documentList.currentItem()
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
 
     def poiClicked(self):
         select = self.poiList.currentItem().text()
@@ -858,24 +881,87 @@ class Ui_MainWindow(object):
                 i += 3
 
     def documentationClicked(self):
-        query = {"file_name": "documentation"}
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            self.documentViewField.setReadOnly(False)
+            self.saveButton.setEnabled(True)
+            self.restoreButton.setEnabled(True)
+            collection = self.collection
+            query = {"file_name": currentDocument}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                self.documentViewField.setText(query_result["contents"])
+            else:
+                text_file_doc = {"file_name": currentDocument, "contents": ""}
+                collection.insert_one(text_file_doc)
+        elif currentDocument == "Plugin Structure":
+            self.loadPluginStructureDocumentation()
 
-        query_result = self.collection.find_one(query)
-        if query_result is not None:
-            self.documentViewField.setText(query_result["contents"])
+    def loadPluginStructureDocumentation(self):
+        self.documentViewField.setReadOnly(True)
+        self.saveButton.setEnabled(False)
+        self.restoreButton.setEnabled(False)
+        currentPlugin = self.pluginManagementList.currentItem()
+        if currentPlugin is not None:
+            collection = self.collection
+            query = {"Plugin Name": currentPlugin.text()}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                pluginXsdPath = query_result["Structure File Path"]
+                try:
+                    with open(pluginXsdPath, 'r') as pluginXsd:
+                        content = pluginXsd.read()
+                    self.documentViewField.setText(content)
+                except FileNotFoundError as err:
+                    self.documentViewField.setText("Structure File Path Not Found")
+            else:
+                self.documentViewField.setText("Plugin Not Found")
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
-            self.collection.insert_one(text_file_doc)
+            self.documentViewField.setText("No Plugin Selected")
+
+    def restoreBeatDocumentation(self):
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            default_beat_documentation_path = "BEATDocumentationDefault.txt"
+            try:
+                with open(default_beat_documentation_path, 'r') as default_beat_documentation:
+                    content = default_beat_documentation.read()
+                collection = self.collection
+                query = {"file_name": currentDocument}
+                text_file_doc = {"file_name": currentDocument, "contents": content}
+                # insert the contents into the "file" collection
+                if collection.count_documents(query) > 0:
+                    collection.replace_one(query, text_file_doc)
+                else:
+                    collection.insert_one(query, text_file_doc)
+                self.documentViewField.setText(content)
+            except FileNotFoundError:
+                print("Could Not Restore BEAT Documentation, BEATDocumentationDefault.txt file not found")
+
+    def handleDocumentationEdit(self):
+        self.documentationTextChangeTimer.start(7500)
+        pass
 
     def saveDocument(self):
-        query = {"file_name": "documentation"}
+        if self.documentList.currentItem() is None:
+            return
+        currentDocument = self.documentList.currentItem().text()
+        if currentDocument == "Plugin Structure":
+            return
+        documentContent = self.documentViewField.toPlainText()
+        collection = self.collection
+        query = {"file_name": currentDocument}
         # build a document to be inserted
-        text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
+        text_file_doc = {"file_name": currentDocument, "contents": documentContent}
         # insert the contents into the "file" collection
         if self.collection.count_documents(query) > 0:
             self.collection.replace_one(query, text_file_doc)
         else:
             self.collection.insert_one(query, text_file_doc)
+
+    # End of Documentation Related Function #
 
     def filter_projects(self):  ##filtering list of project
         for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -1293,7 +1379,22 @@ class Ui_MainWindow(object):
         self.documentSearch.setObjectName("documentSearch")
         self.documentSearch.textChanged[str].connect(self.filter_doc)
         self.documentList = QtWidgets.QListWidget(self.documentView)
-        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 581))
+        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 535))
+        ######
+        self.restoreButton = QtWidgets.QPushButton(self.documentView)
+        self.restoreButton.setGeometry(QtCore.QRect(10, 90 + self.documentList.height(), 110, 45))
+        self.restoreButton.setObjectName("restoreButton")
+        self.restoreButton.setText("Restore")
+        self.restoreButton.clicked.connect(self.restoreBeatDocumentation)
+        margin_between_buttons = 11
+        self.saveButton = QtWidgets.QPushButton(self.documentView)
+        self.saveButton.setGeometry(
+            QtCore.QRect(10 + margin_between_buttons + self.restoreButton.width(), 90 + self.documentList.height(), 110,
+                         45))
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.setText("Save")
+        self.saveButton.clicked.connect(self.saveDocument)
+        ######
         font = QtGui.QFont()
         font.setPointSize(11)
         self.documentList.setFont(font)
@@ -1367,23 +1468,28 @@ class Ui_MainWindow(object):
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         ####################################
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test  # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
-        query = {"file_name": "documentation"}
+        collection = self.collection  # and inside that DB, a collection called "files"
+        query = {"file_name": "BEAT Documentation"}
         query_result = collection.find_one(query)
         if query_result is not None:
             self.documentList.addItem(query_result["file_name"])
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
+            text_file_doc = {"file_name": "BEAT Documentation", "contents": ""}
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
-        ####################################
+        self.documentList.addItem("Plugin Structure")
+        self.hidePluginStructure(True)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
+
+    def hidePluginStructure(self, hidden):
+        items = self.documentList.findItems("Plugin Structure", QtCore.Qt.MatchExactly)
+        if len(items) > 0:
+            for item in items:
+                item.setHidden(hidden)
 
     def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
