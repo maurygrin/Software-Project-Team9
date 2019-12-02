@@ -754,11 +754,10 @@ class Ui_MainWindow(object):
     def pluginClicked(self):
         listStrings.clear()
         listFunctions.clear()
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
         self.poiViewField.clear()
         self.poiViewField.repaint()
-        print("Clicked Vacio: ")
-        print(listStrings)  # Test
-        print(listFunctions)  # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
@@ -768,6 +767,7 @@ class Ui_MainWindow(object):
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
+        pluginOutput = plugin.get("pluginOutput")
 
         ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
 
@@ -783,22 +783,16 @@ class Ui_MainWindow(object):
             listFunctions.append(item.get("Name"))
             listFunctions.append(item.get("Type"))
             listFunctions.append(item.get("Output"))
-        print("Clicked: ")
+        print("Clicked: Plugin")
 
         self.poiPluginField.append(str(listStrings))  # Test
         self.poiPluginField.append(str(listFunctions))  # Test
-
-        #######... until here. After you commented this, run the program again and delete the plugins in the system. #####
-        ####### Then, uncomment the previous code and now it should work find when you create a plugin, close the system, #####
-        ####### and select a plugin from the list..... AAAAAAAHHHHH PERRROOOOOOOO!!! ##########
-
-        # for document in self.collection.find():
-        #    self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
+        self.outputFieldDropDown.addItem(pluginOutput)
 
         self.poiTypeDropDownAnalysis.clear()
         self.poiTypeDropDownAnalysis.addItem("Select")
@@ -808,28 +802,19 @@ class Ui_MainWindow(object):
 
         self.pluginDropDownAnalysis.clear()
         self.pluginDropDownAnalysis.repaint()
-        self.pluginDropDownAnalysis.addItem("Select")
         self.pluginDropDownAnalysis.addItem(pluginName)
 
         self.poiPluginDropDown.clear()
         self.poiPluginDropDown.repaint()
-        self.poiPluginDropDown.addItem("Select")
         self.poiPluginDropDown.addItem(pluginName)
 
         self.poiFilterDropDown.clear()
-        self.poiFilterDropDown.repaint()
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
         self.poiFilterDropDown.repaint()
 
         self.deletePluginButton.setEnabled(True)
-
-        self.hidePluginStructure(False)
-        currentDocument = self.documentList.currentItem()
-        if currentDocument is not None:
-            if currentDocument.text() == "Plugin Structure":
-                self.loadPluginStructureDocumentation()
 
     def poiClicked(self):
         select = self.poiList.currentItem().text()
