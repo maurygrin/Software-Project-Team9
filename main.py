@@ -576,16 +576,30 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
-        currentDocument = self.documentList.currentItem()
-        if currentDocument is not None:
-            if currentDocument.text() == "Plugin Structure":
-                self.documentViewField.clear()
-                self.hidePluginStructure(True)
-        self.hidePluginStructure(True)
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
         self.poiList.clear()
         self.poiList.repaint()
+
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
+        self.outputFieldDropDown.addItem("Output Field")
+
+        self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
+        self.poiFilterDropDown.addItem("Select")
+
+        self.poiTypeDropDownAnalysis.clear()
+        self.poiTypeDropDownAnalysis.repaint()
+        self.poiTypeDropDownAnalysis.addItem("Select")
+
+        self.pluginDropDownAnalysis.clear()
+        self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
+
+        self.poiPluginDropDown.clear()
+        self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
 
     def deletePOI(self):
         self.poiList.takeItem(self.poiList.currentRow())
@@ -1431,6 +1445,8 @@ class Ui_MainWindow(object):
         self.documentList.clicked.connect(self.documentationClicked)
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
+
+        self.poiDeleteButton.clicked.connect(self.deletePOI)
 
         self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
 
