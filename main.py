@@ -15,6 +15,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 list = []
 listStrings = []
 listFunctions = []
+
+
 class Ui_MainWindow(object):
     def __init__(self):
         self.documentationTextChangeTimer = QtCore.QTimer()
@@ -85,10 +87,9 @@ class Ui_MainWindow(object):
         self.windowBinaryError.show()
 
     def removeBreakpoint(self, item):
-       # item.checkState() == 2
+        # item.checkState() == 2
         print("changed")
-        #item.
-
+        # item.
 
     def createProject(self, name, binary, description):
         if not name or not binary or not description:
@@ -154,7 +155,6 @@ class Ui_MainWindow(object):
 
             self.saveProject()
 
-
     def runStaticAnalysis(self):
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
             self.setupPluginError(self.windowPluginError)
@@ -172,7 +172,7 @@ class Ui_MainWindow(object):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected=="Strings"):
+            if (poiSelected == "Strings"):
                 self.terminalField.append("Command: iz")
                 self.display = "strings"
                 self.detailedPoiAnalysisField.setText("")
@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
                     item.setCheckState(QtCore.Qt.Unchecked)
                     self.poiAnalysisList.addItem(item)
 
-            elif (poiSelected=="Functions"):
+            elif (poiSelected == "Functions"):
                 self.terminalField.append("Command: afl")
                 self.display = "functions"
                 self.detailedPoiAnalysisField.setText("")
@@ -216,12 +216,11 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.setFont(font)
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.f:
-                    #print(item);
+                    # print(item);
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
                     self.poiAnalysisList.addItem(item)
-
 
     def runDynamicAnalysis(self):
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
@@ -244,7 +243,7 @@ class Ui_MainWindow(object):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
 
-            if (poiSelected=="Strings"):
+            if (poiSelected == "Strings"):
                 self.display = "strings"
                 self.detailedPoiAnalysisField.setText("")
                 self.poiAnalysisList.clear()
@@ -310,6 +309,8 @@ class Ui_MainWindow(object):
 
         if (dropDownSelect == "Strings"):
             self.poiList.clear()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
             i = 0
             while i < len(listStrings):
                 self.poiList.addItem(str(listStrings[i]))
@@ -318,6 +319,8 @@ class Ui_MainWindow(object):
 
         elif (dropDownSelect == "Functions"):
             self.poiList.clear()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
             i = 0
             while i < len(listFunctions):
                 self.poiList.addItem(str(listFunctions[i]))
@@ -327,8 +330,13 @@ class Ui_MainWindow(object):
         elif (dropDownSelect == "Select"):
             self.poiList.clear()
             self.poiList.repaint()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
 
     def parseXML(file_name):
+        listFunctions.clear()
+        listStrings.clear()
+        list.clear()
         # Parse XML with ElementTree
         tree = ET.ElementTree(file=file_name)
         # print(tree.getroot())
@@ -338,14 +346,14 @@ class Ui_MainWindow(object):
         for user in users:
             user_children = user.getchildren()
             for user_child in user_children:
-                #print("%s=%s" % (user_child.tag, user_child.text))
+                # print("%s=%s" % (user_child.tag, user_child.text))
                 if user_child.tag == "network":
                     list.append(user_child.text)
                 if user_child.tag == "nameFunctions" or user_child.tag == "typeFunctions" or user_child.tag == "outputFunctions":
                     listFunctions.append(user_child.text)
                 if user_child.tag == "nameStrings" or user_child.tag == "typeStrings" or user_child.tag == "outputString":
                     listStrings.append(user_child.text)
-        #print(list)
+        # print(list)
         print("Parse: ")
         print(listStrings)
         print(listFunctions)
@@ -354,6 +362,8 @@ class Ui_MainWindow(object):
         if not name or not description or not structure or not data_set:
             print("Failed")
         else:
+            self.poiPluginField.clear()
+            self.poiPluginField.repaint()
             self.plugin = Plugin(name, description, structure, data_set)
             self.pluginNameField.setText(self.plugin.name)
             self.pluginDescriptionField.setText(self.plugin.description)
@@ -383,6 +393,10 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
+            self.documentList.addItem("Plugin Structure")
+
+            # self.poiPluginField.setText(listFunctions[0])
+
             #self.poiPluginField.setText(listFunctions[0])
             self.savePlugin()
 
@@ -396,7 +410,6 @@ class Ui_MainWindow(object):
             self.poiOutEdit.setText(self.poi.out)
 
             self.poiViewField.clear()
-            self.poiViewField.repaint()
 
             tree = ET.parse("networkPlugin.xml")
 
@@ -409,9 +422,37 @@ class Ui_MainWindow(object):
             subType.text = self.poi.typeP
             subOutput.text = self.poi.out
 
+
+            if typeP == "String":
+                listStrings.append(name)
+                listStrings.append(typeP)
+                listStrings.append(out)
+
+
+            if typeP == "Function":
+                listFunctions.append(name)
+                listFunctions.append(typeP)
+                listFunctions.append(out)
+
+
+
+
+            self.poiViewField.setText("")
+            self.poiViewField.append("\t" + "\n")
+            self.poiViewField.append("\t" + "Name: " + name)
+            self.poiViewField.append("\t" + "\n")
+            self.poiViewField.append("\t" + "Type: " +typeP)
+            self.poiViewField.append("\n")
+            self.poiViewField.append("\t" + "Output: " + out)
+            font = self.poiViewField.font()
+            font.setPointSize(12)
+            self.poiViewField.setFont(font)
+            self.poiViewField.repaint()
+
             root.append(child)
             tree.write("networkPlugin.xml")
             self.poiList.addItem(self.poi.name)
+            self.poiList.repaint()
 
 
     def saveProject(self):
@@ -458,41 +499,38 @@ class Ui_MainWindow(object):
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
                     "POI Strings": list[4],
                     "POI Functions": list[5],
-                    "Strings": [],# Nested Document
-                    "Functions": [] # Nested Document
+                    "Strings": [],  # Nested Document
+                    "Functions": []  # Nested Document
                     }
 
         i = 0
         while i < len(listStrings):
             docStrings = {
                 "Name": listStrings[i],
-                "Type": listStrings[i+1],
-                "Output": listStrings[i+2]
+                "Type": listStrings[i + 1],
+                "Output": listStrings[i + 2]
             }
             if (self.poiPluginDropDown.currentText() == list[0]):
                 self.poiPluginField.append(str(docStrings))
-                self.poiList.addItem(str(listStrings[i]))
             i += 3
-            pluginDB["Strings"].append(docStrings) # Insert Nested Document
-            #self.poiPluginField.append(listStrings[i])
-
+            pluginDB["Strings"].append(docStrings)  # Insert Nested Document
+            # self.poiPluginField.append(listStrings[i])
 
         i = 0
         while i < len(listFunctions):
             docFunctions = {
                 "Name": listFunctions[i],
-                "Type": listFunctions[i+1],
-                "Output": listFunctions[i+2]
+                "Type": listFunctions[i + 1],
+                "Output": listFunctions[i + 2]
             }
             if (self.poiPluginDropDown.currentText() == self.plugin.name):
                 self.poiPluginField.append(str(docFunctions))
-                self.poiList.addItem(str(listFunctions[i]))
             i += 3
-            pluginDB["Functions"].append(docFunctions)    # Insert Nested Document
+            pluginDB["Functions"].append(docFunctions)  # Insert Nested Document
         self.collection.insert_many([pluginDB])
 
-        #for i in listFunctions:
-         #   self.collection.insert_one(listFunctions[i])
+        # for i in listFunctions:
+        #   self.collection.insert_one(listFunctions[i])
 
         it = QtWidgets.QListWidgetItem(self.plugin.name)
         self.pluginManagementList.addItem(it)
@@ -546,7 +584,6 @@ class Ui_MainWindow(object):
         self.poiPluginField.repaint()
         self.poiList.clear()
         self.poiList.repaint()
-
 
     def deletePOI(self):
         self.poiList.takeItem(self.poiList.currentRow())
@@ -602,6 +639,9 @@ class Ui_MainWindow(object):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
                                                             "XML Files (*.xml)", options=options)
         if fileName:
+            listStrings.clear()
+            list.clear()
+            listFunctions.clear()
             self.datasetFieldWindow.setText(fileName)
             Ui_MainWindow.parseXML(fileName)
             self.pluginNameEdit.setText(list[0])
@@ -696,9 +736,11 @@ class Ui_MainWindow(object):
     def pluginClicked(self):
         listStrings.clear()
         listFunctions.clear()
+        self.poiViewField.clear()
+        self.poiViewField.repaint()
         print("Clicked Vacio: ")
-        print(listStrings) # Test
-        print(listFunctions) # Test
+        print(listStrings)  # Test
+        print(listFunctions)  # Test
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
@@ -719,25 +761,21 @@ class Ui_MainWindow(object):
             listStrings.append(item.get("Type"))
             listStrings.append(item.get("Output"))
 
-        for item in plugin.get("Functions"):    # Get Nested Document values
+        for item in plugin.get("Functions"):  # Get Nested Document values
             listFunctions.append(item.get("Name"))
             listFunctions.append(item.get("Type"))
             listFunctions.append(item.get("Output"))
         print("Clicked: ")
 
         self.poiPluginField.append(str(listStrings))  # Test
-        self.poiPluginField.append(str(listFunctions))    # Test
-
+        self.poiPluginField.append(str(listFunctions))  # Test
 
         #######... until here. After you commented this, run the program again and delete the plugins in the system. #####
         ####### Then, uncomment the previous code and now it should work find when you create a plugin, close the system, #####
         ####### and select a plugin from the list..... AAAAAAAHHHHH PERRROOOOOOOO!!! ##########
 
-
-
-       # for document in self.collection.find():
+        # for document in self.collection.find():
         #    self.pluginManagementList.addItem(document.get("Plugin Name"))
-
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
@@ -777,43 +815,42 @@ class Ui_MainWindow(object):
 
     def poiClicked(self):
         select = self.poiList.currentItem().text()
-        i=0
+        i = 0
         if self.poiFilterDropDown.currentText() == "Strings":
-             while i < len(listStrings):
+            while i < len(listStrings):
                 current = listStrings[i]
+                print(current)
                 if current == select:
                     self.poiViewField.setText("")
                     self.poiViewField.append("\t" + "\n")
                     self.poiViewField.append("\t" + "Name: " + listStrings[i])
                     self.poiViewField.append("\t" + "\n")
-                    self.poiViewField.append("\t" + "Type: " + listStrings[i+1])
+                    self.poiViewField.append("\t" + "Type: " + listStrings[i + 1])
                     self.poiViewField.append("\n")
-                    self.poiViewField.append("\t" + "Output: " + listStrings[i+2])
+                    self.poiViewField.append("\t" + "Output: " + listStrings[i + 2])
                     font = self.poiViewField.font()
                     font.setPointSize(12)
                     self.poiViewField.setFont(font)
                     self.poiViewField.repaint()
                     break
-                i+=3
+                i += 3
         elif self.poiFilterDropDown.currentText() == "Functions":
-             while i < len(listFunctions):
+            while i < len(listFunctions):
                 current = listFunctions[i]
                 if current == select:
                     self.poiViewField.setText("")
                     self.poiViewField.append("\t" + "\n")
                     self.poiViewField.append("\t" + "Name: " + listFunctions[i])
                     self.poiViewField.append("\t" + "\n")
-                    self.poiViewField.append("\t" + "Type: " + listFunctions[i+1])
+                    self.poiViewField.append("\t" + "Type: " + listFunctions[i + 1])
                     self.poiViewField.append("\n")
-                    self.poiViewField.append("\t" + "Output: " + listFunctions[i+2])
+                    self.poiViewField.append("\t" + "Output: " + listFunctions[i + 2])
                     font = self.poiViewField.font()
                     font.setPointSize(12)
                     self.poiViewField.setFont(font)
                     self.poiViewField.repaint()
                     break
-                i+=3
-
-
+                i += 3
 
     def documentationClicked(self):
         currentDocument = self.documentList.currentItem().text()
@@ -921,7 +958,6 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.documentList.findItems(self.documentSearch.text(), QtCore.Qt.MatchStartsWith):
             item.setHidden(False)
-
 
     def setupUi(self, MainWindow):
 
@@ -1396,7 +1432,6 @@ class Ui_MainWindow(object):
 
         self.poiFilterDropDown.activated.connect(self.dropDownChangePOI)
 
-
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
 
@@ -1621,12 +1656,12 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "BEAT: Binary Extraction and Analysis Tool"))
         self.projectViewGroup.setTitle(_translate("MainWindow", "Project View"))
         self.projectNewButton.setText(_translate("MainWindow", "New"))
-      #  self.projectSearch.setHtml(_translate("MainWindow",
-                                        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          #    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          #    "p, li { white-space: pre-wrap; }\n"
-                                            #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                            #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
+        #  self.projectSearch.setHtml(_translate("MainWindow",
+        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #    "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
         self.projectSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.projectDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.saveProjectButton.setText(_translate("MainWindow", "+ Save"))
@@ -1654,12 +1689,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.analysisTabName))
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
-        #self.pluginSearch.setHtml(_translate("MainWindow",
-                                       #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                        #     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                         #    "p, li { white-space: pre-wrap; }\n"
-                                          #   "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                           #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.pluginSearch.setHtml(_translate("MainWindow",
+        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #    "p, li { white-space: pre-wrap; }\n"
+        #   "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchPluginButton.setText(_translate("MainWindow", "🔍 "))
         self.deletePluginButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginStructureLabel.setText(_translate("MainWindow", "Plugin Structure"))
@@ -1675,12 +1710,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
         self.newPOIButton.setText(_translate("MainWindow", "New"))
-       # self.poiSearch.setHtml(_translate("MainWindow",
-                                #          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                 #         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                  #        "p, li { white-space: pre-wrap; }\n"
-                                     #     "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                     #     "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.poiSearch.setHtml(_translate("MainWindow",
+        #          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #        "p, li { white-space: pre-wrap; }\n"
+        #     "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #     "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.poiSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginPoiLabel.setText(_translate("MainWindow", "Plugin"))
@@ -1690,20 +1725,20 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.setItemText(0, _translate("MainWindow", "Select"))
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Points of Interest View"))
         self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
-       # self.documentViewField.setHtml(_translate("MainWindow",
-                                              #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                               #   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                               #   "p, li { white-space: pre-wrap; }\n"
-                                                #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                                #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.documentViewField.setHtml(_translate("MainWindow",
+        #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #   "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.detailedDocumentationViewLabel.setText(_translate("MainWindow", "Detailed Documentation View"))
         self.documentView.setTitle(_translate("MainWindow", "Documentation View"))
-      #  self.documentSearch.setHtml(_translate("MainWindow",
-                                           #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                             #  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                             #  "p, li { white-space: pre-wrap; }\n"
-                                             #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                              # "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        #  self.documentSearch.setHtml(_translate("MainWindow",
+        #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #  "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        # "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
