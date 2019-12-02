@@ -15,6 +15,10 @@ from controllers.DocumentationController import DocumentationController
 
 
 class Ui_MainWindow(object):
+
+    def __init__(self):
+        self.windowNew = QtWidgets.QDialog()
+
     def setupMain(self, MainWindow):
 
         self.project_tab = ProjectTab()
@@ -58,17 +62,10 @@ class Ui_MainWindow(object):
         self.PluginTab = self.plugin_tab.setupPluginTab(self.PluginTab)
         self.tabWidget.addTab(self.PluginTab, "")
 
-
-
-
         self.POITab = QtWidgets.QWidget()
         self.POITab.setObjectName("PointsOfInterestTab")
         self.POITab = self.poi_tab.setupPOITab(self.POITab)
         self.tabWidget.addTab(self.POITab, "")
-
-
-
-
 
         self.DocumentationTab = QtWidgets.QWidget()
         self.DocumentationTab.setObjectName("DocumentationTab")
@@ -86,8 +83,6 @@ class Ui_MainWindow(object):
         self.plugin_controller = PluginController(self.plugin_tab)
         self.poi_controller = POIController(self.poi_tab)
         self.documentation_controller = DocumentationController(self.documentation_tab)
-
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -107,6 +102,7 @@ class Ui_MainWindow(object):
 
         self.documentation_tab.retranslateDocumentationTab()
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DocumentationTab), _translate("MainWindow", "Documentation"))
+
 
 if __name__ == "__main__":
     import sys

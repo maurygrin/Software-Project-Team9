@@ -14,7 +14,8 @@ from pathlib import Path, PureWindowsPath
 
 class ProjectTab(object):
 
-    #def __init__(self):
+    def __init__(self):
+        self.windowNew = QtWidgets.QDialog()
 
     def setupProjectTab(self, tab):
 
@@ -197,3 +198,70 @@ class ProjectTab(object):
         self.ProjectsLabel.setText(_translate("MainWindow", "Projects"))
         self.projectNewButton.setText(_translate("MainWindow", " New "))
         self.projectDeleteButton.setText(_translate("MainWindow", " Delete "))
+
+    def setupUiCreateProject(self, NewProject):
+        NewProject.setObjectName("NewProject")
+        NewProject.resize(437, 293)
+        NewProject.setMinimumSize(QtCore.QSize(437, 293))
+        self.NewProjectMainLayout = QtWidgets.QGridLayout(NewProject)
+        self.NewProjectMainLayout.setObjectName("NewProjectMainLayout")
+        self.ProjectNameLayout = QtWidgets.QVBoxLayout()
+        self.ProjectNameLayout.setObjectName("ProjectNameLayout")
+        self.projectNameLabel = QtWidgets.QLabel(NewProject)
+        self.projectNameLabel.setObjectName("projectNameLabel")
+        self.ProjectNameLayout.addWidget(self.projectNameLabel)
+        self.projectNameEdit = QtWidgets.QLineEdit(NewProject)
+        self.projectNameEdit.setObjectName("projectNameEdit")
+        self.ProjectNameLayout.addWidget(self.projectNameEdit)
+        self.NewProjectMainLayout.addLayout(self.ProjectNameLayout, 0, 0, 1, 1)
+        self.ProjectDescriptionLayout = QtWidgets.QVBoxLayout()
+        self.ProjectDescriptionLayout.setObjectName("ProjectDescriptionLayout")
+        self.projectDescriptionLabel = QtWidgets.QLabel(NewProject)
+        self.projectDescriptionLabel.setObjectName("projectDescriptionLabel")
+        self.ProjectDescriptionLayout.addWidget(self.projectDescriptionLabel)
+        self.projectDescriptionEdit = QtWidgets.QTextEdit(NewProject)
+        self.projectDescriptionEdit.setObjectName("projectDescriptionEdit")
+        self.ProjectDescriptionLayout.addWidget(self.projectDescriptionEdit)
+        self.NewProjectMainLayout.addLayout(self.ProjectDescriptionLayout, 1, 0, 1, 1)
+        self.ProjectBinaryLayout = QtWidgets.QGridLayout()
+        self.ProjectBinaryLayout.setObjectName("ProjectBinaryLayout")
+        self.projectNameEdit_2 = QtWidgets.QLineEdit(NewProject)
+        self.projectNameEdit_2.setObjectName("projectNameEdit_2")
+        self.ProjectBinaryLayout.addWidget(self.projectNameEdit_2, 1, 0, 1, 1)
+        self.binaryFilePathLabel = QtWidgets.QLabel(NewProject)
+        self.binaryFilePathLabel.setObjectName("binaryFilePathLabel")
+        self.ProjectBinaryLayout.addWidget(self.binaryFilePathLabel, 0, 0, 1, 1)
+        self.binaryFilePathBrowse = QtWidgets.QPushButton(NewProject)
+        self.binaryFilePathBrowse.setObjectName("binaryFilePathBrowse")
+        self.ProjectBinaryLayout.addWidget(self.binaryFilePathBrowse, 1, 1, 1, 1)
+        self.NewProjectMainLayout.addLayout(self.ProjectBinaryLayout, 2, 0, 1, 1)
+        self.ProjectButtonboxLayout = QtWidgets.QHBoxLayout()
+        self.ProjectButtonboxLayout.setObjectName("ProjectButtonboxLayout")
+        self.ProjectButtonbox = QtWidgets.QDialogButtonBox(NewProject)
+        self.ProjectButtonbox.setOrientation(QtCore.Qt.Horizontal)
+        self.ProjectButtonbox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.ProjectButtonbox.setObjectName("ProjectButtonbox")
+        self.ProjectButtonboxLayout.addWidget(self.ProjectButtonbox)
+        self.NewProjectMainLayout.addLayout(self.ProjectButtonboxLayout, 3, 0, 1, 1)
+
+        self.retranslateUiCreateProject(NewProject)
+        self.ProjectButtonbox.accepted.connect(NewProject.accept)
+        self.ProjectButtonbox.rejected.connect(NewProject.reject)
+        QtCore.QMetaObject.connectSlotsByName(NewProject)
+
+        #self.binaryFilePathEdit.setEnabled(False)
+
+       # self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
+
+       # self.buttonBox.accepted.connect(
+        #    lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
+         #                              self.projectDescriptionEdit.toPlainText())
+        #)
+
+    def retranslateUiCreateProject(self, NewProject):
+        _translate = QtCore.QCoreApplication.translate
+        NewProject.setWindowTitle(_translate("NewProject", "Create New Project"))
+        self.projectNameLabel.setText(_translate("NewProject", "Project Name"))
+        self.projectDescriptionLabel.setText(_translate("NewProject", "Project Description"))
+        self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
+        self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
