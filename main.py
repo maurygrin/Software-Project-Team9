@@ -393,8 +393,6 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
-            self.documentList.addItem("Plugin Structure")
-
             # self.poiPluginField.setText(listFunctions[0])
 
             #self.poiPluginField.setText(listFunctions[0])
