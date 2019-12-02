@@ -61,6 +61,7 @@ class Ui_MainWindow(object):
         self.vaddr = ""
         self.value = ""
         self.section = ""
+        self.POIselected = ""
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
@@ -91,6 +92,7 @@ class Ui_MainWindow(object):
         self.windowBinaryError.show()
 
     def removeBreakpoint(self, item):
+        print("breakpoint removed/added")
         # item.checkState() == 2
         print("changed")
         # item.
@@ -195,7 +197,7 @@ class Ui_MainWindow(object):
                     item = QtWidgets.QListWidgetItem(item["string"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Unchecked)
-                    item.setIcon(QtGui.QIcon('comment.png'))
+                    #item.setIcon(QtGui.QIcon('comment.png')) #^
                     self.poiAnalysisList.addItem(item)
 
             elif (poiSelected == "Functions"):
@@ -688,8 +690,10 @@ class Ui_MainWindow(object):
         self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
         self.retranslateUi(MainWindow)
 
-    def analysisClicked(self):
+    def analysisClicked(self): #^^
+        print("abalysis clicked")
         selected = self.poiAnalysisList.currentItem().text()
+        self.POIselected = selected
         if self.display is "strings":
             for item in self.s:
                 current = item["string"]
@@ -1429,7 +1433,7 @@ class Ui_MainWindow(object):
 
         self.poiAnalysisList.itemSelectionChanged.connect(self.analysisClicked)
 
-        self.poiAnalysisList.itemChanged.connect(self.removeBreakpoint)
+        self.poiAnalysisList.itemChanged.connect(self.removeBreakpoint)  #^
 
         self.runList.clicked.connect(self.runClicked)
 
@@ -1903,16 +1907,17 @@ class Ui_MainWindow(object):
     def saveComment(self, description):
         print("Saved not!")
         print(description)
-        Comment = {"ID": "test2", "Comment": description}
+        Comment = {"POI": self.POIselected, "Comment": description}
 
         self.collection.insert([Comment])
 
         print(self.collection)
 
-        results = self.collection.find({"ID": "test2"})
+        results = self.collection.find({"POI": self.POIselected})
         for result in results:
-            print("went inside")
+            print("went inside!!!")
             print(result["Comment"])
+            print(result["POI"])
             # self.detailedPoiAnalysisField.setText(result["DADescription"])
             #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
@@ -1920,7 +1925,40 @@ class Ui_MainWindow(object):
     def commentPopUp(self):
         self.setupComment(self.windowComment)
         self.windowComment.show()
+        if (self.POIselected == ""):
+            print("u aren't clicking on any idiot")
+        else:
+            print("You clicked on something bro.")
+            print(self.POIselected)
         print("Hello comment pop-ups!")
+
+        print("About to print.")
+
+        print(self.collection)
+
+        print("Printed!!")
+
+        print("About to print again!!")
+
+        results = self.collection.find({"POI": self.POIselected})
+        for result in results:
+            print("went inside!!!555")
+            print(result["Comment"])
+            print(result["POI"])
+            # self.detailedPoiAnalysisField.setText(result["DADescription"])
+            # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+            break
+
+        print("End of print!555")
+
+        # for item in self.s:  # ^
+        #     item = QtWidgets.QListWidgetItem(item["string"])
+        #     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+        #     item.setCheckState(QtCore.Qt.Unchecked)
+        #     item.setIcon(QtGui.QIcon('comment.png'))
+        #     self.poiAnalysisList.addItem(item)
+
+
 ###
 
 if __name__ == "__main__":
