@@ -1164,6 +1164,7 @@ class Ui_MainWindow(object):
         self.stopDynamicButton = QtWidgets.QPushButton(self.analysisTab)
         self.stopDynamicButton.setGeometry(QtCore.QRect(1130, 70, 113, 32))
         self.stopDynamicButton.setObjectName("stopDynamicButton")
+
         self.analysisView = QtWidgets.QGroupBox(self.analysisTab)
         self.analysisView.setGeometry(QtCore.QRect(20, 10, 261, 681))
         font = QtGui.QFont()
@@ -1890,7 +1891,12 @@ class Ui_MainWindow(object):
         self.commentLabel.setObjectName("commentDescriptionLabel")
         self.commentEdit = QtWidgets.QTextEdit(newComment)
         self.commentEdit.setGeometry(QtCore.QRect(20, 50, 500, 220))  ##Description Field 20, 170, 500, 141))
+
         self.commentEdit.setObjectName("commentDescriptionEdit")
+
+#^^
+        comment = self.getComment()
+        self.commentEdit.setText(comment)  ###
 
         self.retranslateUiComment(newComment)
         self.CButtonBox.accepted.connect(newComment.accept)
@@ -1899,6 +1905,17 @@ class Ui_MainWindow(object):
 
         self.CButtonBox.accepted.connect(
             lambda: self.saveComment(self.commentEdit.toPlainText()))
+
+    def getComment(self): ############
+        results = self.collection.find({"POI": self.POIselected})
+        for result in results:
+            # print("went inside!!!")
+            # print(result["Comment"])
+            # print(result["POI"])
+            # self.detailedPoiAnalysisField.setText(result["DADescription"])
+            # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+            return (result["Comment"])
+        return ""
 
     def retranslateUiComment(self, newComment):  #####
         _translate = QtCore.QCoreApplication.translate
@@ -1922,14 +1939,60 @@ class Ui_MainWindow(object):
             #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
 
+        self.updatePOIComments()
+
+        #^
+    def updatePOIComments(self): #^^^^
+        print("Updating!!!")
+
+        for i in range(self.poiAnalysisList.count()):
+            print(i)
+            print(self.poiAnalysisList.item(i))
+            poi = (self.poiAnalysisList.item(i)).text()
+            print((self.poiAnalysisList.item(i)).text())
+            results = self.collection.find({"POI": poi})
+            for result in results:
+                print("went inside!!!9999")
+                print(result["Comment"])
+                print(result["POI"])
+                # self.detailedPoiAnalysisField.setText(result["DADescription"])
+                # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+                break
+
+
+
+        #item.setIcon(QtGui.QIcon('comment.png'))
+
+        print("Finished counting.9999")
+        print(self.collection)
+
+        #results = self.collection.find({"POI": self.POIselected})
+        # for result in results:
+        #     print("went inside!!!777")
+        #     print(result["Comment"])
+        #     print(result["POI"])
+        #     # self.detailedPoiAnalysisField.setText(result["DADescription"])
+        #     # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
+        #     break
+
+        print("Done777")
+
+
     def commentPopUp(self):
-        self.setupComment(self.windowComment)
-        self.windowComment.show()
         if (self.POIselected == ""):
             print("u aren't clicking on any idiot")
+            msg = QMessageBox()
+            msg.setWindowTitle("Comment Error")
+            msg.setText("A point of interest must be selected first.")
+            x = msg.exec_()
+            return
         else:
             print("You clicked on something bro.")
             print(self.POIselected)
+
+        self.setupComment(self.windowComment)
+        self.windowComment.show()
+
         print("Hello comment pop-ups!")
 
         print("About to print.")
@@ -1945,6 +2008,7 @@ class Ui_MainWindow(object):
             print("went inside!!!555")
             print(result["Comment"])
             print(result["POI"])
+
             # self.detailedPoiAnalysisField.setText(result["DADescription"])
             # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
@@ -1957,7 +2021,6 @@ class Ui_MainWindow(object):
         #     item.setCheckState(QtCore.Qt.Unchecked)
         #     item.setIcon(QtGui.QIcon('comment.png'))
         #     self.poiAnalysisList.addItem(item)
-
 
 ###
 
