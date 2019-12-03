@@ -1182,7 +1182,7 @@ class Ui_MainWindow(object):
         self.commentViewButton = QtWidgets.QPushButton(self.analysisView)
         self.commentViewButton.setGeometry(QtCore.QRect(100, 640, 141, 30))
         self.commentViewButton.setObjectName("commentViewButton")
-        self.commentViewButton.clicked.connect(self.commentPopUp)  # *
+        self.commentViewButton.clicked.connect(self.createCommentOnPOI)  # *
         self.UI.addTab(self.analysisTab, "")
         self.pluginManagementTab = QtWidgets.QWidget()
         self.pluginManagementTab.setObjectName("pluginManagementTab")
@@ -1881,39 +1881,37 @@ class Ui_MainWindow(object):
         self.CButtonBox = QtWidgets.QDialogButtonBox(newComment)
         self.CButtonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
         self.CButtonBox.setOrientation(QtCore.Qt.Horizontal)
-
         self.CButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Save | QtWidgets.QDialogButtonBox.Ok)
         self.CButtonBox.button(QtWidgets.QDialogButtonBox.Ok).setText("Clear")
-
         self.CButtonBox.setObjectName("commentButtonBox")
         self.commentLabel = QtWidgets.QLabel(newComment)
         self.commentLabel.setGeometry(QtCore.QRect(20, 80, 151, 16))  ## String Description
         self.commentLabel.setObjectName("commentDescriptionLabel")
         self.commentEdit = QtWidgets.QTextEdit(newComment)
         self.commentEdit.setGeometry(QtCore.QRect(20, 50, 500, 220))  ##Description Field 20, 170, 500, 141))
-
         self.commentEdit.setObjectName("commentDescriptionEdit")
 
 #^^
         comment = self.getComment()
-        self.commentEdit.setText(comment)  ###
+
+        self.commentEdit.setText(comment)
 
         self.retranslateUiComment(newComment)
+
+        self.CButtonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.deleteComment)
         self.CButtonBox.accepted.connect(newComment.accept)
-        self.CButtonBox.rejected.connect(newComment.reject)
-        QtCore.QMetaObject.connectSlotsByName(newComment)
+        #self.CButtonBox.rejected.connect(newComment.reject)
+
+        #QtCore.QMetaObject.connectSlotsByName(newComment)
 
         self.CButtonBox.accepted.connect(
             lambda: self.saveComment(self.commentEdit.toPlainText()))
 
-    def getComment(self): ############
+
+    # Iterate through the collection to find the POI's comment to set the text
+    def getComment(self):
         results = self.collection.find({"POI": self.POIselected})
         for result in results:
-            # print("went inside!!!")
-            # print(result["Comment"])
-            # print(result["POI"])
-            # self.detailedPoiAnalysisField.setText(result["DADescription"])
-            # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             return (result["Comment"])
         return ""
 
@@ -1921,25 +1919,26 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         newComment.setWindowTitle(_translate("newAnalysis", "Comment View"))
 
-    def saveComment(self, description):
-        print("Saved not!")
-        print(description)
-        Comment = {"POI": self.POIselected, "Comment": description}
+    def deleteComment(self, description):
 
+        print("deleted plugin!!!!!!!!!!!!!!!!!!!!")
+
+    def saveComment(self, description):
+        Comment = {"POI": self.POIselected, "Comment": description}
         self.collection.insert([Comment])
 
-        print(self.collection)
+        #if self.hasDocument("POI", description):
+        #     Comment = {"POI": self.POIselected, "Comment": description}
+        #     self.collection.insert([Comment])
+        # else:
+        #     self.collection.update_one({"POI": self.POIselected}, {"$set": {"Comment":description}})
 
-        results = self.collection.find({"POI": self.POIselected})
-        for result in results:
-            print("went inside!!!")
-            print(result["Comment"])
-            print(result["POI"])
-            # self.detailedPoiAnalysisField.setText(result["DADescription"])
-            #self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
-            break
 
-        self.updatePOIComments()
+    #returns true if a document is in the collection
+    def hasDocument(self, property, value): ###^^^
+        if self.collection.find({property: value}).count() > 0:
+            return True
+        return False
 
         #^
     def updatePOIComments(self): #^^^^
@@ -1978,30 +1977,18 @@ class Ui_MainWindow(object):
         print("Done777")
 
 
-    def commentPopUp(self):
+    def createCommentOnPOI(self):
         if (self.POIselected == ""):
-            print("u aren't clicking on any idiot")
             msg = QMessageBox()
             msg.setWindowTitle("Comment Error")
             msg.setText("A point of interest must be selected first.")
             x = msg.exec_()
             return
-        else:
-            print("You clicked on something bro.")
-            print(self.POIselected)
 
         self.setupComment(self.windowComment)
         self.windowComment.show()
 
-        print("Hello comment pop-ups!")
-
-        print("About to print.")
-
         print(self.collection)
-
-        print("Printed!!")
-
-        print("About to print again!!")
 
         results = self.collection.find({"POI": self.POIselected})
         for result in results:
@@ -2012,8 +1999,6 @@ class Ui_MainWindow(object):
             # self.detailedPoiAnalysisField.setText(result["DADescription"])
             # self.runList.addItem(QtWidgets.QListWidgetItem(result["DAName"]))
             break
-
-        print("End of print!555")
 
         # for item in self.s:  # ^
         #     item = QtWidgets.QListWidgetItem(item["string"])
