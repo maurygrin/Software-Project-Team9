@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PluginDatasetError</class>
+ <widget class="QDialog" name="PluginDatasetError">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>291</width>
+    <height>99</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>291</width>
+    <height>99</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>294</width>
+    <height>99</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Error Message: Predefined Data Set</string>
+  </property>
+  <layout class="QGridLayout" name="PluginDatasetErrorMainLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="PluginDatasetErrorLayout">
+     <item>
+      <widget class="QLabel" name="PluginDatasetErrorLabel">
+       <property name="text">
+        <string>The plugin predefined data set is not valid.</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="PluginDatasetErrorButtonbox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>PluginDatasetErrorButtonbox</sender>
+   <signal>accepted()</signal>
+   <receiver>PluginDatasetError</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>PluginDatasetErrorButtonbox</sender>
+   <signal>rejected()</signal>
+   <receiver>PluginDatasetError</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NewPOI</class>
+ <widget class="QDialog" name="NewPOI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>437</width>
+    <height>253</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>437</width>
+    <height>253</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Create New Point of Interest</string>
+  </property>
+  <layout class="QGridLayout" name="PoiMainLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="PoiNameLayout">
+     <item>
+      <widget class="QLabel" name="poiNameLabel">
+       <property name="text">
+        <string>Point of Interest Name</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="poiNameEdit"/>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="PoiDescriptionLayout">
+     <item>
+      <widget class="QLabel" name="poiTypeLabel">
+       <property name="text">
+        <string>Point of Interest Description</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="poiTypeEdit"/>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <layout class="QVBoxLayout" name="PoiOutputLayout">
+     <item>
+      <widget class="QLabel" name="poiOutLabel">
+       <property name="text">
+        <string>Python Output</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="poiOutEdit"/>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="PoiButtonboxLayout">
+     <item>
+      <widget class="QDialogButtonBox" name="poiButtonBox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
