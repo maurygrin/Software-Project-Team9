@@ -1924,10 +1924,16 @@ class Ui_MainWindow(object):
         print("deleted plugin!!!!!!!!!!!!!!!!!!!!")
 
     def saveComment(self, description):
-        Comment = {"POI": self.POIselected, "Comment": description}
-        self.collection.insert([Comment])
+        if self.hasDocument("POI", self.POIselected):
+            self.collection.update_one({"POI": self.POIselected}, {"$set": {"Comment":description}})
+        else:
+            Comment = {"POI": self.POIselected, "Comment": description}
+            self.collection.insert([Comment])
 
-        #if self.hasDocument("POI", description):
+        # Comment = {"POI": self.POIselected, "Comment": description}
+        # self.collection.insert([Comment])
+        #
+        # if self.hasDocument("POI", description):
         #     Comment = {"POI": self.POIselected, "Comment": description}
         #     self.collection.insert([Comment])
         # else:
