@@ -403,6 +403,10 @@ class Ui_MainWindow(object):
 
             self.savePlugin()
 
+            if len(hasPluginStructure) == 0:
+                hasPluginStructure.append("Plugin Structure")
+                self.documentList.addItem("Plugin Structure")
+
     def createPOI(self, name, typeP, out):
         if not name or not typeP or not out:
             print("Failed")
@@ -813,10 +817,10 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
-        self.poiFilterDropDown.repaint()
-        print(hasPluginStructure)
-        if "Plugin Structure" in hasPluginStructure:
-            print("i did it")
+        print(len(hasPluginStructure))
+        if len(hasPluginStructure) == 0:
+            hasPluginStructure.append("Plugin Structure")
+            self.documentList.addItem("Plugin Structure")
 
         self.deletePluginButton.setEnabled(True)
 
@@ -1457,7 +1461,6 @@ class Ui_MainWindow(object):
             text_file_doc = {"file_name": "BEAT Documentation", "contents": ""}
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
-        hasPluginStructure."Plugin Structure"}
         self.documentList.addItem("Plugin Structure")
 
 
