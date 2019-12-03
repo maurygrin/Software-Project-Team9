@@ -1,7 +1,6 @@
 import os, sys, r2pipe, json, base64
 import pymongo
 from pymongo import MongoClient
-
 from Script import Script
 from Plugin import Plugin
 from Project import Project
@@ -16,7 +15,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 list = []
 listStrings = []
 listFunctions = []
-hasPluginStructure = []
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -402,10 +401,6 @@ class Ui_MainWindow(object):
             self.poiPluginField.setText(listFunctions[0])
 
             self.savePlugin()
-
-            if len(hasPluginStructure) == 0:
-                hasPluginStructure.append("Plugin Structure")
-                self.documentList.addItem("Plugin Structure")
 
     def createPOI(self, name, typeP, out):
         if not name or not typeP or not out:
@@ -817,10 +812,9 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
-        print(len(hasPluginStructure))
-        if len(hasPluginStructure) == 0:
-            hasPluginStructure.append("Plugin Structure")
-            self.documentList.addItem("Plugin Structure")
+        self.poiFilterDropDown.repaint()
+
+
 
         self.deletePluginButton.setEnabled(True)
 
@@ -1462,9 +1456,6 @@ class Ui_MainWindow(object):
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
         self.documentList.addItem("Plugin Structure")
-
-
-
         self.hidePluginStructure(True)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
