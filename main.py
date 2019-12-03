@@ -11,12 +11,15 @@ from Metadata import Metadata
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets
+import threading
 
 list=[]
 listStrings=[]
 listFunctions=[]
 staticFunctionList=[]
 dictList = []
+
+
 class Ui_MainWindow(object):
     def __init__(self):
         self.briana = None
@@ -268,9 +271,10 @@ class Ui_MainWindow(object):
     def stopDynamicAnalysis(self):
         self.r2.cmd("break")
 
+    def dynamicAnalysisThread(self):
+        threading.Thread(target=self.runDynamicAnalysis(), args=(10,)).start()
 
     def runDynamicAnalysis(self):
-        self.stopDynamicButton.setEnabled(True)
         for i in range(len(dictList)):  # iterate over list of functions
             validFlag = True #is arg num populated flag
             if(dictList[i]['argNum'] == []): #check to see if there is anything populated
@@ -350,7 +354,7 @@ class Ui_MainWindow(object):
                 item.setCheckState(QtCore.Qt.Checked)
                 self.poiAnalysisList.addItem(item)
         elif (poiSelected == "Functions"):
-            self.terminalField.append("Command: afl")
+            self.terminalField.append("Command: afll")
             self.display = "functions"
             self.detailedPoiAnalysisField.setText("")
             self.poiAnalysisList.clear()
@@ -1307,7 +1311,7 @@ class Ui_MainWindow(object):
 
         self.runStaticButton.clicked.connect(self.runStaticAnalysis)
 
-        self.runDynamicButton.clicked.connect(self.runDynamicAnalysis)
+        self.runDynamicButton.clicked.connect(self.dynamicAnalysisThread)
 
         self.projectList.clicked.connect(self.projectClicked)
 
