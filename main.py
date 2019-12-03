@@ -81,9 +81,10 @@ class Ui_MainWindow(object):
         self.windowBinaryError.show()
 
     def removeBreakpoint(self, item):
-       # item.checkState() == 2
-        print("changed")
-        #item.
+        if item.checkState() == 2:
+            print("remove:item.text()")
+        if item.checkState() == 0:
+            print("set")
 
 
     def createProject(self, name, binary, description):
@@ -283,46 +284,47 @@ class Ui_MainWindow(object):
             self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
             self.r2.cmd("ood")  # open in debug mode
             self.r2.cmd("aaa")
-            breakpointString = "db " + (dictList[i]['fName'])
-            #if (the item is checked then ):
-                #place breakpoint
-            self.r2.cmd(breakpointString)  # first set the breakpoint
-            self.r2.cmd("dc")  # Run until the first breakpoint
-            returnVal = self.r2.cmd("dr rax")
-            returnVal = returnVal.rstrip("\n")
-            #start running after breakpoint get arguments first
-            templistOfVals = []
-            templistOfLoc = []
-            # for arguments
-            if(validFlag):
-                for j in range(dictList[i]['argNum']):
-                    # set return value
-                    dictList[i]['retVal'] = returnVal
-                    commandToVal = self.r2.cmd("afvd " + str(dictList[i]['argName'][j]))
-                    if commandToVal != "":
-                        commandList = commandToVal.split(" ")
-                        validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
-                        lineWithval = self.r2.cmd(validCommand)
-                        formattedVal = json.loads(lineWithval)
-                        templistOfVals.append(formattedVal[0]['value'])
-                        dictList[i]['argVal'] = templistOfVals
 
-            # for local variables
-            if(validFlag2):
-                for k in range(dictList[i]['locNum']):
-                        commandToVal = self.r2.cmd("afvd " + str(dictList[i]['locName'][k]))
+            if self.poiAnalysisList.item(i).checkState() !=0:
+
+                breakpointString = "db " + (dictList[i]['fName'])
+                self.r2.cmd(breakpointString)  # first set the breakpoint
+                self.r2.cmd("dc")  # Run until the first breakpoint
+                returnVal = self.r2.cmd("dr rax")
+                returnVal = returnVal.rstrip("\n")
+                #start running after breakpoint get arguments first
+                templistOfVals = []
+                templistOfLoc = []
+                # for arguments
+                if(validFlag):
+                    for j in range(dictList[i]['argNum']):
+                        # set return value
+                        dictList[i]['retVal'] = returnVal
+                        commandToVal = self.r2.cmd("afvd " + str(dictList[i]['argName'][j]))
                         if commandToVal != "":
-                            try:
-                                commandList = commandToVal.split(" ")
-                                validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
-                                lineWithval = self.r2.cmd(validCommand)
-                                formattedVal = json.loads(lineWithval)
-                                templistOfLoc.append(formattedVal[0]['value'])
-                                dictList[i]['locVal'] = templistOfLoc
-                            except:
-                                pass
+                            commandList = commandToVal.split(" ")
+                            validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                            lineWithval = self.r2.cmd(validCommand)
+                            formattedVal = json.loads(lineWithval)
+                            templistOfVals.append(formattedVal[0]['value'])
+                            dictList[i]['argVal'] = templistOfVals
 
-            self.r2.cmd("db-*")
+                # for local variables
+                if(validFlag2):
+                    for k in range(dictList[i]['locNum']):
+                            commandToVal = self.r2.cmd("afvd " + str(dictList[i]['locName'][k]))
+                            if commandToVal != "":
+                                try:
+                                    commandList = commandToVal.split(" ")
+                                    validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
+                                    lineWithval = self.r2.cmd(validCommand)
+                                    formattedVal = json.loads(lineWithval)
+                                    templistOfLoc.append(formattedVal[0]['value'])
+                                    dictList[i]['locVal'] = templistOfLoc
+                                except:
+                                    pass
+
+                self.r2.cmd("db-*")
         print(dictList)
         #Display Dynamic results
         poiSelected = self.poiTypeDropDownAnalysis.currentText()
