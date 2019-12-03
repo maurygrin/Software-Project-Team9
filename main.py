@@ -18,11 +18,11 @@ listStrings=[]
 listFunctions=[]
 staticFunctionList=[]
 dictList = []
-
-
 class Ui_MainWindow(object):
     def __init__(self):
-        self.briana = None
+        self.documentationTextChangeTimer = QtCore.QTimer()
+        self.documentationTextChangeTimer.setSingleShot(True)
+        self.documentationTextChangeTimer.timeout.connect(self.saveDocument)
         self.windowNew = QtWidgets.QDialog()
         self.windowDeleteConfirmation = QtWidgets.QDialog()
         self.windowPlug = QtWidgets.QDialog()
@@ -67,6 +67,10 @@ class Ui_MainWindow(object):
         db = cluster.test
         self.collection = db["beat"]
 
+        global list
+        global listStrings
+        global listFunctions
+
     def projectWindow(self):
         self.setupUiCreateProject(self.windowNew)
         self.windowNew.show()
@@ -74,6 +78,10 @@ class Ui_MainWindow(object):
     def pluginWindow(self):
         self.setupUiCreatePlugin(self.windowPlug)
         self.windowPlug.show()
+
+    def poiWindow(self):
+        self.setupUiPOI(self.windowPOI)
+        self.windowPOI.show()
 
     def deleteConfirmation(self):
         self.setupUiDeleteProjectConfirmation(self.windowDeleteConfirmation)
@@ -443,8 +451,39 @@ class Ui_MainWindow(object):
                 for item in self.functionsStatic:
                     self.poiAnalysisList.addItem(item["name"])
 
+    def dropDownChangePOI(self):
+        dropDownSelect = self.poiFilterDropDown.currentText()
+
+        if (dropDownSelect == "Strings"):
+            self.poiList.clear()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
+            i = 0
+            while i < len(listStrings):
+                self.poiList.addItem(str(listStrings[i]))
+                i += 3
+            self.poiList.repaint()
+
+        elif (dropDownSelect == "Functions"):
+            self.poiList.clear()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
+            i = 0
+            while i < len(listFunctions):
+                self.poiList.addItem(str(listFunctions[i]))
+                i += 3
+            self.poiList.repaint()
+
+        elif (dropDownSelect == "Select"):
+            self.poiList.clear()
+            self.poiList.repaint()
+            self.poiViewField.clear()
+            self.poiViewField.repaint()
 
     def parseXML(file_name):
+        listFunctions.clear()
+        listStrings.clear()
+        list.clear()
         # Parse XML with ElementTree
         tree = ET.ElementTree(file=file_name)
         # print(tree.getroot())
@@ -454,21 +493,24 @@ class Ui_MainWindow(object):
         for user in users:
             user_children = user.getchildren()
             for user_child in user_children:
-                print("%s=%s" % (user_child.tag, user_child.text))
+                # print("%s=%s" % (user_child.tag, user_child.text))
                 if user_child.tag == "network":
                     list.append(user_child.text)
                 if user_child.tag == "nameFunctions" or user_child.tag == "typeFunctions" or user_child.tag == "outputFunctions":
-                 listFunctions.append(user_child.text)
+                    listFunctions.append(user_child.text)
                 if user_child.tag == "nameStrings" or user_child.tag == "typeStrings" or user_child.tag == "outputString":
-                 listStrings.append(user_child.text)
-        print(list)
-        print(listFunctions)
+                    listStrings.append(user_child.text)
+        # print(list)
+        print("Parse: ")
         print(listStrings)
+        print(listFunctions)
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
             print("Failed")
         else:
+            self.poiPluginField.clear()
+            self.poiPluginField.repaint()
             self.plugin = Plugin(name, description, structure, data_set)
             self.pluginNameField.setText(self.plugin.name)
             self.pluginDescriptionField.setText(self.plugin.description)
@@ -482,14 +524,17 @@ class Ui_MainWindow(object):
             self.poiTypeDropDownAnalysis.addItem(list[4])
             self.poiTypeDropDownAnalysis.addItem(list[5])
 
+            self.outputFieldDropDown.clear()
+            self.outputFieldDropDown.addItem(list[2])
+            print(list[2])
+            self.outputFieldDropDown.repaint()
+
             self.pluginDropDownAnalysis.clear()
             self.pluginDropDownAnalysis.repaint()
-            self.pluginDropDownAnalysis.addItem("Select")
             self.pluginDropDownAnalysis.addItem(list[0])
 
             self.poiPluginDropDown.clear()
             self.poiPluginDropDown.repaint()
-            self.poiPluginDropDown.addItem("Select")
             self.poiPluginDropDown.addItem(list[0])
 
             self.poiFilterDropDown.clear()
@@ -498,13 +543,67 @@ class Ui_MainWindow(object):
             self.poiFilterDropDown.addItem(list[4])
             self.poiFilterDropDown.addItem(list[5])
 
-            self.documentList.addItem("Plugin Structure")
+
 
             self.poiPluginField.setText(listFunctions[0])
 
 
 
             self.savePlugin()
+
+    def createPOI(self, name, typeP, out):
+        if not name or not typeP or not out:
+            print("Failed")
+        else:
+            self.poi = POI(name, typeP, out)
+            self.poiNameEdit.setText(self.poi.name)
+            self.poiTypeEdit.setText(self.poi.typeP)
+            self.poiOutEdit.setText(self.poi.out)
+
+            self.poiViewField.clear()
+
+            tree = ET.parse("networkPlugin.xml")
+
+            root = tree.getroot()
+            child = ET.Element("item")
+            subName = ET.SubElement(child, "nameStrings")
+            subType = ET.SubElement(child, "typeStrings")
+            subOutput = ET.SubElement(child, "outputString")
+            subName.text = self.poi.name
+            subType.text = self.poi.typeP
+            subOutput.text = self.poi.out
+
+
+            if typeP == "String":
+                listStrings.append(name)
+                listStrings.append(typeP)
+                listStrings.append(out)
+
+
+            if typeP == "Function":
+                listFunctions.append(name)
+                listFunctions.append(typeP)
+                listFunctions.append(out)
+
+
+
+
+            self.poiViewField.setText("")
+            self.poiViewField.append("\t" + "\n")
+            self.poiViewField.append("\t" + "Name: " + name)
+            self.poiViewField.append("\t" + "\n")
+            self.poiViewField.append("\t" + "Type: " +typeP)
+            self.poiViewField.append("\n")
+            self.poiViewField.append("\t" + "Output: " + out)
+            font = self.poiViewField.font()
+            font.setPointSize(12)
+            self.poiViewField.setFont(font)
+            self.poiViewField.repaint()
+
+            root.append(child)
+            tree.write("networkPlugin.xml")
+            self.poiList.addItem(self.poi.name)
+            self.poiList.repaint()
 
 
     def saveProject(self):
@@ -551,16 +650,49 @@ class Ui_MainWindow(object):
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
                     "POI Strings": list[4],
                     "POI Functions": list[5],
-                    "POI One": listFunctions[0]}
+                    "Strings": [],  # Nested Document
+                    "Functions": []  # Nested Document
+                    }
 
+        i = 0
+        while i < len(listStrings):
+            docStrings = {
+                "Name": listStrings[i],
+                "Type": listStrings[i + 1],
+                "Output": listStrings[i + 2]
+            }
+            if (self.poiPluginDropDown.currentText() == list[0]):
+                self.poiPluginField.append(str(docStrings))
+            i += 3
+            pluginDB["Strings"].append(docStrings)  # Insert Nested Document
+            # self.poiPluginField.append(listStrings[i])
+
+        i = 0
+        while i < len(listFunctions):
+            docFunctions = {
+                "Name": listFunctions[i],
+                "Type": listFunctions[i + 1],
+                "Output": listFunctions[i + 2]
+            }
+            if (self.poiPluginDropDown.currentText() == self.plugin.name):
+                self.poiPluginField.append(str(docFunctions))
+            i += 3
+            pluginDB["Functions"].append(docFunctions)  # Insert Nested Document
         self.collection.insert_many([pluginDB])
 
+        # for i in listFunctions:
+        #   self.collection.insert_one(listFunctions[i])
+
         it = QtWidgets.QListWidgetItem(self.plugin.name)
-
         self.pluginManagementList.addItem(it)
-
+        self.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)
+        currentDocument = self.documentList.currentItem()
+        self.hidePluginStructure(False)
 
+        if currentDocument is not None:
+            if currentDocument.text() == "Plugin Structure":
+                self.loadPluginStructureDocumentation()
         self.retranslateUi(MainWindow)
 
     def deleteProject(self):
@@ -594,12 +726,41 @@ class Ui_MainWindow(object):
         self.pluginDescriptionField.repaint()
         self.pluginStructureField.repaint()
         self.pluginPredefinedField.repaint()
+        self.poiPluginField.clear()
+        self.poiPluginField.repaint()
+        self.poiList.clear()
+        self.poiList.repaint()
+
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
+        self.outputFieldDropDown.addItem("Output Field")
+
+        self.poiFilterDropDown.clear()
+        self.poiFilterDropDown.repaint()
+        self.poiFilterDropDown.addItem("Select")
+
+        self.poiTypeDropDownAnalysis.clear()
+        self.poiTypeDropDownAnalysis.repaint()
+        self.poiTypeDropDownAnalysis.addItem("Select")
+
+        self.pluginDropDownAnalysis.clear()
+        self.pluginDropDownAnalysis.repaint()
+        self.pluginDropDownAnalysis.addItem("Select")
+
+        self.poiPluginDropDown.clear()
+        self.poiPluginDropDown.repaint()
+        self.poiPluginDropDown.addItem("Select")
+
+    def deletePOI(self):
+        self.poiList.takeItem(self.poiList.currentRow())
+        self.poiViewField.clear()
+        self.poiViewField.repaint()
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.binaryFilePathField, "Browse Binary File", "",
-                                                            "All Files (*.exe *.out *.class *.docx)",
+                                                            "Binary Files (*.exe *.out *.class *.docx)",
                                                             options=options)
         if fileName:
             self.path = str(fileName)
@@ -645,6 +806,9 @@ class Ui_MainWindow(object):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.datasetFieldWindow, "Browse XML File", "",
                                                             "XML Files (*.xml)", options=options)
         if fileName:
+            listStrings.clear()
+            list.clear()
+            listFunctions.clear()
             self.datasetFieldWindow.setText(fileName)
             Ui_MainWindow.parseXML(fileName)
             self.pluginNameEdit.setText(list[0])
@@ -652,7 +816,7 @@ class Ui_MainWindow(object):
 
     def projectClicked(self):
         p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
-        self.runStaticButton.setEnabled(True)
+
         self.projectNameField.setText(p.get("Project Name"))
 
         self.projectDescriptionField.setText(p.get("Project Description"))
@@ -689,33 +853,8 @@ class Ui_MainWindow(object):
 
     def analysisClicked(self):
         selected = self.poiAnalysisList.currentItem().text()
-        if (self.brianaFlag == True):
-            if (self.poiSelected == "Functions"):
-                self.display = "functions"
-                for item in self.functionsStatic:
-                    current = item["name"]
-                    if current == selected:
-                        self.vaddr = hex(item["minbound"])
-                        self.vaddr = str(self.vaddr)
-                        self.function = str(item["name"])
-                        self.signature = str(item["signature"])
-                        self.temp = self.signature.split('(')[1];
-                        self.temp2 = self.temp.split(')')[0];
-                        break
-                self.detailedPoiAnalysisField.setText("")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("Function: " + self.function)
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
-                font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(12)
-                self.detailedPoiAnalysisField.setFont(font)
-                self.detailedPoiAnalysisField.repaint()
-
-        elif self.display is "strings":
-            for item in self.stringsStatic:
+        if self.display is "strings":
+            for item in self.s:
                 current = item["string"]
                 if current == selected:
                     self.vaddr = hex(item["vaddr"])
@@ -736,7 +875,7 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.repaint()
 
         elif self.display is "functions":
-            for item in self.functionsStatic:
+            for item in self.f:
                 current = item["name"]
                 if current == selected:
                     self.vaddr = hex(item["minbound"])
@@ -758,97 +897,198 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.setFont(font)
             self.detailedPoiAnalysisField.repaint()
 
-
     def runClicked(self):
         print("Analysis Run List clicked")
 
     def pluginClicked(self):
+        listStrings.clear()
+        listFunctions.clear()
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
+        self.poiViewField.clear()
+        self.poiViewField.repaint()
         plugin = self.collection.find_one({"Plugin Name": self.pluginManagementList.currentItem().text()})
         self.poiPluginField.clear()
         self.poiPluginField.repaint()
+        self.poiList.clear()
+        self.poiList.repaint()
         pluginName = plugin.get("Plugin Name")
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
+        pluginOutput = plugin.get("pluginOutput")
+        self.hidePluginStructure(False)
+
+        ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
+
         pluginString = plugin.get("POI Strings")
         pluginFunction = plugin.get("POI Functions")
-        poiOne = plugin.get("POI One")
+
+        for item in plugin.get("Strings"):  # Get Nested Document values
+            listStrings.append(item.get("Name"))
+            listStrings.append(item.get("Type"))
+            listStrings.append(item.get("Output"))
+
+        for item in plugin.get("Functions"):  # Get Nested Document values
+            listFunctions.append(item.get("Name"))
+            listFunctions.append(item.get("Type"))
+            listFunctions.append(item.get("Output"))
+        print("Clicked: Plugin")
+
+        self.poiPluginField.append(str(listStrings))  # Test
+        self.poiPluginField.append(str(listFunctions))  # Test
 
         self.pluginNameField.setText(pluginName)
         self.pluginDescriptionField.setText(pluginDescription)
         self.pluginStructureField.setText(pluginStructure)
         self.pluginPredefinedField.setText(pluginDataset)
-        self.poiPluginField.setText(poiOne)
+        self.outputFieldDropDown.addItem(pluginOutput)
 
         self.poiTypeDropDownAnalysis.clear()
-        self.poiTypeDropDownAnalysis.repaint()
         self.poiTypeDropDownAnalysis.addItem("Select")
         self.poiTypeDropDownAnalysis.addItem(pluginString)
         self.poiTypeDropDownAnalysis.addItem(pluginFunction)
+        self.poiFilterDropDown.repaint()
 
         self.pluginDropDownAnalysis.clear()
         self.pluginDropDownAnalysis.repaint()
-        self.pluginDropDownAnalysis.addItem("Select")
         self.pluginDropDownAnalysis.addItem(pluginName)
 
         self.poiPluginDropDown.clear()
         self.poiPluginDropDown.repaint()
-        self.poiPluginDropDown.addItem("Select")
         self.poiPluginDropDown.addItem(pluginName)
 
         self.poiFilterDropDown.clear()
-        self.poiFilterDropDown.repaint()
         self.poiFilterDropDown.addItem("Select")
         self.poiFilterDropDown.addItem(pluginString)
         self.poiFilterDropDown.addItem(pluginFunction)
+        self.poiFilterDropDown.repaint()
 
 
-        #self.display = "strings"
-        #self.terminalField.append("Command: iz")
-        #self.poiPluginField.setText("")
-        #self.poiAnalysisList.clear()
-        #self.poiPluginField.append("\t" + "\n")
-        #self.poiPluginField.append("\t" + "Name: ")
-        #self.poiPluginField.append("\t" + "\n")
-        #self.poiPluginField.append("\t" + "Type: ")
-        #self.poiPluginField.append("\n")
-        #self.poiPluginField.append("\t" + "Output: ")
-        #font = self.poiPluginField.font()
-        #font.setPointSize(20)
-        #self.poiPluginField.setFont(font)
-        #self.poiPluginField.repaint()
 
-        #for item in self.s:
-         #   self.poiPluginField.addItem(base64.b64decode(item["string"]).decode())
-          #  self.poiPluginField.append(list[9])
         self.deletePluginButton.setEnabled(True)
 
     def poiClicked(self):
-        print("POI List clicked")
+        select = self.poiList.currentItem().text()
+        i = 0
+        if self.poiFilterDropDown.currentText() == "Strings":
+            while i < len(listStrings):
+                current = listStrings[i]
+                print(current)
+                if current == select:
+                    self.poiViewField.setText("")
+                    self.poiViewField.append("\t" + "\n")
+                    self.poiViewField.append("\t" + "Name: " + listStrings[i])
+                    self.poiViewField.append("\t" + "\n")
+                    self.poiViewField.append("\t" + "Type: " + listStrings[i + 1])
+                    self.poiViewField.append("\n")
+                    self.poiViewField.append("\t" + "Output: " + listStrings[i + 2])
+                    font = self.poiViewField.font()
+                    font.setPointSize(12)
+                    self.poiViewField.setFont(font)
+                    self.poiViewField.repaint()
+                    break
+                i += 3
+        elif self.poiFilterDropDown.currentText() == "Functions":
+            while i < len(listFunctions):
+                current = listFunctions[i]
+                if current == select:
+                    self.poiViewField.setText("")
+                    self.poiViewField.append("\t" + "\n")
+                    self.poiViewField.append("\t" + "Name: " + listFunctions[i])
+                    self.poiViewField.append("\t" + "\n")
+                    self.poiViewField.append("\t" + "Type: " + listFunctions[i + 1])
+                    self.poiViewField.append("\n")
+                    self.poiViewField.append("\t" + "Output: " + listFunctions[i + 2])
+                    font = self.poiViewField.font()
+                    font.setPointSize(12)
+                    self.poiViewField.setFont(font)
+                    self.poiViewField.repaint()
+                    break
+                i += 3
 
     def documentationClicked(self):
-        print("Documentation List clicked")
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            self.documentViewField.setReadOnly(False)
+            self.saveButton.setEnabled(True)
+            self.restoreButton.setEnabled(True)
+            collection = self.collection
+            query = {"file_name": currentDocument}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                self.documentViewField.setText(query_result["contents"])
+            else:
+                text_file_doc = {"file_name": currentDocument, "contents": ""}
+                collection.insert_one(text_file_doc)
+        elif currentDocument == "Plugin Structure":
+            self.loadPluginStructureDocumentation()
 
-    def documentationClicked(self):
-        query = {"file_name": "documentation"}
-
-        query_result = self.collection.find_one(query)
-        if query_result is not None:
-            self.documentViewField.setText(query_result["contents"])
+    def loadPluginStructureDocumentation(self):
+        self.documentViewField.setReadOnly(True)
+        self.saveButton.setEnabled(False)
+        self.restoreButton.setEnabled(False)
+        currentPlugin = self.pluginManagementList.currentItem()
+        if currentPlugin is not None:
+            collection = self.collection
+            query = {"Plugin Name": currentPlugin.text()}
+            query_result = collection.find_one(query)
+            if query_result is not None:
+                pluginXsdPath = query_result["Structure File Path"]
+                try:
+                    with open(pluginXsdPath, 'r') as pluginXsd:
+                        content = pluginXsd.read()
+                    self.documentViewField.setText(content)
+                except FileNotFoundError as err:
+                    self.documentViewField.setText("Structure File Path Not Found")
+            else:
+                self.documentViewField.setText("Plugin Not Found")
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
-            self.collection.insert_one(text_file_doc)
+            self.documentViewField.setText("No Plugin Selected")
+
+    def restoreBeatDocumentation(self):
+        currentDocument = self.documentList.currentItem().text()
+        print(self.documentList.currentItem().text())
+        if currentDocument == "BEAT Documentation":
+            default_beat_documentation_path = "BEATDocumentationDefault.txt"
+            try:
+                with open(default_beat_documentation_path, 'r') as default_beat_documentation:
+                    content = default_beat_documentation.read()
+                collection = self.collection
+                query = {"file_name": currentDocument}
+                text_file_doc = {"file_name": currentDocument, "contents": content}
+                # insert the contents into the "file" collection
+                if collection.count_documents(query) > 0:
+                    collection.replace_one(query, text_file_doc)
+                else:
+                    collection.insert_one(query, text_file_doc)
+                self.documentViewField.setText(content)
+            except FileNotFoundError:
+                print("Could Not Restore BEAT Documentation, BEATDocumentationDefault.txt file not found")
+
+    def handleDocumentationEdit(self):
+        self.documentationTextChangeTimer.start(7500)
+        pass
 
     def saveDocument(self):
-        query = {"file_name": "documentation"}
+        if self.documentList.currentItem() is None:
+            return
+        currentDocument = self.documentList.currentItem().text()
+        if currentDocument == "Plugin Structure":
+            return
+        documentContent = self.documentViewField.toPlainText()
+        collection = self.collection
+        query = {"file_name": currentDocument}
         # build a document to be inserted
-        text_file_doc = {"file_name": "documentation", "contents": self.documentViewField.toPlainText()}
+        text_file_doc = {"file_name": currentDocument, "contents": documentContent}
         # insert the contents into the "file" collection
         if self.collection.count_documents(query) > 0:
             self.collection.replace_one(query, text_file_doc)
         else:
             self.collection.insert_one(query, text_file_doc)
 
+    # End of Documentation Related Function #
 
     def filter_projects(self):  ##filtering list of project
         for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -873,7 +1113,6 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.documentList.findItems(self.documentSearch.text(), QtCore.Qt.MatchStartsWith):
             item.setHidden(False)
-
 
     def setupUi(self, MainWindow):
 
@@ -1074,7 +1313,6 @@ class Ui_MainWindow(object):
         self.analysisView.setFont(font)
         self.analysisView.setObjectName("analysisView")
         self.poiAnalysisList = QtWidgets.QListWidget(self.analysisView)
-        self.briana = QtWidgets.QListWidget()
         self.poiAnalysisList.setGeometry(QtCore.QRect(10, 30, 231, 601))
         font = QtGui.QFont()
         font.setPointSize(11)
@@ -1269,7 +1507,22 @@ class Ui_MainWindow(object):
         self.documentSearch.setObjectName("documentSearch")
         self.documentSearch.textChanged[str].connect(self.filter_doc)
         self.documentList = QtWidgets.QListWidget(self.documentView)
-        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 581))
+        self.documentList.setGeometry(QtCore.QRect(10, 80, 231, 535))
+        ######
+        self.restoreButton = QtWidgets.QPushButton(self.documentView)
+        self.restoreButton.setGeometry(QtCore.QRect(10, 90 + self.documentList.height(), 110, 45))
+        self.restoreButton.setObjectName("restoreButton")
+        self.restoreButton.setText("Restore")
+        self.restoreButton.clicked.connect(self.restoreBeatDocumentation)
+        margin_between_buttons = 11
+        self.saveButton = QtWidgets.QPushButton(self.documentView)
+        self.saveButton.setGeometry(
+            QtCore.QRect(10 + margin_between_buttons + self.restoreButton.width(), 90 + self.documentList.height(), 110,
+                         45))
+        self.saveButton.setObjectName("saveButton")
+        self.saveButton.setText("Save")
+        self.saveButton.clicked.connect(self.saveDocument)
+        ######
         font = QtGui.QFont()
         font.setPointSize(11)
         self.documentList.setFont(font)
@@ -1307,6 +1560,8 @@ class Ui_MainWindow(object):
 
         self.newPluginButton.clicked.connect(self.pluginWindow)
 
+        self.newPOIButton.clicked.connect(self.poiWindow)
+
         self.saveProjectButton.setEnabled(False)
 
         self.runStaticButton.clicked.connect(self.runStaticAnalysis)
@@ -1329,8 +1584,11 @@ class Ui_MainWindow(object):
 
         self.deletePluginButton.clicked.connect(self.deletePlugin)
 
+        self.poiDeleteButton.clicked.connect(self.deletePOI)
+
         self.poiTypeDropDownAnalysis.activated.connect(self.displayPOI)
 
+        self.poiFilterDropDown.activated.connect(self.dropDownChangePOI)
 
         for document in self.collection.find():
             self.projectList.addItem(document.get("Project Name"))
@@ -1339,26 +1597,28 @@ class Ui_MainWindow(object):
             self.pluginManagementList.addItem(document.get("Plugin Name"))
 
         ####################################
-        client = MongoClient("mongodb://localhost:27017")
-        db = client.test  # use a database called "test_database"
-        collection = db.documentation  # and inside that DB, a collection called "files"
-        query = {"file_name": "documentation"}
+        collection = self.collection  # and inside that DB, a collection called "files"
+        query = {"file_name": "BEAT Documentation"}
         query_result = collection.find_one(query)
         if query_result is not None:
             self.documentList.addItem(query_result["file_name"])
         else:
-            text_file_doc = {"file_name": "documentation", "contents": ""}
+            text_file_doc = {"file_name": "BEAT Documentation", "contents": ""}
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
-        ####################################
+        self.documentList.addItem("Plugin Structure")
+        self.hidePluginStructure(True)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         # self.deletePluginButton.clicked.connect(self.deleteConfirmation)
 
         self.terminalField.setReadOnly(True)
-        self.runStaticButton.setEnabled(False)
-        self.runDynamicButton.setEnabled(False)
-        self.stopDynamicButton.setEnabled(False)
+
+    def hidePluginStructure(self, hidden):
+        items = self.documentList.findItems("Plugin Structure", QtCore.Qt.MatchExactly)
+        if len(items) > 0:
+            for item in items:
+                item.setHidden(hidden)
 
     def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
@@ -1482,6 +1742,40 @@ class Ui_MainWindow(object):
             lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
                                       self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
 
+    def setupUiPOI(self, NewPOI):
+        NewPOI.setObjectName("NewPOI")
+        NewPOI.resize(454, 184)
+        self.poiTypeLabel = QtWidgets.QLabel(NewPOI)
+        self.poiTypeLabel.setGeometry(QtCore.QRect(10, 60, 141, 16))
+        self.poiTypeLabel.setObjectName("poiTypeLabel")
+        self.poiOutLabel = QtWidgets.QLabel(NewPOI)
+        self.poiOutLabel.setGeometry(QtCore.QRect(10, 110, 81, 16))
+        self.poiOutLabel.setObjectName("poiOutLabel")
+        self.poiOutEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiOutEdit.setGeometry(QtCore.QRect(10, 130, 431, 21))
+        self.poiOutEdit.setObjectName("poiOutEdit")
+        self.buttonBox = QtWidgets.QDialogButtonBox(NewPOI)
+        self.buttonBox.setGeometry(QtCore.QRect(90, 150, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.poiTypeEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiTypeEdit.setGeometry(QtCore.QRect(10, 80, 431, 21))
+        self.poiTypeEdit.setObjectName("poiTypeEdit")
+        self.poiNameEdit = QtWidgets.QTextEdit(NewPOI)
+        self.poiNameEdit.setGeometry(QtCore.QRect(10, 30, 431, 21))
+        self.poiNameEdit.setObjectName("poiNameEdit")
+        self.poiNameLabel = QtWidgets.QLabel(NewPOI)
+        self.poiNameLabel.setGeometry(QtCore.QRect(10, 10, 121, 16))
+        self.poiNameLabel.setObjectName("poiNameLabel")
+
+        self.retranslateUiPOI(NewPOI)
+        QtCore.QMetaObject.connectSlotsByName(NewPOI)
+
+        self.buttonBox.accepted.connect(
+            lambda: self.createPOI(self.poiNameEdit.toPlainText(), self.poiTypeEdit.toPlainText(),
+                                   self.poiOutEdit.toPlainText()))
+
     def setupUiBinaryError(self, binaryFileErrorWindow):
         binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
         binaryFileErrorWindow.resize(400, 99)
@@ -1520,12 +1814,12 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "BEAT: Binary Extraction and Analysis Tool"))
         self.projectViewGroup.setTitle(_translate("MainWindow", "Project View"))
         self.projectNewButton.setText(_translate("MainWindow", "New"))
-      #  self.projectSearch.setHtml(_translate("MainWindow",
-                                        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          #    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          #    "p, li { white-space: pre-wrap; }\n"
-                                            #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                            #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
+        #  self.projectSearch.setHtml(_translate("MainWindow",
+        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #    "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
         self.projectSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.projectDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.saveProjectButton.setText(_translate("MainWindow", "+ Save"))
@@ -1553,12 +1847,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.analysisTab), _translate("MainWindow", self.analysisTabName))
         self.pluginView.setTitle(_translate("MainWindow", "Plugin View"))
         self.newPluginButton.setText(_translate("MainWindow", "New"))
-        #self.pluginSearch.setHtml(_translate("MainWindow",
-                                       #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                        #     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                         #    "p, li { white-space: pre-wrap; }\n"
-                                          #   "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                           #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.pluginSearch.setHtml(_translate("MainWindow",
+        #      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #    "p, li { white-space: pre-wrap; }\n"
+        #   "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchPluginButton.setText(_translate("MainWindow", "🔍 "))
         self.deletePluginButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginStructureLabel.setText(_translate("MainWindow", "Plugin Structure"))
@@ -1574,12 +1868,12 @@ class Ui_MainWindow(object):
         self.UI.setTabText(self.UI.indexOf(self.pluginManagementTab), _translate("MainWindow", "Plugin Management"))
         self.poiView.setTitle(_translate("MainWindow", "Point of Interest View"))
         self.newPOIButton.setText(_translate("MainWindow", "New"))
-       # self.poiSearch.setHtml(_translate("MainWindow",
-                                #          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                 #         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                  #        "p, li { white-space: pre-wrap; }\n"
-                                     #     "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                     #     "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.poiSearch.setHtml(_translate("MainWindow",
+        #          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #        "p, li { white-space: pre-wrap; }\n"
+        #     "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        #     "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.poiSearchButton.setText(_translate("MainWindow", "🔍 "))
         self.poiDeleteButton.setText(_translate("MainWindow", "- Delete"))
         self.pluginPoiLabel.setText(_translate("MainWindow", "Plugin"))
@@ -1589,20 +1883,20 @@ class Ui_MainWindow(object):
         self.poiFilterDropDown.setItemText(0, _translate("MainWindow", "Select"))
         self.detailedPoiViewLabel.setText(_translate("MainWindow", "Detailed Points of Interest View"))
         self.UI.setTabText(self.UI.indexOf(self.poiTab), _translate("MainWindow", "Points of Interest"))
-       # self.documentViewField.setHtml(_translate("MainWindow",
-                                              #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                               #   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                               #   "p, li { white-space: pre-wrap; }\n"
-                                                #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                                #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        # self.documentViewField.setHtml(_translate("MainWindow",
+        #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #   "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+        #  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.detailedDocumentationViewLabel.setText(_translate("MainWindow", "Detailed Documentation View"))
         self.documentView.setTitle(_translate("MainWindow", "Documentation View"))
-      #  self.documentSearch.setHtml(_translate("MainWindow",
-                                           #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                             #  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                             #  "p, li { white-space: pre-wrap; }\n"
-                                             #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-                                              # "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        #  self.documentSearch.setHtml(_translate("MainWindow",
+        #    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        #  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        #  "p, li { white-space: pre-wrap; }\n"
+        #  "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
+        # "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.searchDocumentButton.setText(_translate("MainWindow", "🔍 "))
         self.UI.setTabText(self.UI.indexOf(self.Documentation), _translate("MainWindow", "Documentation"))
 
@@ -1623,6 +1917,13 @@ class Ui_MainWindow(object):
         self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
         self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
         self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+
+    def retranslateUiPOI(self, NewPOI):
+        _translate = QtCore.QCoreApplication.translate
+        NewPOI.setWindowTitle(_translate("NewPOI", "New POI"))
+        self.poiTypeLabel.setText(_translate("NewPOI", "Poin Of Interest Description"))
+        self.poiOutLabel.setText(_translate("NewPOI", "Python Output"))
+        self.poiNameLabel.setText(_translate("NewPOI", "Point Of Interest Name"))
 
     def retranslateUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
         _translate = QtCore.QCoreApplication.translate

@@ -1,0 +1,74 @@
+The purpose of this document is to guide the user through using the BEAT System.
+
+Project Tab
+How to create a project?
+ On your left side under the project view box you will see two buttons labeled "New" and "-Delete". 
+
+  1.Click "New" pop-up window will be displayed. It will ask you to enter the project name. 
+  2.Click "Browse" and upload your .exe or .out file. Note: You must write a project description. 
+  3.Click "Create" and the "New Project" pop-up window will close. You will see the project name, project description, binary file path, binary file  properties.
+  4.Click the "+Save" button.
+
+ When your project is saved you will see what you named to your project on the left side.
+
+How to  look for a project?
+ Under the project view, you will see a search bar,  click it and enter the name of the project that you are looking for.
+
+How to delete a project?
+    Select the project that you want to delete, click delete and a message will display "You are about to delete permanently a project. Are you sure you want to delete it?" click the "Yes" button.
+
+
+Analysis Tab
+How to run Static Analysis?
+ A binary file must be uploaded first. 
+  1. Select the Plugin and POI Type. Click the  Static Analysis "Run" button.
+
+How to run Dynamic Analysis?
+ Static analysis must be performed first in order to enable the Dynamic Analysis button
+   1.Click the Dynamic Analysis "Run" button.
+
+How to stop Dynamic Analysis?
+ Click the Dynamic Analysis  “Stop” button.
+
+How to delete the analysis result?
+ Select the Analysis result that you want to delete. Click the “Delete Analysis Result” button. A message will be displayed "You are about to delete permanently an analysis result. Are you sure you want to delete it?" click the "Yes" button.
+
+
+
+Plugin Management Tab
+How to create a new plugin?
+ Under plugin view box you will see two buttons labeled "New" and "-Delete". Click "New" and a pop-up window named "Create New Plugin" you must upload a "Plugin Structure" and Plugin Dataset, write the plugin name and write a "Plugin Description" click "OK" button and click the "+Save" button. When your plugin is saved you will see the plugin’s name on the left side.
+
+How to delete a plugin?
+ Select the plugin that you would like to delete, click the delete button and a message will be displayed "You are about to delete permanently this plugin. Are you sure you want to delete it?" click the "Yes" button.
+
+How to find a plugin?
+ Under the plugin view, you will see a search bar,  click it and enter the name of the plugin that you are looking for.
+
+Point of Interest
+How to create a Point of Interest?
+ Under Point of Interest view box you will see two buttons labeled "New" and "-Delete".
+   1.Click "New" and a pop-up window named "New POI" will be displayed. You must fill out the Point of interest name and the point of interest type. 
+   2.Click the "OK" and "+Save" button. When your Point of Interest is saved you will see what you named that you labeled your Point of Interest on the left side.
+    
+How to search for a Point of Interest?
+ Under the point of interest view, you will see a search bar,  click it and enter the name of the plugin that you are looking for.
+
+How to delete a Point of Interest?
+ Select the Point of Interest that you would like to delete, click the delete button and a message will be displayed "You are about to delete permanently a point of interest. Are you sure you want to delete it?" click the "Yes" button.
+
+
+Documentation Tab
+How to edit the BEAT Documentation?
+ Under the BEAT Documentation view search bar, you will see the "BEAT Documentation" this document will help you learn how to use the system, such as creating a project, looking for a plugin, deleting a point of interest, etc. The BEAT Documentation box is editable you are allowed to make changes.
+
+How to save the Beat Documentation?
+ When the user writes in the BEAT Documentation box the "+Save" button will be enabled. Click the "+Save" button to save your changes.
+
+How to restore the default version of the BEAT Documentation?
+ When the user edits or saves a project the "Restore" button will be enabled. Click the "Restore" button to show the default BEAT Documentation.
+
+How to see the Plugin Structure?
+ The Plugin Structure must be selected or uploaded on the Plugin Management tab for the plugin structure to be enabled.
+
+
