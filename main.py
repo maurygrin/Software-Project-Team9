@@ -61,7 +61,7 @@ class Ui_MainWindow(object):
         self.function = ""
         self.functionsStatic = ""
         self.temp2 = ""
-        self.brianaFlag = False
+        self.dynamicRun = False
 
         cluster = MongoClient("mongodb://localhost:27017")
         db = cluster.test
@@ -281,6 +281,8 @@ class Ui_MainWindow(object):
 
     def dynamicAnalysisThread(self):
         threading.Thread(target=self.runDynamicAnalysis(), args=(10,)).start()
+        self.runStaticButton.setEnabled(False)
+        self.dynamicRun = True
 
     def runDynamicAnalysis(self):
         for i in range(len(dictList)):  # iterate over list of functions
@@ -369,53 +371,85 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.append("\t" + "\n")
             self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
             self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Function: ")
+            self.detailedPoiAnalysisField.append("\t" + "Function Name: ")
             self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
+            self.detailedPoiAnalysisField.append("\t" + "Arg Name: ")
             self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Parameter Value: ")
+            self.detailedPoiAnalysisField.append("\t" + "Arg Number: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Arg Type: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Arg Value: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Name: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
             self.detailedPoiAnalysisField.append("\t" + "\n")
             self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
             self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("\t" + "Order num: ")
+            self.detailedPoiAnalysisField.append("\t" + "Local Variable Name: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Local Variable Type: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Local Variable Number: ")
+            self.detailedPoiAnalysisField.append("\t" + "\n")
+            self.detailedPoiAnalysisField.append("\t" + "Local Variable Value: ")
             self.detailedPoiAnalysisField.append("\n")
             font = self.detailedPoiAnalysisField.font()
             font.setPointSize(12)
             self.detailedPoiAnalysisField.setFont(font)
             self.detailedPoiAnalysisField.repaint()
-            counter = 0
             for item in self.functionsStatic:
-                staticFunctionList.append(item["name"])
                 item = QtWidgets.QListWidgetItem(item["name"])
                 item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                 item.setCheckState(QtCore.Qt.Checked)
                 self.poiAnalysisList.addItem(item)
-                counter = counter + 1
-
 
     def displayPOI(self):
         if (self.static == 1):
 
             poiSelected = self.poiTypeDropDownAnalysis.currentText()
-            if (self.brianaFlag==True):
-                if (poiSelected == "Functions"):
-                    self.display = "functions"
-                    self.terminalField.append("Command: afl")
-                    self.detailedPoiAnalysisField.setText("")
-                    self.poiAnalysisList.clear()
-                    self.detailedPoiAnalysisField.append("\t" + "\n")
-                    self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
-                    self.detailedPoiAnalysisField.append("\t" + "\n")
-                    self.detailedPoiAnalysisField.append("\t" + "Function: ")
-                    self.detailedPoiAnalysisField.append("\t" + "\n")
-                    self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
-                    self.detailedPoiAnalysisField.append("\t" + "\n")
-                    font = self.detailedPoiAnalysisField.font()
-                    font.setPointSize(12)
-                    self.detailedPoiAnalysisField.setFont(font)
-                    self.detailedPoiAnalysisField.repaint()
 
-            if (poiSelected == "Strings"):
+            if (poiSelected == "Functions"):
+                self.display = "functions"
+                self.terminalField.append("Command: afll")
+                self.detailedPoiAnalysisField.setText("")
+                self.poiAnalysisList.clear()
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Function Name: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Arg Name: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Arg Number: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Arg Type: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Arg Value: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Name: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Type: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Return Value: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Local Variable Name: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Local Variable Type: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Local Variable Number: ")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("\t" + "Local Variable Value: ")
+                self.detailedPoiAnalysisField.append("\n")
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+                for item in self.functionsStatic:
+                    self.poiAnalysisList.addItem(item["name"])
+
+            elif (poiSelected == "Strings"):
                 self.display = "strings"
                 self.terminalField.append("Command: iz")
                 self.detailedPoiAnalysisField.setText("")
@@ -432,24 +466,7 @@ class Ui_MainWindow(object):
                 self.detailedPoiAnalysisField.repaint()
                 for item in self.stringsStatic:
                     self.poiAnalysisList.addItem(item["string"])
-            elif (poiSelected == "Functions"):
-                self.display = "functions"
-                self.terminalField.append("Command: afl")
-                self.detailedPoiAnalysisField.setText("")
-                self.poiAnalysisList.clear()
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Function: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                self.detailedPoiAnalysisField.append("\t" + "Parameters: ")
-                self.detailedPoiAnalysisField.append("\t" + "\n")
-                font = self.detailedPoiAnalysisField.font()
-                font.setPointSize(12)
-                self.detailedPoiAnalysisField.setFont(font)
-                self.detailedPoiAnalysisField.repaint()
-                for item in self.functionsStatic:
-                    self.poiAnalysisList.addItem(item["name"])
+
 
     def dropDownChangePOI(self):
         dropDownSelect = self.poiFilterDropDown.currentText()
@@ -648,6 +665,7 @@ class Ui_MainWindow(object):
                     "Plugin Description": self.plugin.description,
                     "Structure File Path": self.plugin.structure,
                     "Pre-Defined Dataset File Path": self.plugin.data_set,
+                    "Plugin Output": list[2],
                     "POI Strings": list[4],
                     "POI Functions": list[5],
                     "Strings": [],  # Nested Document
@@ -854,7 +872,7 @@ class Ui_MainWindow(object):
     def analysisClicked(self):
         selected = self.poiAnalysisList.currentItem().text()
         if self.display is "strings":
-            for item in self.s:
+            for item in self.stringsStatic:
                 current = item["string"]
                 if current == selected:
                     self.vaddr = hex(item["vaddr"])
@@ -875,27 +893,79 @@ class Ui_MainWindow(object):
             self.detailedPoiAnalysisField.repaint()
 
         elif self.display is "functions":
-            for item in self.f:
-                current = item["name"]
-                if current == selected:
-                    self.vaddr = hex(item["minbound"])
-                    self.vaddr = str(self.vaddr)
-                    self.function = str(item["name"])
-                    self.signature = str(item["signature"])
-                    self.temp = self.signature.split('(')[1];
-                    self.temp2 = self.temp.split(')')[0];
-                    break
-            self.detailedPoiAnalysisField.setText("")
-            self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
-            self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("Function: " + self.function)
-            self.detailedPoiAnalysisField.append("\t" + "\n")
-            self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
-            font = self.detailedPoiAnalysisField.font()
-            font.setPointSize(12)
-            self.detailedPoiAnalysisField.setFont(font)
-            self.detailedPoiAnalysisField.repaint()
+            if self.dynamicRun == False:
+                for item in self.functionsStatic:
+                    current = item["name"]
+                    if current == selected:
+                        self.vaddr = hex(item["minbound"])
+                        self.vaddr = str(self.vaddr)
+                        self.function = str(item["name"])
+                        self.signature = str(item["signature"])
+                        self.temp = self.signature.split('(')[1];
+                        self.temp2 = self.temp.split(')')[0];
+                        break
+                self.detailedPoiAnalysisField.setText("")
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Function: " + self.function)
+                self.detailedPoiAnalysisField.append("\t" + "\n")
+                self.detailedPoiAnalysisField.append("Parameters: " + self.temp2)
+                font = self.detailedPoiAnalysisField.font()
+                font.setPointSize(12)
+                self.detailedPoiAnalysisField.setFont(font)
+                self.detailedPoiAnalysisField.repaint()
+            elif self.dynamicRun:
+                for i in range(len(dictList)):
+                    current = dictList[i]['fName']
+                    if current == selected:
+                        self.funcName = dictList[i]['fName']
+                        self.funcArgNum = str(dictList[i]['argNum'])
+                        self.funcArgName = str(dictList[i]['argName'])
+                        self.funcArgType = str(dictList[i]['argType'])
+                        self.funcArgVal = str(dictList[i]['argVal'])
+                        self.funcLocNum = str(dictList[i]['locNum'])
+                        self.funcLocName = str(dictList[i]['locName'])
+                        self.funcLocType = str(dictList[i]['locType'])
+                        self.funcLocVal = str(dictList[i]['locVal'])
+                        self.funcRetName = str(dictList[i]['retName'])
+                        self.funcRetType = str(dictList[i]['retType'])
+                        self.funcRetVal = str(dictList[i]['retValue'])
+
+
+                        self.detailedPoiAnalysisField.setText("")
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Virtual Memory Address: " + self.vaddr)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Function Name: " + self.funcName)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Arg Number: " + self.funcArgNum)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Arg Name: " + self.funcArgName)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Arg Type: " + self.funcArgType)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Arg Value: " + self.funcArgVal)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Local Number: " + self.funcLocNum)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Local Name: " + self.funcLocName)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Local Type: " + self.funcLocType)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Local Value: " + self.funcLocVal)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Return Name: " + self.funcRetName)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Return Type: " + self.funcRetType)
+                        self.detailedPoiAnalysisField.append("\t" + "\n")
+                        self.detailedPoiAnalysisField.append("Return Value: " + self.funcRetVal)
+
+
+                        font = self.detailedPoiAnalysisField.font()
+                        font.setPointSize(12)
+                        self.detailedPoiAnalysisField.setFont(font)
+                        self.detailedPoiAnalysisField.repaint()
 
     def runClicked(self):
         print("Analysis Run List clicked")
@@ -916,7 +986,7 @@ class Ui_MainWindow(object):
         pluginDescription = plugin.get("Plugin Description")
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
-        pluginOutput = plugin.get("pluginOutput")
+        pluginOutput = plugin.get("Plugin Output")
         self.hidePluginStructure(False)
 
         ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
@@ -953,6 +1023,10 @@ class Ui_MainWindow(object):
         self.pluginDropDownAnalysis.clear()
         self.pluginDropDownAnalysis.repaint()
         self.pluginDropDownAnalysis.addItem(pluginName)
+
+        self.outputFieldDropDown.clear()
+        self.outputFieldDropDown.repaint()
+        self.outputFieldDropDown.addItem(pluginOutput)
 
         self.poiPluginDropDown.clear()
         self.poiPluginDropDown.repaint()
@@ -1607,7 +1681,7 @@ class Ui_MainWindow(object):
             collection.insert_one(text_file_doc)
             self.documentList.addItem(text_file_doc["file_name"])
         self.documentList.addItem("Plugin Structure")
-        self.hidePluginStructure(True)
+        self.hidePluginStructure(False)
 
         self.projectDeleteButton.clicked.connect(self.deleteConfirmation)
         # self.deletePluginButton.clicked.connect(self.deleteConfirmation)

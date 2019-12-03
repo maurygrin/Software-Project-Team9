@@ -169,4 +169,4 @@
         <typeStrings>String</typeStrings>
         <outputString> </outputString>
     </item>
-</plugins>
+<item><nameStrings>Test @</nameStrings><typeStrings>String</typeStrings><outputString>SOCK(ADDR)</outputString></item></plugins>
