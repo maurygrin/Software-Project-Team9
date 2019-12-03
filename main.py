@@ -540,6 +540,7 @@ class Ui_MainWindow(object):
         it.setSelected(True)
         currentDocument = self.documentList.currentItem()
         self.hidePluginStructure(False)
+
         if currentDocument is not None:
             if currentDocument.text() == "Plugin Structure":
                 self.loadPluginStructureDocumentation()
@@ -768,6 +769,7 @@ class Ui_MainWindow(object):
         pluginStructure = plugin.get("Structure File Path")
         pluginDataset = plugin.get("Pre-Defined Dataset File Path")
         pluginOutput = plugin.get("pluginOutput")
+        self.hidePluginStructure(False)
 
         ####### If you already created a plugin before pulling this version, you may have to comment from here.. #####
 
