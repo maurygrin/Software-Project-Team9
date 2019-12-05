@@ -104,6 +104,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.DocumentationTab), _translate("MainWindow", "Documentation"))
 
 
+
 if __name__ == "__main__":
     import sys
 

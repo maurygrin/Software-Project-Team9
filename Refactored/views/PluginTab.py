@@ -14,7 +14,8 @@ from pathlib import Path, PureWindowsPath
 
 class PluginTab(object):
 
-    #def __init__(self):
+    def __init__(self):
+        self.windowPlug = QtWidgets.QDialog()
 
     def setupPluginTab(self, tab):
         self.tab = tab
@@ -164,7 +165,6 @@ class PluginTab(object):
         self.verticalLayout_5.addLayout(self.pluginbuttonslayout)
         return self.tab
 
-
     def retranslatePluginTab(self):
 
         _translate = QtCore.QCoreApplication.translate
@@ -183,3 +183,64 @@ class PluginTab(object):
         self.poipluginlabel.setText(_translate("MainWindow", "Points of Interest"))
         self.XMLEditorButton.setText(_translate("MainWindow", "XML Editor"))
         self.savePluginButton.setText(_translate("MainWindow", "Save"))
+
+    def setupUiCreatePlugin(self, newPlugin):
+        newPlugin.setObjectName("newPlugin")
+        newPlugin.resize(541, 369)
+        self.buttonBox = QtWidgets.QDialogButtonBox(newPlugin)
+        self.buttonBox.setGeometry(QtCore.QRect(370, 330, 161, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.projectNameLabel = QtWidgets.QLabel(newPlugin)
+        self.projectNameLabel.setGeometry(QtCore.QRect(20, 100, 81, 16))
+        self.projectNameLabel.setObjectName("projectNameLabel")
+        self.pluginNameEdit = QtWidgets.QTextEdit(newPlugin)
+        self.pluginNameEdit.setGeometry(QtCore.QRect(20, 120, 431, 21))
+        self.pluginNameEdit.setObjectName("pluginNameEdit")
+        self.pluginDescriptionLabel = QtWidgets.QLabel(newPlugin)
+        self.pluginDescriptionLabel.setGeometry(QtCore.QRect(20, 150, 131, 16))
+        self.pluginDescriptionLabel.setObjectName("pluginDescriptionLabel")
+        self.pluginDescriptionEdit = QtWidgets.QTextEdit(newPlugin)
+        self.pluginDescriptionEdit.setGeometry(QtCore.QRect(20, 170, 431, 141))
+        self.pluginDescriptionEdit.setObjectName("pluginDescriptionEdit")
+        self.pluginStructlabel = QtWidgets.QLabel(newPlugin)
+        self.pluginStructlabel.setGeometry(QtCore.QRect(20, 20, 81, 16))
+        self.pluginStructlabel.setObjectName("pluginStructlabel")
+        self.pluginDatasetLabel = QtWidgets.QLabel(newPlugin)
+        self.pluginDatasetLabel.setGeometry(QtCore.QRect(20, 60, 81, 16))
+        self.pluginDatasetLabel.setObjectName("pluginDatasetLabel")
+        self.browseStructWindow = QtWidgets.QPushButton(newPlugin)
+        self.browseStructWindow.setGeometry(QtCore.QRect(460, 40, 75, 23))
+        self.browseStructWindow.setObjectName("browseStructWindow")
+        self.brosweDSWindow = QtWidgets.QPushButton(newPlugin)
+        self.brosweDSWindow.setGeometry(QtCore.QRect(460, 80, 75, 23))
+        self.brosweDSWindow.setObjectName("brosweDSWindow")
+        self.structureFieldWindow = QtWidgets.QTextBrowser(newPlugin)
+        self.structureFieldWindow.setGeometry(QtCore.QRect(20, 40, 431, 21))
+        self.structureFieldWindow.setObjectName("structureFieldWindow")
+        self.datasetFieldWindow = QtWidgets.QTextBrowser(newPlugin)
+        self.datasetFieldWindow.setGeometry(QtCore.QRect(20, 80, 431, 21))
+        self.datasetFieldWindow.setObjectName("datasetFieldWindow")
+
+        self.retranslateUiCreatePlugin(newPlugin)
+        self.buttonBox.accepted.connect(newPlugin.accept)
+        self.buttonBox.rejected.connect(newPlugin.reject)
+        QtCore.QMetaObject.connectSlotsByName(newPlugin)
+
+#        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
+ #       self.browseStructWindow.clicked.connect(self.BrowseStruct)
+
+        self.buttonBox.accepted.connect(
+            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
+                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
+
+    def retranslateUiCreatePlugin(self, newPlugin):
+        _translate = QtCore.QCoreApplication.translate
+        newPlugin.setWindowTitle(_translate("newPlugin", "Create New Plugin"))
+        self.projectNameLabel.setText(_translate("newPlugin", "Plugin Name"))
+        self.pluginDescriptionLabel.setText(_translate("newPlugin", "Plugin Description"))
+        self.pluginStructlabel.setText(_translate("newPlugin", "Plugin Structure"))
+        self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
+        self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
+        self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))

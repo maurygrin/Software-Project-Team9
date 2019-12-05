@@ -2,8 +2,8 @@ class POIController(object):
 
     def __init__(self, poi_tab):
         self.poi_tab = poi_tab
-        #self.analysis_tab.projectNewButton.clicked.connect(self.projectWindow)
+        self.poi_tab.newPOIButton.clicked.connect(self.poiWindow)
 
-    #def projectWindow(self):
-        #self.project_tab.setupUiCreateProject(self.project_tab.windowNew)
-        #self.project_tab.windowNew.show()
+    def poiWindow(self):
+        self.poi_tab.setupUiPOI(self.poi_tab.windowPOI)
+        self.poi_tab.windowPOI.show()
