@@ -38,7 +38,6 @@ class DocumentationTab(object):
         font.setBold(False)
         font.setWeight(50)
         self.documentSearch.setFont(font)
-        self.documentSearch.setFocusPolicy(QtCore.Qt.NoFocus)
         self.documentSearch.setObjectName("documentSearch")
         self.DocumentationViewMainLayout.addWidget(self.documentSearch)
         self.DocumentsLabel = QtWidgets.QLabel(self.DocumentationViewContainer)

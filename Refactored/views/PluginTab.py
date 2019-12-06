@@ -16,6 +16,7 @@ class PluginTab(object):
 
     def __init__(self):
         self.windowPlug = QtWidgets.QDialog()
+        self.windowPluginError = QtWidgets.QDialog()
 
     def setupPluginTab(self, tab):
         self.tab = tab
@@ -36,7 +37,6 @@ class PluginTab(object):
         font.setBold(False)
         font.setWeight(50)
         self.pluginSearch.setFont(font)
-        self.pluginSearch.setFocusPolicy(QtCore.Qt.NoFocus)
         self.pluginSearch.setObjectName("pluginSearch")
         self.verticalLayout.addWidget(self.pluginSearch)
         self.pluginslabel = QtWidgets.QLabel(self.PluginViewContainer)
@@ -228,13 +228,6 @@ class PluginTab(object):
         self.buttonBox.rejected.connect(newPlugin.reject)
         QtCore.QMetaObject.connectSlotsByName(newPlugin)
 
-#        self.brosweDSWindow.clicked.connect(self.BrowseDataSet)
- #       self.browseStructWindow.clicked.connect(self.BrowseStruct)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPlugin(self.pluginNameEdit.toPlainText(), self.pluginDescriptionEdit.toPlainText(),
-                                      self.structureFieldWindow.toPlainText(), self.datasetFieldWindow.toPlainText()))
-
     def retranslateUiCreatePlugin(self, newPlugin):
         _translate = QtCore.QCoreApplication.translate
         newPlugin.setWindowTitle(_translate("newPlugin", "Create New Plugin"))
@@ -244,3 +237,25 @@ class PluginTab(object):
         self.pluginDatasetLabel.setText(_translate("newPlugin", "Plugin Dataset"))
         self.browseStructWindow.setText(_translate("newPlugin", "Browse"))
         self.brosweDSWindow.setText(_translate("newPlugin", "Browse"))
+
+    def setupPluginError(self, pluginSelected):
+        pluginSelected.setObjectName("pluginSelected")
+        pluginSelected.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(pluginSelected)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 60, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.messageLabel = QtWidgets.QLabel(pluginSelected)
+        self.messageLabel.setGeometry(QtCore.QRect(30, 20, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
+
+        self.retranslatePluginError(pluginSelected)
+        self.buttonBox.accepted.connect(pluginSelected.accept)
+        QtCore.QMetaObject.connectSlotsByName(pluginSelected)
+
+    def retranslatePluginError(self, pluginSelected):
+        _translate = QtCore.QCoreApplication.translate
+        pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
+        self.messageLabel.setText(
+            _translate("pluginSelected", "You need to select a plugin before running an analysis."))

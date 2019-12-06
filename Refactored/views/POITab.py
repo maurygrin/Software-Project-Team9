@@ -39,7 +39,6 @@ class POITab(object):
         font.setBold(False)
         font.setWeight(50)
         self.poiSearch.setFont(font)
-        self.poiSearch.setFocusPolicy(QtCore.Qt.NoFocus)
         self.poiSearch.setObjectName("poiSearch")
         self.PointsOfInterestViewLayout.addWidget(self.poiSearch)
         self.poipoilabel = QtWidgets.QLabel(self.PointsOfInterestViewContainer)
@@ -189,10 +188,6 @@ class POITab(object):
 
         self.retranslateUiPOI(NewPOI)
         QtCore.QMetaObject.connectSlotsByName(NewPOI)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createPOI(self.poiNameEdit.toPlainText(), self.poiTypeEdit.toPlainText(),
-                                   self.poiOutEdit.toPlainText()))
 
     def retranslateUiPOI(self, NewPOI):
         _translate = QtCore.QCoreApplication.translate

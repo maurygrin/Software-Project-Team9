@@ -12,6 +12,7 @@ from controllers.AnalysisController import AnalysisController
 from controllers.PluginController import PluginController
 from controllers.POIController import POIController
 from controllers.DocumentationController import DocumentationController
+from controllers.DBController import DBController
 
 
 class Ui_MainWindow(object):
@@ -78,11 +79,14 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.project_controller = ProjectController(self.project_tab)
+        self.db_controller = DBController()
+
         self.analysis_controller = AnalysisController(self.analysis_tab)
-        self.plugin_controller = PluginController(self.plugin_tab)
+        self.project_controller = ProjectController(self.project_tab, self.analysis_tab, self.analysis_controller, self.db_controller)
         self.poi_controller = POIController(self.poi_tab)
-        self.documentation_controller = DocumentationController(self.documentation_tab)
+        self.documentation_controller = DocumentationController(self.documentation_tab, self.db_controller, self.plugin_tab)
+        self.plugin_controller = PluginController(self.plugin_tab, self.poi_tab, self.analysis_tab, self.db_controller, self.poi_controller, self.documentation_controller)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

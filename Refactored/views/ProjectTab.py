@@ -16,6 +16,8 @@ class ProjectTab(object):
 
     def __init__(self):
         self.windowNew = QtWidgets.QDialog()
+        self.windowDeleteConfirmation = QtWidgets.QDialog()
+        self.windowBinaryError = QtWidgets.QDialog()
 
     def setupProjectTab(self, tab):
 
@@ -145,7 +147,6 @@ class ProjectTab(object):
         font.setBold(False)
         font.setWeight(50)
         self.projectSearch.setFont(font)
-        self.projectSearch.setFocusPolicy(QtCore.Qt.NoFocus)
         self.projectSearch.setObjectName("projectSearch")
         self.ProjectViewMainLayout.addWidget(self.projectSearch)
         self.ProjectMainLayout = QtWidgets.QVBoxLayout()
@@ -235,15 +236,6 @@ class ProjectTab(object):
         self.buttonBox.rejected.connect(NewProject.reject)
         QtCore.QMetaObject.connectSlotsByName(NewProject)
 
-        self.binaryFilePathEdit.setEnabled(False)
-
-#        self.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
-
-        self.buttonBox.accepted.connect(
-            lambda: self.createProject(self.projectNameEdit.toPlainText(), self.binaryFilePathEdit.toPlainText(),
-                                       self.projectDescriptionEdit.toPlainText())
-        )
-
     def retranslateUiCreateProject(self, NewProject):
         _translate = QtCore.QCoreApplication.translate
         NewProject.setWindowTitle(_translate("NewProject", "New Project"))
@@ -251,3 +243,56 @@ class ProjectTab(object):
         self.projectDescriptionLabel.setText(_translate("NewProject", "Project Description"))
         self.binaryFilePathLabel.setText(_translate("NewProject", "Binary File Path"))
         self.binaryFilePathBrowse.setText(_translate("NewProject", "Browse"))
+
+    def setupUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
+        DeleteProjectConfirmation.setObjectName("deleteProjectConfirmation")
+        DeleteProjectConfirmation.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(DeleteProjectConfirmation)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 50, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setText("Yes")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).setText("No")
+        self.buttonBox.setObjectName("buttonBox")
+        self.messageLabel = QtWidgets.QLabel(DeleteProjectConfirmation)
+        self.messageLabel.setGeometry(QtCore.QRect(10, 10, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
+        self.messageLabel_2 = QtWidgets.QLabel(DeleteProjectConfirmation)
+        self.messageLabel_2.setGeometry(QtCore.QRect(10, 30, 371, 31))
+        self.messageLabel_2.setObjectName("messageLabel_2")
+
+        self.retranslateUiDeleteProjectConfirmation(DeleteProjectConfirmation)
+        self.buttonBox.accepted.connect(DeleteProjectConfirmation.accept)
+        self.buttonBox.rejected.connect(DeleteProjectConfirmation.reject)
+        QtCore.QMetaObject.connectSlotsByName(DeleteProjectConfirmation)
+
+    def retranslateUiDeleteProjectConfirmation(self, DeleteProjectConfirmation):
+        _translate = QtCore.QCoreApplication.translate
+        DeleteProjectConfirmation.setWindowTitle(_translate("deleteProjectConfirmation", "Delete Project Confirmation"))
+        self.messageLabel.setText(
+            _translate("deleteProjectConfirmation", "You are about to delete permanently a project. Are you sure"))
+        self.messageLabel_2.setText(_translate("deleteProjectConfirmation", "you want to delete it?"))
+
+    def setupUiBinaryError(self, binaryFileErrorWindow):
+        binaryFileErrorWindow.setObjectName("binaryFileErrorWindow")
+        binaryFileErrorWindow.resize(400, 99)
+        self.buttonBox = QtWidgets.QDialogButtonBox(binaryFileErrorWindow)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 50, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.messageLabel = QtWidgets.QLabel(binaryFileErrorWindow)
+        self.messageLabel.setGeometry(QtCore.QRect(10, 10, 371, 31))
+        self.messageLabel.setObjectName("messageLabel")
+
+        self.retranslateUiBinaryError(binaryFileErrorWindow)
+        self.buttonBox.accepted.connect(binaryFileErrorWindow.accept)
+        self.buttonBox.rejected.connect(binaryFileErrorWindow.reject)
+        QtCore.QMetaObject.connectSlotsByName(binaryFileErrorWindow)
+
+    def retranslateUiBinaryError(self, binaryFileErrorWindow):
+        _translate = QtCore.QCoreApplication.translate
+        binaryFileErrorWindow.setWindowTitle(
+            _translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
+        self.messageLabel.setText(
+            _translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
