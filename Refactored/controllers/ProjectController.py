@@ -8,7 +8,7 @@ from ProjectSub.Metadata import Metadata
 
 class ProjectController(object):
 
-    def __init__(self, project_tab, analysis_tab, analysis, db):
+    def __init__(self, project_tab, analysis_tab, analysisController, db):
         self.project_tab = project_tab
         self.analysis_tab = analysis_tab
         self.project_tab.projectNewButton.clicked.connect(self.projectWindow)
@@ -44,7 +44,7 @@ class ProjectController(object):
         self.stripped = ""
         self.extension = ""
 
-        self.analysis = analysis
+        self.analysisController = analysisController
 
         self.db.findProjects(self.project_tab)
 
@@ -83,7 +83,7 @@ class ProjectController(object):
 
             self.r2 = r2pipe.open(self.path)
 
-            self.analysis.set_r2(self.r2)
+            self.analysisController.set_r2(self.r2)
 
             self.binaryInfo = self.r2.cmdj('ij')
 
@@ -271,7 +271,7 @@ class ProjectController(object):
         #self.retranslateUi(MainWindow)
 
     def filter_projects(self):  ##filtering list of project
-        for item in self.project_tabprojectList.findItems("*", QtCore.Qt.MatchWildcard):
+        for item in self.project_tab.projectList.findItems("*", QtCore.Qt.MatchWildcard):
             item.setHidden(True)
         for item in self.project_tab.projectList.findItems(self.project_tab.projectSearch.text(), QtCore.Qt.MatchStartsWith):
             item.setHidden(False)
