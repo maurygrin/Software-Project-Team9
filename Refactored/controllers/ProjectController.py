@@ -264,6 +264,8 @@ class ProjectController(object):
 
         self.r2 = r2pipe.open(p.get("Binary File Path"))
 
+        self.analysisController.set_r2(self.r2)
+
         self.analysis_tab.detailedPoiAnalysisField.clear()
 
         self.project_tab.projectDescriptionField.setEnabled(True)

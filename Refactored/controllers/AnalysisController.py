@@ -217,7 +217,6 @@ class AnalysisController(object):
                 self.r2.cmd("dc")  # Run until you hit the breakpoint
                 #get the value of the rax register to get return value
                 returnVal = self.r2.cmd("dr rax")
-                #returnVal = returnVal.rstrip("\n")  DO WE NEED THIS
                 #start running after breakpoint get arguments first
                 templistVals = []
                 templistLoc = []
@@ -283,7 +282,6 @@ class AnalysisController(object):
                 item.setCheckState(QtCore.Qt.Checked)
                 self.analysis_tab.poiAnalysisList.addItem(item)
         elif (poiSelected == "Functions"):
-            self.analsysis_tab.terminalField.append("Dynamic Analysis performed!")
             self.analysis_tab.terminalField.append("Command: afll")
             self.display = "functions"
             self.analysis_tab.detailedPoiAnalysisField.setText("")
