@@ -1,8 +1,6 @@
 from PluginSub.POI import POI
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore
 
 import xml.etree.cElementTree as ET
 

@@ -1,16 +1,6 @@
-import os, sys, r2pipe, json, base64
+import r2pipe
 
-from controllers.AnalysisController import AnalysisController
-from controllers.DBController import DBController
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
-
-from views.ProjectTab import ProjectTab
-from views.AnalysisTab import AnalysisTab
-from views.PluginTab import PluginTab
-from views.POITab import POITab
-from views.DocumentationTab import DocumentationTab
+from PyQt5 import QtCore, QtWidgets
 
 from ProjectSub.Project import Project
 from ProjectSub.BinaryFile import BinaryFile
@@ -245,7 +235,7 @@ class ProjectController(object):
     def projectClicked(self):
         p = self.db.findProject("Project Name", self.project_tab.projectList.currentItem().text())
 
-
+        self.project_tab.fileProperties.clear()
         self.project_tab.projectNameField.setText(p.get("Project Name"))
 
         self.project_tab.projectDescriptionField.setText(p.get("Project Description"))

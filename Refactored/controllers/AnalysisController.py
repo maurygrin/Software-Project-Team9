@@ -1,7 +1,6 @@
-import os, sys, r2pipe, json, base64, threading
+import json, threading
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
+from PyQt5 import QtCore, QtWidgets
 
 staticFunctionList=[]
 dictList = []
@@ -315,8 +314,14 @@ class AnalysisController(object):
                 font.setPointSize(12)
                 self.analysis_tab.detailedPoiAnalysisField.setFont(font)
                 self.analysis_tab.detailedPoiAnalysisField.repaint()
+                counter = 0
                 for item in self.functionsStatic:
-                    self.analysis_tab.poiAnalysisList.addItem(item["name"])
+                    staticFunctionList.append(item["name"])
+                    item = QtWidgets.QListWidgetItem(item["name"])
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Checked)
+                    self.analysis_tab.poiAnalysisList.addItem(item)
+                    counter = counter + 1
 
             elif (poiSelected == "Strings"):
                 self.display = "strings"
@@ -330,11 +335,14 @@ class AnalysisController(object):
                 self.analysis_tab.detailedPoiAnalysisField.append("\n")
                 self.analysis_tab.detailedPoiAnalysisField.append("\t" + "Section: ")
                 font = self.analysis_tab.detailedPoiAnalysisField.font()
-#                font.self.analysis_tab.setPointSize(12)
+                font.setPointSize(12)
                 self.analysis_tab.detailedPoiAnalysisField.setFont(font)
                 self.analysis_tab.detailedPoiAnalysisField.repaint()
                 for item in self.stringsStatic:
-                    self.analysis_tab.poiAnalysisList.addItem(item["string"])
+                    item = QtWidgets.QListWidgetItem(item["string"])
+                    item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    item.setCheckState(QtCore.Qt.Checked)
+                    self.analysis_tab.poiAnalysisList.addItem(item)
 
     def analysisClicked(self):
         selected = self.analysis_tab.poiAnalysisList.currentItem().text()

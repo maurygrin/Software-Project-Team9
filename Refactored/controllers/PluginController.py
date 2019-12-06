@@ -1,19 +1,16 @@
 from PluginSub.Plugin import Plugin
 
-from controllers.POIController import POIController
-from controllers.DBController import DBController
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
+from PyQt5 import QtCore, QtWidgets
 import xml.etree.cElementTree as ET
 
 
 class PluginController(object):
 
-    def __init__(self, plugin_tab, poi_tab, analysis_tab, db, poiController, documentController):
+    def __init__(self, plugin_tab, poi_tab, analysis_tab, db, poiController, documentController, document_tab):
         self.plugin_tab = plugin_tab
         self.documentController= documentController
         self.poiController = poiController
+        self.document_tab = document_tab
         self.db = db
         self.plugin_tab.newPluginButton.clicked.connect(self.pluginWindow)
         self.plugin_tab.pluginStructureField.setEnabled(False)
@@ -156,7 +153,7 @@ class PluginController(object):
         self.plugin_tab.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)
         currentDocument = self.document_tab.documentList.currentItem()
-        self.document_tab.hidePluginStructure(False)
+        self.documentController.hidePluginStructure(False)
 
         if currentDocument is not None:
             if currentDocument.text() == "Plugin Structure":

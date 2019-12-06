@@ -1,20 +1,6 @@
-import os, sys, r2pipe
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
-
-from Project import Project
-from BinaryFile import BinaryFile
-from Metadata import Metadata
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
-
-from pathlib import Path, PureWindowsPath
 
 class AnalysisTab(object):
-
-    #def __init__(self):
 
     def setupAnalysisTab(self, tab):
 
