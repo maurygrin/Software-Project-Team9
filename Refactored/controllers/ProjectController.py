@@ -68,12 +68,16 @@ class ProjectController(object):
         )
 
     def binaryErrorWindow(self):
-        self.setupUiBinaryError(self.windowBinaryError)
-        self.windowBinaryError.show()
+        self.project_tab.setupUiBinaryError(self.project_tab.windowBinaryError)
+        self.project_tab.windowBinaryError.show()
+
+    def fileErrorWindow(self):
+        self.project_tab.setupUiInvalidField(self.project_tab.windowFileError)
+        self.project_tab.windowFileError.show()
 
     def createProject(self, name, binary, description):
         if not name or not binary or not description:
-            print("Failed")
+            self.fileErrorWindow()
         else:
             self.project = Project(name, binary, description)
 

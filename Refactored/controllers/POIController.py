@@ -30,6 +30,10 @@ class POIController(object):
             lambda: self.createPOI(self.poi_tab.poiNameEdit.toPlainText(), self.poi_tab.poiTypeEdit.toPlainText(),
                                    self.poi_tab.poiOutEdit.toPlainText()))
 
+    def poiSelectedWindow(self):
+        self.poi_tab.setupUiPOISelection(self.poi_tab.windowPOISelected)
+        self.poi_tab.windowPOISelected.show()
+
     def dropDownChangePOI(self):
         dropDownSelect = self.poi_tab.poiFilterDropDown.currentText()
 
@@ -61,7 +65,7 @@ class POIController(object):
 
     def createPOI(self, name, typeP, out):
         if not name or not typeP or not out:
-            print("Failed")
+            self.poiSelectedWindow()
         else:
             self.poi = POI(name, typeP, out)
             self.poi_tab.poiNameEdit.setText(self.poi.name)

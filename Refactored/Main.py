@@ -84,7 +84,8 @@ class Ui_MainWindow(object):
         self.project_controller = ProjectController(self.project_tab, self.analysis_tab, self.analysis_controller, self.db_controller)
         self.poi_controller = POIController(self.poi_tab)
         self.documentation_controller = DocumentationController(self.documentation_tab, self.db_controller, self.plugin_tab)
-        self.plugin_controller = PluginController(self.plugin_tab, self.poi_tab, self.analysis_tab, self.db_controller, self.poi_controller, self.documentation_controller, self.documentation_tab)
+        self.plugin_controller = PluginController(self.plugin_tab, self.poi_tab, self.analysis_tab, self.db_controller,
+                                                  self.poi_controller, self.documentation_controller, self.documentation_tab)
 
 
     def retranslateUi(self, MainWindow):

@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+
 class DBController(object):
 
     def __init__(self):

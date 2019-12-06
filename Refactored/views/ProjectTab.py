@@ -6,6 +6,7 @@ class ProjectTab(object):
         self.windowNew = QtWidgets.QDialog()
         self.windowDeleteConfirmation = QtWidgets.QDialog()
         self.windowBinaryError = QtWidgets.QDialog()
+        self.windowFileError = QtWidgets.QDialog()
 
     def setupProjectTab(self, tab):
 
@@ -284,3 +285,32 @@ class ProjectTab(object):
             _translate("binaryFileErrorWindow", "Error Message: x86 Architecture Binary File"))
         self.messageLabel.setText(
             _translate("binaryFileErrorWindow", "     The system only supports x86 architecture files."))
+
+    def setupUiInvalidField(self, InvalidFieldWindow):
+        InvalidFieldWindow.setObjectName("InvalidFieldWindow")
+        InvalidFieldWindow.resize(291, 99)
+        InvalidFieldWindow.setMinimumSize(QtCore.QSize(291, 99))
+        InvalidFieldWindow.setMaximumSize(QtCore.QSize(291, 99))
+        self.InvalidWindowMainLayout = QtWidgets.QGridLayout(InvalidFieldWindow)
+        self.InvalidWindowMainLayout.setObjectName("InvalidWindowMainLayout")
+        self.InvalidFieldLayout = QtWidgets.QVBoxLayout()
+        self.InvalidFieldLayout.setObjectName("InvalidFieldLayout")
+        self.InvalidFieldLabel = QtWidgets.QLabel(InvalidFieldWindow)
+        self.InvalidFieldLabel.setObjectName("InvalidFieldLabel")
+        self.InvalidFieldLayout.addWidget(self.InvalidFieldLabel)
+        self.InvalidFieldButtonBox = QtWidgets.QDialogButtonBox(InvalidFieldWindow)
+        self.InvalidFieldButtonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.InvalidFieldButtonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.InvalidFieldButtonBox.setObjectName("InvalidFieldButtonBox")
+        self.InvalidFieldLayout.addWidget(self.InvalidFieldButtonBox)
+        self.InvalidWindowMainLayout.addLayout(self.InvalidFieldLayout, 0, 0, 1, 1)
+
+        self.retranslateUiInvalidField(InvalidFieldWindow)
+        self.InvalidFieldButtonBox.accepted.connect(InvalidFieldWindow.accept)
+        self.InvalidFieldButtonBox.rejected.connect(InvalidFieldWindow.reject)
+        QtCore.QMetaObject.connectSlotsByName(InvalidFieldWindow)
+
+    def retranslateUiInvalidField(self, InvalidFieldWindow):
+        _translate = QtCore.QCoreApplication.translate
+        InvalidFieldWindow.setWindowTitle(_translate("InvalidFieldWindow", "Invalid Field"))
+        self.InvalidFieldLabel.setText(_translate("InvalidFieldWindow", "Fill out missing fields to create project."))

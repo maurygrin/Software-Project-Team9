@@ -34,6 +34,13 @@ class PluginController(object):
         self.plugin_tab.savePluginButton.setEnabled(False)
 
 
+    def pluginSelectionWindow(self):
+        self.plugin_tab.setupUiPluginSelection(self.plugin_tab.windowPluginSelection)
+        self.plugin_tab.windowPluginSelection.show()
+
+    def pluginDatasetWindow(self):
+        self.plugin_tab.setupUiDatasetError(self.plugin_tab.windowDatasetError)
+        self.plugin_tab.windowDatasetError.show()
 
     def pluginWindow(self):
         self.plugin_tab.setupUiCreatePlugin(self.plugin_tab.windowPlug)
@@ -48,7 +55,7 @@ class PluginController(object):
 
     def createPlugin(self, name, description, structure, data_set):
         if not name or not description or not structure or not data_set:
-            print("Failed")
+            self.pluginSelectionWindow()
         else:
             self.plugin_tab.poiPluginField.clear()
             self.plugin_tab.poiPluginField.repaint()
@@ -97,18 +104,23 @@ class PluginController(object):
             self.plugin_tab.structureFieldWindow.setText(fileName)
 
     def BrowseDataSet(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.plugin_tab.datasetFieldWindow, "Browse XML File", "",
-                                                            "XML Files (*.xml)", options=options)
-        if fileName:
-            self.listStrings.clear()
-            self.list.clear()
-            self.listFunctions.clear()
-            self.plugin_tab.datasetFieldWindow.setText(fileName)
-            self.parseXML(fileName)
-            self.plugin_tab.pluginNameEdit.setText(self.list[0])
-            self.plugin_tab.pluginDescriptionEdit.setText(self.list[1])
+        try:
+            options = QtWidgets.QFileDialog.Options()
+            options |= QtWidgets.QFileDialog.DontUseNativeDialog
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.plugin_tab.datasetFieldWindow, "Browse XML File", "",
+                                                                "XML Files (*.xml)", options=options)
+            if fileName:
+                self.listStrings.clear()
+                self.list.clear()
+                self.listFunctions.clear()
+                self.plugin_tab.datasetFieldWindow.setText(fileName)
+                self.parseXML(fileName)
+                self.plugin_tab.pluginNameEdit.setText(self.list[0])
+                self.plugin_tab.pluginDescriptionEdit.setText(self.list[1])
+        except Exception as e:
+            self.pluginDatasetWindow()
+            self.plugin_tab.datasetFieldWindow.clear()
+
 
     def savePlugin(self):
         pluginDB = {"Plugin Name": self.plugin.name,

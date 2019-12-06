@@ -5,6 +5,8 @@ class PluginTab(object):
     def __init__(self):
         self.windowPlug = QtWidgets.QDialog()
         self.windowPluginError = QtWidgets.QDialog()
+        self.windowPluginSelection = QtWidgets.QDialog()
+        self.windowDatasetError = QtWidgets.QDialog()
 
     def setupPluginTab(self, tab):
         self.tab = tab
@@ -247,3 +249,61 @@ class PluginTab(object):
         pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
         self.messageLabel.setText(
             _translate("pluginSelected", "You need to select a plugin before running an analysis."))
+
+    def setupUiPluginSelection(self, PluginSelection):
+        PluginSelection.setObjectName("PluginSelection")
+        PluginSelection.resize(306, 99)
+        PluginSelection.setMinimumSize(QtCore.QSize(306, 99))
+        PluginSelection.setMaximumSize(QtCore.QSize(306, 99))
+        self.PluginSelectionMainLayout = QtWidgets.QGridLayout(PluginSelection)
+        self.PluginSelectionMainLayout.setObjectName("PluginSelectionMainLayout")
+        self.PluginSelectionLayout = QtWidgets.QVBoxLayout()
+        self.PluginSelectionLayout.setObjectName("PluginSelectionLayout")
+        self.PluginSelectionLabel = QtWidgets.QLabel(PluginSelection)
+        self.PluginSelectionLabel.setObjectName("PluginSelectionLabel")
+        self.PluginSelectionLayout.addWidget(self.PluginSelectionLabel)
+        self.PluginSelectionButtonbox = QtWidgets.QDialogButtonBox(PluginSelection)
+        self.PluginSelectionButtonbox.setOrientation(QtCore.Qt.Horizontal)
+        self.PluginSelectionButtonbox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.PluginSelectionButtonbox.setObjectName("PluginSelectionButtonbox")
+        self.PluginSelectionLayout.addWidget(self.PluginSelectionButtonbox)
+        self.PluginSelectionMainLayout.addLayout(self.PluginSelectionLayout, 0, 0, 1, 1)
+
+        self.retranslateUiPluginSelection(PluginSelection)
+        self.PluginSelectionButtonbox.accepted.connect(PluginSelection.accept)
+        self.PluginSelectionButtonbox.rejected.connect(PluginSelection.reject)
+        QtCore.QMetaObject.connectSlotsByName(PluginSelection)
+
+    def retranslateUiPluginSelection(self, PluginSelection):
+        _translate = QtCore.QCoreApplication.translate
+        PluginSelection.setWindowTitle(_translate("PluginSelection", "Error Message: Plugin Selected"))
+        self.PluginSelectionLabel.setText(_translate("PluginSelection", "Fill out missing fields to create plugin."))
+
+    def setupUiDatasetError(self, PluginDatasetError):
+        PluginDatasetError.setObjectName("PluginDatasetError")
+        PluginDatasetError.resize(311, 99)
+        PluginDatasetError.setMinimumSize(QtCore.QSize(311, 99))
+        PluginDatasetError.setMaximumSize(QtCore.QSize(311, 99))
+        self.PluginDatasetErrorMainLayout = QtWidgets.QGridLayout(PluginDatasetError)
+        self.PluginDatasetErrorMainLayout.setObjectName("PluginDatasetErrorMainLayout")
+        self.PluginDatasetErrorLayout = QtWidgets.QVBoxLayout()
+        self.PluginDatasetErrorLayout.setObjectName("PluginDatasetErrorLayout")
+        self.PluginDatasetErrorLabel = QtWidgets.QLabel(PluginDatasetError)
+        self.PluginDatasetErrorLabel.setObjectName("PluginDatasetErrorLabel")
+        self.PluginDatasetErrorLayout.addWidget(self.PluginDatasetErrorLabel)
+        self.PluginDatasetErrorButtonbox = QtWidgets.QDialogButtonBox(PluginDatasetError)
+        self.PluginDatasetErrorButtonbox.setOrientation(QtCore.Qt.Horizontal)
+        self.PluginDatasetErrorButtonbox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.PluginDatasetErrorButtonbox.setObjectName("PluginDatasetErrorButtonbox")
+        self.PluginDatasetErrorLayout.addWidget(self.PluginDatasetErrorButtonbox)
+        self.PluginDatasetErrorMainLayout.addLayout(self.PluginDatasetErrorLayout, 0, 0, 1, 1)
+
+        self.retranslateUiDatasetError(PluginDatasetError)
+        self.PluginDatasetErrorButtonbox.accepted.connect(PluginDatasetError.accept)
+        self.PluginDatasetErrorButtonbox.rejected.connect(PluginDatasetError.reject)
+        QtCore.QMetaObject.connectSlotsByName(PluginDatasetError)
+
+    def retranslateUiDatasetError(self, PluginDatasetError):
+        _translate = QtCore.QCoreApplication.translate
+        PluginDatasetError.setWindowTitle(_translate("PluginDatasetError", "Error Message: Predefined Data Set"))
+        self.PluginDatasetErrorLabel.setText(_translate("PluginDatasetError", "The plugin predefined data set is not valid."))

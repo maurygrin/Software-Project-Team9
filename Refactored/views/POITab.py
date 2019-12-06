@@ -4,6 +4,7 @@ class POITab(object):
 
     def __init__(self):
         self.windowPOI = QtWidgets.QDialog()
+        self.windowPOISelected = QtWidgets.QDialog()
 
     def setupPOITab(self, tab):
         self.tab = tab
@@ -180,6 +181,35 @@ class POITab(object):
     def retranslateUiPOI(self, NewPOI):
         _translate = QtCore.QCoreApplication.translate
         NewPOI.setWindowTitle(_translate("NewPOI", "New POI"))
-        self.poiTypeLabel.setText(_translate("NewPOI", "Poin Of Interest Description"))
+        self.poiTypeLabel.setText(_translate("NewPOI", "Point Of Interest Description"))
         self.poiOutLabel.setText(_translate("NewPOI", "Python Output"))
         self.poiNameLabel.setText(_translate("NewPOI", "Point Of Interest Name"))
+
+    def setupUiPOISelection(self, POISelection):
+        POISelection.setObjectName("POISelection")
+        POISelection.resize(356, 99)
+        POISelection.setMinimumSize(QtCore.QSize(356, 99))
+        POISelection.setMaximumSize(QtCore.QSize(356, 99))
+        self.POISelectionMainLayout = QtWidgets.QGridLayout(POISelection)
+        self.POISelectionMainLayout.setObjectName("POISelectionMainLayout")
+        self.POISelectionLayout = QtWidgets.QVBoxLayout()
+        self.POISelectionLayout.setObjectName("POISelectionLayout")
+        self.POISelectionLabel = QtWidgets.QLabel(POISelection)
+        self.POISelectionLabel.setObjectName("POISelectionLabel")
+        self.POISelectionLayout.addWidget(self.POISelectionLabel)
+        self.POISelectionButtonbox = QtWidgets.QDialogButtonBox(POISelection)
+        self.POISelectionButtonbox.setOrientation(QtCore.Qt.Horizontal)
+        self.POISelectionButtonbox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.POISelectionButtonbox.setObjectName("POISelectionButtonbox")
+        self.POISelectionLayout.addWidget(self.POISelectionButtonbox)
+        self.POISelectionMainLayout.addLayout(self.POISelectionLayout, 0, 0, 1, 1)
+
+        self.retranslateUiPOISelection(POISelection)
+        self.POISelectionButtonbox.accepted.connect(POISelection.accept)
+        self.POISelectionButtonbox.rejected.connect(POISelection.reject)
+        QtCore.QMetaObject.connectSlotsByName(POISelection)
+
+    def retranslateUiPOISelection(self, POISelection):
+        _translate = QtCore.QCoreApplication.translate
+        POISelection.setWindowTitle(_translate("POISelection", "Error Message: POI Selected"))
+        self.POISelectionLabel.setText(_translate("POISelection", "Fill out missing fields to create a point of interest."))
