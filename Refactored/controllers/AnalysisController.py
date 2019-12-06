@@ -3,7 +3,7 @@ import json, threading
 from PyQt5 import QtCore, QtWidgets
 
 staticFunctionList=[]
-dictList = []
+functionDict = []
 
 class AnalysisController(object):
 
@@ -32,26 +32,37 @@ class AnalysisController(object):
 
 
     def runStaticAnalysis(self):
+        #The error to see if the user has not selected a plugin.
         if (self.analysis_tab.pluginDropDownAnalysis.currentText() == "Select"):
             self.analysis_tab.setupPluginError(self.windowPluginError)
             self.analysis_tab.windowPluginError.show()
+        #Everything is ok to start static analysis
         else:
             self.analysis_tab.runDynamicButton.setEnabled(True)
 
             self.static = 1
-
+            #Terminal Show what analysis was performed
             self.analysis_tab.terminalField.append("Static Analysis Performed!")
             self.analysis_tab.terminalField.append("")
+            #Radare command to start analysis
             self.r2.cmd("aaa")
+            #Radare command to list functions
             self.functionsStatic = self.r2.cmdj("afllj")
+            #Radare command to list strings, izz lists strings in the whole library
             self.stringsStatic = self.r2.cmdj("izzj")
-            poiSelected = self.analysis_tab.poiTypeDropDownAnalysis.currentText()
 
+            #Get what the user selected from the drop down menu.
+            poiSelected = self.analysis_tab.poiTypeDropDownAnalysis.currentText()
+            #Populate if strings was choosen
             if (poiSelected=="Strings"):
+                #Append command to the terminal
                 self.analysis_tab.terminalField.append("Command: izz")
+                #Saying that we are going to display strings
                 self.display = "strings"
                 self.analysis_tab.detailedPoiAnalysisField.setText("")
                 self.analysis_tab.poiAnalysisList.clear()
+                #This part is not apending the values, it is just simply appending the text.
+                #These is what we are looking for here.
                 self.analysis_tab.detailedPoiAnalysisField.append("\t" + "\n")
                 self.analysis_tab.detailedPoiAnalysisField.append("\t" + "Virtual Memory Address: ")
                 self.analysis_tab.detailedPoiAnalysisField.append("\t" + "\n")
@@ -62,12 +73,18 @@ class AnalysisController(object):
                 font.setPointSize(12)
                 self.analysis_tab.detailedPoiAnalysisField.setFont(font)
                 self.analysis_tab.detailedPoiAnalysisField.repaint()
+                #for every string you found in the analysis
                 for item in self.stringsStatic:
+                    #Add the string name to the widget list
                     item = QtWidgets.QListWidgetItem(item["string"])
+                    #Set up the checkable boxes for breakpoints
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Checked)
+                    #Add the String as an item to the list located to the left of the window.
                     self.analysis_tab.poiAnalysisList.addItem(item)
+            #If the Functions drop down was selceted
             elif (poiSelected=="Functions"):
+                #Append command to the terminal
                 self.analysis_tab.terminalField.append("Command: afl")
                 self.display = "functions"
                 self.analysis_tab.detailedPoiAnalysisField.setText("")
@@ -89,129 +106,163 @@ class AnalysisController(object):
                 font.setPointSize(12)
                 self.analysis_tab.detailedPoiAnalysisField.setFont(font)
                 self.analysis_tab.detailedPoiAnalysisField.repaint()
-                counter = 0
+                #for every string found in the analysis of functions
                 for item in self.functionsStatic:
+                    #Add the name of the function to a list,
+                    #this is important for dynamic analysis.
                     staticFunctionList.append(item["name"])
                     item = QtWidgets.QListWidgetItem(item["name"])
                     item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
                     item.setCheckState(QtCore.Qt.Checked)
+                    #Append the function item to the left of the window.
                     self.analysis_tab.poiAnalysisList.addItem(item)
-                    counter = counter + 1
-                self.brianaFunction(staticFunctionList)
+                #Call the method that populates the dictionary to hold the values of the functions analysis.
+                self.populateFunctionsDict(staticFunctionList)
 
-    def brianaFunction(self, staticFunctionList):
-        keys = ['fName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
+    def populateFunctionsDict(self, staticFunctionList):
+        keys = ['funcName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
                 'locType', 'locNum', 'locVal']
-        # will be used to add each function dictionary
-        argCounter = 0
-        locCounter = 0
-        # create a dictionary with keys that correspond to fields needed for the functions
-        funD = dict.fromkeys(keys, [])
-        self.r2.cmd("aaa")  # initial analysis
-
-        # start analysis process
+        # These will be used to know the order.
+        argOrder = 0
+        locOrder = 0
+        # Dictionary to hold values needed for functions.
+        funcKeys = dict.fromkeys(keys, [])
+        #start the analysis
+        self.r2.cmd("aaa")
+        #For every function from static analysis
         for i in range(len(staticFunctionList)):
-            funD['fName'] = (staticFunctionList[i])
-            funInfo = self.r2.cmd("afvj @ " + staticFunctionList[i])
-            formatInfo = json.loads(funInfo)
-            for key in formatInfo.keys():
-                tempList = formatInfo[key]
-                argNames = []
-                argTypes = []
-                localVarNames = []
-                localVarTypes = []
-
+            #add the mname of the function to the dictionary in apropriate field
+            funcKeys['funcName'] = (staticFunctionList[i])
+            #Radare command to get th args, registers, and variables in that function.
+            arvFunc = self.r2.cmd("afvj @ " + staticFunctionList[i])
+            formatARV = json.loads(arvFunc)
+            for key in formatARV.keys():
+                #to hold list of args, registers, and variables found for that function.
+                tempList = formatARV[key]
+                #to hold the name of the args
+                namesArgs = []
+                #to hold the types of the args
+                typesArgs = []
+                #to hold the local variable names
+                namesLocal = []
+                #to hold the local variable types
+                typesLocal = []
+                #iterate to populate information
                 for j in range(len(tempList)):
+                    #we will populate different things accordingly
                     if tempList[j]['kind'] == 'reg':
-                        argCounter += 1
-                        funD['argNum'] = argCounter
-                        argNames.append(tempList[j]['name'])
-                        argTypes.append(tempList[j]['type'])
-                        funD['argName'] = argNames
-                        funD['argType'] = argTypes
+                        #if it found a reg, update the counter to know the order
+                        argOrder += 1
+                        funcKeys['argNum'] = argOrder
+                        namesArgs.append(tempList[j]['name'])
+                        typesArgs.append(tempList[j]['type'])
+                        funcKeys['argName'] = namesArgs
+                        funcKeys['argType'] = typesArgs
                     if tempList[j]['kind'] == 'var':
-                        locCounter += 1
-                        funD['locNum'] = locCounter
-                        localVarNames.append(tempList[j]['name'])
-                        localVarTypes.append(tempList[j]['type'])
-                        funD['locName'] = localVarNames
-                        funD['locType'] = localVarTypes
-            argCounter = 0
-            locCounter = 0
-            dictList.append(funD)
-            sample = open('dictList.txt', 'w')
-            print(str(dictList), file=sample)
+                        #if it found a var, update the counter to know the order
+                        locOrder += 1
+                        funcKeys['locNum'] = locOrder
+                        namesLocal.append(tempList[j]['name'])
+                        typesLocal.append(tempList[j]['type'])
+                        funcKeys['locName'] = namesLocal
+                        funcKeys['locType'] = typesLocal
+            #once they step out of this loop it means it is done
+            #populating the information for that specific function
+            #therefore we need to retart the counter for the order
+            argOrder = 0
+            locOrder = 0
+            #we also need to add it to the global list that holds what we will dipslay.
+            functionDict.append(funcKeys)
+            #for testing purposes only
+            sample = open('functionDict.txt', 'w')
+            print(str(functionDict), file=sample)
             sample.close()
-            funD = dict.fromkeys(keys, [])
+            funcKeys = dict.fromkeys(keys, [])
 
+
+    # function to stop dynamic analysis
     def stopDynamicAnalysis(self):
         self.r2.cmd("break")
-
+    #making a thread to run in the background
     def dynamicAnalysisThread(self):
         threading.Thread(target=self.runDynamicAnalysis(), args=(10,)).start()
         self.analysis_tab.runStaticButton.setEnabled(False)
         self.dynamicRun = True
 
+    #dynamic analysis
+    #so now that the list is populated we can go ahead an do dynamic analysis
     def runDynamicAnalysis(self):
-        for i in range(len(dictList)):  # iterate over list of functions
+        #iterate through the dictionary populated before
+        for i in range(len(functionDict)):
             validFlag = True #is arg num populated flag
-            if(dictList[i]['argNum'] == []): #check to see if there is anything populated
+            if(functionDict[i]['argNum'] == []): #check to see if there is anything populated
                 validFlag = False
 
             validFlag2 = True #is locNum populated flag
-            if(dictList[i]['locNum'] == []): # check to see if there is anything populated
+            if(functionDict[i]['locNum'] == []): # check to see if there is anything populated
                 validFlag2 = False
 
 
             self.r2.cmd("e dbg.bpinmaps=0")  # disable cannot set breakpoint on unmapped memory
             self.r2.cmd("ood")  # open in debug mode
-            self.r2.cmd("aaa")
+            self.r2.cmd("aaa")  #do analsysis
 
+            #before starting to set breakpoints, we must check user input to see if the user,
+            #unchecked boxes, meaning that they do not wish to run dynamic with a breakpoint
+            #in that location.
             if self.analysis_tab.poiAnalysisList.item(i).checkState() !=0:
-
-                breakpointString = "db " + (dictList[i]['fName'])
-                self.r2.cmd(breakpointString)  # first set the breakpoint
-                self.r2.cmd("dc")  # Run until the first breakpoint
+                #get the name of the function, make a string that holds the command for bp
+                breakpointCommand = "db " + (functionDict[i]['funcName'])
+                self.r2.cmd(breakpointCommand)  # set breakpoint at that function
+                self.r2.cmd("dc")  # Run until you hit the breakpoint
+                #get the value of the rax register to get return value
                 returnVal = self.r2.cmd("dr rax")
-                returnVal = returnVal.rstrip("\n")
+                #returnVal = returnVal.rstrip("\n")  DO WE NEED THIS
                 #start running after breakpoint get arguments first
-                templistOfVals = []
-                templistOfLoc = []
-                # for arguments
+                templistVals = []
+                templistLoc = []
+                # get argument information
                 if(validFlag):
-                    for j in range(dictList[i]['argNum']):
+                    for j in range(functionDict[i]['argNum']):
                         # set return value
-                        dictList[i]['retVal'] = returnVal
-                        commandToVal = self.r2.cmd("afvd " + str(dictList[i]['argName'][j]))
-                        if commandToVal != "":
-                            commandList = commandToVal.split(" ")
-                            validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
-                            lineWithval = self.r2.cmd(validCommand)
-                            formattedVal = json.loads(lineWithval)
-                            templistOfVals.append(formattedVal[0]['value'])
-                            dictList[i]['argVal'] = templistOfVals
+                        functionDict[i]['retVal'] = returnVal
+                        #r2 command for displaying the value of args/locals in the debugger
+                        commandArgVal = self.r2.cmd("afvd " + str(functionDict[i]['argName'][j]))
+                        #check that it actually has a value
+                        if commandArgVal != "":
+                            #split the output, so we could get it in json format
+                            commandV = commandArgVal.split(" ")
+                            jsonCommand = commandV[0] + "j " + commandV[1] + " " + commandV[2]
+                            turnToJson = self.r2.cmd(jsonCommand)
+                            formattedVal = json.loads(turnToJson)
+                            templistVals.append(formattedVal[0]['value'])
+                            functionDict[i]['argVal'] = templistVals
 
-                # for local variables
+                # get locals information
                 if(validFlag2):
-                    for k in range(dictList[i]['locNum']):
-                            commandToVal = self.r2.cmd("afvd " + str(dictList[i]['locName'][k]))
-                            if commandToVal != "":
+                    for k in range(functionDict[i]['locNum']):
+                            #r2 command for displaying the value of args/locals in the debugger
+                            commandLocVal = self.r2.cmd("afvd " + str(functionDict[i]['locName'][k]))
+                            #check that it actually returned something
+                            if commandLocVal != "":
+                                #not sure why it was breaking here, but i just passed it if it couldnt perform it.
                                 try:
-                                    commandList = commandToVal.split(" ")
-                                    validCommand = commandList[0] + "j " + commandList[1] + " " + commandList[2]
-                                    lineWithval = self.r2.cmd(validCommand)
-                                    formattedVal = json.loads(lineWithval)
-                                    templistOfLoc.append(formattedVal[0]['value'])
-                                    dictList[i]['locVal'] = templistOfLoc
+                                    #split the output, so we could get it in json format
+                                    commandL = commandLocVal.split(" ")
+                                    jsonCommand = commandL[0] + "j " + commandL[1] + " " + commandL[2]
+                                    turnToJson = self.r2.cmd(jsonCommand)
+                                    formattedVal = json.loads(turnToJson)
+                                    templistLoc.append(formattedVal[0]['value'])
+                                    functionDict[i]['locVal'] = templistLoc
                                 except:
                                     pass
 
-                self.r2.cmd("db-*")
-        print(dictList)
+                self.r2.cmd("db-*") # remove all the breakpoints
         #Display Dynamic results
         poiSelected = self.analysis_tab.poiTypeDropDownAnalysis.currentText()
 
         if (poiSelected == "Strings"):
+            self.analsysis_tab.terminalField.append("Dynamic Analysis performed!")
             self.analysis_tab.terminalField.append("Command: izz")
             self.display = "strings"
             self.analysis_tab.detailedPoiAnalysisField.setText("")
@@ -232,6 +283,7 @@ class AnalysisController(object):
                 item.setCheckState(QtCore.Qt.Checked)
                 self.analysis_tab.poiAnalysisList.addItem(item)
         elif (poiSelected == "Functions"):
+            self.analsysis_tab.terminalField.append("Dynamic Analysis performed!")
             self.analysis_tab.terminalField.append("Command: afll")
             self.display = "functions"
             self.analysis_tab.detailedPoiAnalysisField.setText("")
@@ -391,21 +443,21 @@ class AnalysisController(object):
                 self.analysis_tab.detailedPoiAnalysisField.setFont(font)
                 self.analysis_tab.detailedPoiAnalysisField.repaint()
             elif self.dynamicRun:
-                for i in range(len(dictList)):
-                    current = dictList[i]['fName']
+                for i in range(len(functionDict)):
+                    current = functionDict[i]['funcName']
                     if current == selected:
-                        self.funcName = dictList[i]['fName']
-                        self.funcArgNum = str(dictList[i]['argNum'])
-                        self.funcArgName = str(dictList[i]['argName'])
-                        self.funcArgType = str(dictList[i]['argType'])
-                        self.funcArgVal = str(dictList[i]['argVal'])
-                        self.funcLocNum = str(dictList[i]['locNum'])
-                        self.funcLocName = str(dictList[i]['locName'])
-                        self.funcLocType = str(dictList[i]['locType'])
-                        self.funcLocVal = str(dictList[i]['locVal'])
-                        self.funcRetName = str(dictList[i]['retName'])
-                        self.funcRetType = str(dictList[i]['retType'])
-                        self.funcRetVal = str(dictList[i]['retValue'])
+                        self.funcName = functionDict[i]['funcName']
+                        self.funcArgNum = str(functionDict[i]['argNum'])
+                        self.funcArgName = str(functionDict[i]['argName'])
+                        self.funcArgType = str(functionDict[i]['argType'])
+                        self.funcArgVal = str(functionDict[i]['argVal'])
+                        self.funcLocNum = str(functionDict[i]['locNum'])
+                        self.funcLocName = str(functionDict[i]['locName'])
+                        self.funcLocType = str(functionDict[i]['locType'])
+                        self.funcLocVal = str(functionDict[i]['locVal'])
+                        self.funcRetName = str(functionDict[i]['retName'])
+                        self.funcRetType = str(functionDict[i]['retType'])
+                        self.funcRetVal = str(functionDict[i]['retValue'])
 
 
                         self.analysis_tab.detailedPoiAnalysisField.setText("")
