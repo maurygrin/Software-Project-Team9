@@ -8,7 +8,7 @@ class PluginController(object):
 
     def __init__(self, plugin_tab, poi_tab, analysis_tab, db, poiController, documentController, document_tab):
         self.plugin_tab = plugin_tab
-        self.documentController= documentController
+        self.documentController = documentController
         self.poiController = poiController
         self.document_tab = document_tab
         self.db = db
@@ -21,6 +21,13 @@ class PluginController(object):
         self.plugin_tab.deletePluginButton.clicked.connect(self.deletePlugin)
 
         self.plugin_tab.pluginSearch.textChanged[str].connect(self.filter_plugins)
+
+        self.plugin = ""
+
+        self.pluginName = ""
+        self.pluginDescription = ""
+        self.pluginStructure = ""
+        self.pluginDataset= ""
 
         self.poi_tab = poi_tab
 
@@ -60,11 +67,17 @@ class PluginController(object):
             self.plugin_tab.poiPluginField.clear()
             self.plugin_tab.poiPluginField.repaint()
             self.plugin = Plugin(name, description, structure, data_set)
-            self.plugin_tab.pluginNameField.setText(self.plugin.name)
-            self.plugin_tab.pluginDescriptionField.setText(self.plugin.description)
-            self.plugin_tab.pluginStructureField.setText(self.plugin.structure)
-            self.plugin_tab.pluginPredefinedField.setText(self.plugin.data_set)
-            self.analysis_tab.pluginDropDownAnalysis.addItem(self.plugin.name)
+
+            self.pluginName = self.plugin.get_name()
+            self.pluginDescription = self.plugin.get_description()
+            self.pluginStructure = self.plugin.get_structure()
+            self.pluginDataset = self.plugin.get_dataset()
+
+            self.plugin_tab.pluginNameField.setText(self.pluginName)
+            self.plugin_tab.pluginDescriptionField.setText(self.pluginDescription)
+            self.plugin_tab.pluginStructureField.setText(self.pluginStructure)
+            self.plugin_tab.pluginPredefinedField.setText(self.pluginDataset)
+            self.analysis_tab.pluginDropDownAnalysis.addItem(self.pluginName)
 
             self.analysis_tab.poiTypeDropDownAnalysis.clear()
             self.analysis_tab.poiTypeDropDownAnalysis.repaint()
@@ -123,10 +136,10 @@ class PluginController(object):
 
 
     def savePlugin(self):
-        pluginDB = {"Plugin Name": self.plugin.name,
-                    "Plugin Description": self.plugin.description,
-                    "Structure File Path": self.plugin.structure,
-                    "Pre-Defined Dataset File Path": self.plugin.data_set,
+        pluginDB = {"Plugin Name": self.pluginName,
+                    "Plugin Description": self.pluginDescription,
+                    "Structure File Path": self.pluginStructure,
+                    "Pre-Defined Dataset File Path": self.pluginDataset,
                     "Plugin Output": self.list[2],
                     "POI Strings": self.list[4],
                     "POI Functions": self.list[5],
@@ -154,13 +167,13 @@ class PluginController(object):
                 "Type": self.listFunctions[i + 1],
                 "Output": self.listFunctions[i + 2]
             }
-            if (self.poi_tab.poiPluginDropDown.currentText() == self.plugin.name):
+            if (self.poi_tab.poiPluginDropDown.currentText() == self.pluginName):
                 self.plugin_tab.poiPluginField.append(str(docFunctions))
             i += 3
             pluginDB["Functions"].append(docFunctions)  # Insert Nested Document
         self.db.insertPlugin(pluginDB)
 
-        it = QtWidgets.QListWidgetItem(self.plugin.name)
+        it = QtWidgets.QListWidgetItem(self.pluginName)
         self.plugin_tab.pluginManagementList.addItem(it)
         self.plugin_tab.pluginManagementList.setCurrentItem(it)
         it.setSelected(True)

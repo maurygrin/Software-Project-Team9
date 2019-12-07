@@ -6,6 +6,7 @@ from ProjectSub.Project import Project
 from ProjectSub.BinaryFile import BinaryFile
 from ProjectSub.Metadata import Metadata
 
+
 class ProjectController(object):
 
     def __init__(self, project_tab, analysis_tab, analysisController, db):
@@ -26,6 +27,19 @@ class ProjectController(object):
         self.project_tab.projectSearch.textChanged[str].connect(self.filter_projects)
 
         self.db = db
+
+        self.project = ""
+        self.binaryFile = ""
+
+        self.projectName = ""
+        self.projectBinary = ""
+        self.projectDescription = ""
+
+        self.binaryPath = ""
+        self.binaryMetadata = ""
+        self.binaryInfo = ""
+
+        self.r2 = ""
 
         self.path = ""
         self.arch = ""
@@ -48,7 +62,6 @@ class ProjectController(object):
 
         self.db.findProjects(self.project_tab)
 
-
     def projectWindow(self):
         self.project_tab.setupUiCreateProject(self.project_tab.windowNew)
         self.project_tab.windowNew.show()
@@ -56,7 +69,8 @@ class ProjectController(object):
 
         self.project_tab.binaryFilePathBrowse.clicked.connect(self.getBinaryFilePath)
         self.project_tab.buttonBox.accepted.connect(
-            lambda: self.createProject(self.project_tab.projectNameEdit.toPlainText(), self.project_tab.binaryFilePathEdit.toPlainText(),
+            lambda: self.createProject(self.project_tab.projectNameEdit.toPlainText(),
+                                       self.project_tab.binaryFilePathEdit.toPlainText(),
                                        self.project_tab.projectDescriptionEdit.toPlainText())
         )
 
@@ -81,9 +95,13 @@ class ProjectController(object):
         else:
             self.project = Project(name, binary, description)
 
-            self.project_tab.projectNameField.setText(self.project.name)
-            self.project_tab.binaryFilePathField.setText(self.project.binary)
-            self.project_tab.projectDescriptionField.setText(self.project.description)
+            self.projectName = self.project.get_name()
+            self.projectBinary = self.project.get_binary()
+            self.projectDescription = self.project.get_description()
+
+            self.project_tab.projectNameField.setText(self.projectName)
+            self.project_tab.binaryFilePathField.setText(self.projectBinary)
+            self.project_tab.projectDescriptionField.setText(self.projectDescription)
 
             self.r2 = r2pipe.open(self.path)
 
@@ -91,51 +109,55 @@ class ProjectController(object):
 
             self.binaryInfo = self.r2.cmdj('ij')
 
-            self.metadata = Metadata(self.binaryInfo.get("bin").get("arch"), self.binaryInfo.get("bin").get("os"),
-                                     self.binaryInfo.get("bin").get("bintype"),
-                                     self.binaryInfo.get("bin").get("machine"), self.binaryInfo.get("bin").get("class"),
-                                     self.binaryInfo.get("bin").get("bits"),
-                                     self.binaryInfo.get("bin").get("lang"), self.binaryInfo.get("bin").get("canary"),
-                                     self.binaryInfo.get("bin").get("endian"),
-                                     self.binaryInfo.get("bin").get("crypto"), self.binaryInfo.get("bin").get("nx"),
-                                     self.binaryInfo.get("bin").get("pic"),
-                                     self.binaryInfo.get("bin").get("relocs"),
-                                     self.binaryInfo.get("bin").get("striped"), self.binaryInfo.get("core").get("type"))
+            self.binaryMetadata = Metadata(self.binaryInfo.get("bin").get("arch"), self.binaryInfo.get("bin").get("os"),
+                                           self.binaryInfo.get("bin").get("bintype"),
+                                           self.binaryInfo.get("bin").get("machine"),
+                                           self.binaryInfo.get("bin").get("class"),
+                                           str(self.binaryInfo.get("bin").get("bits")),
+                                           self.binaryInfo.get("bin").get("lang"),
+                                           str(self.binaryInfo.get("bin").get("canary")),
+                                           self.binaryInfo.get("bin").get("endian"),
+                                           str(self.binaryInfo.get("bin").get("crypto")),
+                                           str(self.binaryInfo.get("bin").get("nx")),
+                                           str(self.binaryInfo.get("bin").get("pic")),
+                                           str(self.binaryInfo.get("bin").get("relocs")),
+                                           str(self.binaryInfo.get("bin").get("striped")),
+                                           self.binaryInfo.get("core").get("type"))
 
-            self.binary = BinaryFile(binary, self.metadata)
+            self.binaryFile = BinaryFile(binary, self.binaryMetadata)
 
-            self.arch = self.binary.metadata.arch
-            self.os = self.binary.metadata.os
-            self.bintype = self.binary.metadata.binaryType
-            self.machine = self.binary.metadata.machine
-            self.classVar = self.binary.metadata.classVariable
-            self.bits = self.binary.metadata.bits
-            self.language = self.binary.metadata.language
-            self.canary = self.binary.metadata.canary
-            self.endian = self.binary.metadata.endian
-            self.crypto = self.binary.metadata.crypto
-            self.nx = self.binary.metadata.nx
-            self.pic = self.binary.metadata.pic
-            self.relocs = self.binary.metadata.relocs
-            self.stripped = self.binary.metadata.stripped
-            self.extension = self.binary.metadata.type
+            self.arch = self.binaryMetadata.get_arch()
+            self.os = self.binaryMetadata.get_os()
+            self.bintype = self.binaryMetadata.get_binaryType()
+            self.machine = self.binaryMetadata.get_machine()
+            self.classVar = self.binaryMetadata.get_classVariable()
+            self.bits = self.binaryMetadata.get_bits()
+            self.language = self.binaryMetadata.get_language()
+            self.canary = self.binaryMetadata.get_canary()
+            self.endian = self.binaryMetadata.get_endian()
+            self.crypto = self.binaryMetadata.get_crypto()
+            self.nx = self.binaryMetadata.get_nx()
+            self.pic = self.binaryMetadata.get_pic()
+            self.relocs = self.binaryMetadata.get_relocs()
+            self.stripped = self.binaryMetadata.get_stripped()
+            self.extension = self.binaryMetadata.get_type()
 
             self.project_tab.binaryFilePathEdit.setText(self.path)
-            self.project_tab.fileProperties.append("arch\t\t\t" + self.binary.metadata.arch + "\n")
-            self.project_tab.fileProperties.append("os\t\t\t" + self.binary.metadata.os + "\n")
-            self.project_tab.fileProperties.append("bintype\t\t\t" + self.binary.metadata.binaryType + "\n")
-            self.project_tab.fileProperties.append("machine\t\t\t" + self.binary.metadata.machine + "\n")
-            self.project_tab.fileProperties.append("class\t\t\t" + self.binary.metadata.classVariable + "\n")
-            self.project_tab.fileProperties.append("bits\t\t\t" + str(self.binary.metadata.bits) + "\n")
-            self.project_tab.fileProperties.append("language\t\t\t" + self.binary.metadata.language + "\n")
-            self.project_tab.fileProperties.append("canary\t\t\t" + str(self.binary.metadata.canary) + "\n")
-            self.project_tab.fileProperties.append("endian\t\t\t" + self.binary.metadata.endian + "\n")
-            self.project_tab.fileProperties.append("crypto\t\t\t" + str(self.binary.metadata.crypto) + "\n")
-            self.project_tab.fileProperties.append("nx\t\t\t" + str(self.binary.metadata.nx) + "\n")
-            self.project_tab.fileProperties.append("pic\t\t\t" + str(self.binary.metadata.pic) + "\n")
-            self.project_tab.fileProperties.append("relocs\t\t\t" + str(self.binary.metadata.relocs) + "\n")
-            self.project_tab.fileProperties.append("stripped\t\t\t" + str(self.binary.metadata.stripped) + "\n")
-            self.project_tab.fileProperties.append("extension\t\t\t" + self.binary.metadata.type + "\n")
+            self.project_tab.fileProperties.append("arch\t\t\t" + self.arch + "\n")
+            self.project_tab.fileProperties.append("os\t\t\t" + self.os + "\n")
+            self.project_tab.fileProperties.append("bintype\t\t\t" + self.bintype + "\n")
+            self.project_tab.fileProperties.append("machine\t\t\t" + self.machine + "\n")
+            self.project_tab.fileProperties.append("class\t\t\t" + self.classVar + "\n")
+            self.project_tab.fileProperties.append("bits\t\t\t" + self.bits + "\n")
+            self.project_tab.fileProperties.append("language\t\t\t" + self.language + "\n")
+            self.project_tab.fileProperties.append("canary\t\t\t" + self.canary + "\n")
+            self.project_tab.fileProperties.append("endian\t\t\t" + self.endian + "\n")
+            self.project_tab.fileProperties.append("crypto\t\t\t" + self.crypto + "\n")
+            self.project_tab.fileProperties.append("nx\t\t\t" + self.nx + "\n")
+            self.project_tab.fileProperties.append("pic\t\t\t" + self.pic + "\n")
+            self.project_tab.fileProperties.append("relocs\t\t\t" + self.relocs + "\n")
+            self.project_tab.fileProperties.append("stripped\t\t\t" + self.stripped + "\n")
+            self.project_tab.fileProperties.append("extension\t\t\t" + self.extension + "\n")
 
             self.project_tab.binaryFilePathField.setText(self.path)
             self.saveProject()
@@ -158,13 +180,10 @@ class ProjectController(object):
         self.project_tab.fileProperties.repaint()
         self.r2 = ""
         self.project_tab.projectList.clearSelection()
-        #self.projectTabName = "Project"
-        #self.analysisTabName = "Analysis"
-        #self.retranslateUi(MainWindow)
 
     def saveProject(self):
-        project = {"Project Name": self.project.name,
-                   "Project Description": self.project.description,
+        project = {"Project Name": self.projectName,
+                   "Project Description": self.projectDescription,
                    "Binary File Path": self.path,
                    "arch": self.arch,
                    "os": self.os,
@@ -182,10 +201,9 @@ class ProjectController(object):
                    "stripped": self.stripped,
                    "extension": self.extension}
 
-
         self.db.insertProject(project)
 
-        it = QtWidgets.QListWidgetItem(self.project.name)
+        it = QtWidgets.QListWidgetItem(self.projectName)
 
         self.project_tab.projectList.addItem(it)
 
@@ -195,16 +213,13 @@ class ProjectController(object):
 
         self.project_tab.projectDeleteButton.setEnabled(True)
 
-        #self.projectTabName = "Project - " + self.project.name
-        #self.analysisTabName = "Analysis - " + self.project.name
-
-        #self.retranslateUi(MainWindow)
 
     def getBinaryFilePath(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.project_tab.binaryFilePathField, "Browse Binary File", "",
-                                                            "Binary Files (*.exe *.out *.class *.docx)",
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self.project_tab.binaryFilePathField,
+                                                            "Browse Binary File",
+                                                            "", "Binary Files (*.exe *.out *.class *.docx)",
                                                             options=options)
         if fileName:
             self.path = str(fileName)
@@ -214,8 +229,8 @@ class ProjectController(object):
 
             try:
                 if (self.binaryInfo.get("bin").get("arch") != "x86") or (
-                        self.binaryInfo.get("core").get("type") != "Executable file" and self.binaryInfo.get(
-                    "core").get("type") != "EXEC (Executable file)"):
+                        self.binaryInfo.get("core").get("type") != "Executable file"
+                        and self.binaryInfo.get("core").get("type") != "EXEC (Executable file)"):
                     self.binaryErrorWindow()
                     self.r2 = ""
                     self.project_tab.fileProperties.setText("")
@@ -272,12 +287,9 @@ class ProjectController(object):
 
         self.project_tab.projectDeleteButton.setEnabled(True)
 
-        #self.projectTabName = "Project - " + self.projectList.currentItem().text()
-        #self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
-        #self.retranslateUi(MainWindow)
-
-    def filter_projects(self):  ##filtering list of project
+    def filter_projects(self):  # filtering list of project
         for item in self.project_tab.projectList.findItems("*", QtCore.Qt.MatchWildcard):
             item.setHidden(True)
-        for item in self.project_tab.projectList.findItems(self.project_tab.projectSearch.text(), QtCore.Qt.MatchStartsWith):
+        for item in self.project_tab.projectList.findItems(self.project_tab.projectSearch.text(),
+                                                           QtCore.Qt.MatchStartsWith):
             item.setHidden(False)

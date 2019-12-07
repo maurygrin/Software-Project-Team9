@@ -161,6 +161,105 @@ class Ui_MainWindow(object):
             self.binaryFilePathField.setText(self.path)
             self.saveProject()
 
+    def saveProject(self):
+        project = {"Project Name": self.project.name,
+                   "Project Description": self.project.description,
+                   "Binary File Path": self.path,
+                   "arch": self.arch,
+                   "os": self.os,
+                   "bintype": self.bintype,
+                   "machine": self.machine,
+                   "class": self.classVar,
+                   "bits": self.bits,
+                   "language": self.language,
+                   "canary": self.canary,
+                   "endian": self.endian,
+                   "crypto": self.crypto,
+                   "nx": self.nx,
+                   "pic": self.pic,
+                   "relocs": self.relocs,
+                   "stripped": self.stripped,
+                   "extension": self.extension}
+
+        self.collection.insert_many([project])
+
+        it = QtWidgets.QListWidgetItem(self.project.name)
+
+        self.projectList.addItem(it)
+
+        it.setSelected(True)
+
+        self.projectDescriptionField.setEnabled(True)
+
+        self.projectDeleteButton.setEnabled(True)
+
+        self.projectTabName = "Project - " + self.project.name
+        self.analysisTabName = "Analysis - " + self.project.name
+
+        self.retranslateUi(MainWindow)
+
+    def deleteProject(self):
+        self.projectDeleteButton.setEnabled(False)
+        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+        self.collection.delete_one(p)
+        self.projectList.takeItem(self.projectList.currentRow())
+        self.projectNameField.clear()
+        self.projectDescriptionField.clear()
+        self.binaryFilePathField.clear()
+        self.fileProperties.clear()
+        self.projectNameField.repaint()
+        self.projectDescriptionField.repaint()
+        self.binaryFilePathField.repaint()
+        self.fileProperties.repaint()
+        self.r2 = ""
+        self.projectList.clearSelection()
+        self.projectTabName = "Project"
+        self.analysisTabName = "Analysis"
+        self.retranslateUi(MainWindow)
+
+    def projectClicked(self):
+        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
+
+        self.projectNameField.setText(p.get("Project Name"))
+
+        self.projectDescriptionField.setText(p.get("Project Description"))
+
+        self.binaryFilePathField.setText(p.get("Binary File Path"))
+
+        self.fileProperties.append("arch\t\t\t" + p.get("arch") + "\n")
+        self.fileProperties.append("os\t\t\t" + p.get("os") + "\n")
+        self.fileProperties.append("bintype\t\t\t" + p.get("bintype") + "\n")
+        self.fileProperties.append("machine\t\t\t" + p.get("machine") + "\n")
+        self.fileProperties.append("class\t\t\t" + p.get("class") + "\n")
+        self.fileProperties.append("bits\t\t\t" + str(p.get("bits")) + "\n")
+        self.fileProperties.append("language\t\t\t" + p.get("language") + "\n")
+        self.fileProperties.append("canary\t\t\t" + str(p.get("canary")) + "\n")
+        self.fileProperties.append("endian\t\t\t" + p.get("endian") + "\n")
+        self.fileProperties.append("crypto\t\t\t" + str(p.get("crypto")) + "\n")
+        self.fileProperties.append("nx\t\t\t" + str(p.get("nx")) + "\n")
+        self.fileProperties.append("pic\t\t\t" + str(p.get("pic")) + "\n")
+        self.fileProperties.append("relocs\t\t\t" + str(p.get("relocs")) + "\n")
+        self.fileProperties.append("stripped\t\t\t" + str(p.get("stripped")) + "\n")
+        self.fileProperties.append("extension\t\t\t" + p.get("extension") + "\n")
+
+        self.r2 = r2pipe.open(p.get("Binary File Path"))
+
+        self.detailedPoiAnalysisField.clear()
+
+        self.projectDescriptionField.setEnabled(True)
+
+        self.projectDeleteButton.setEnabled(True)
+
+        self.projectTabName = "Project - " + self.projectList.currentItem().text()
+        self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
+        self.retranslateUi(MainWindow)
+
+    def filter_projects(self):  ##filtering list of project
+        for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
+            item.setHidden(True)
+        for item in self.projectList.findItems(self.projectSearch.text(), QtCore.Qt.MatchStartsWith):
+            item.setHidden(False)
+
 
     def runStaticAnalysis(self):
         if (self.pluginDropDownAnalysis.currentText() == "Select"):
@@ -229,7 +328,6 @@ class Ui_MainWindow(object):
                     self.poiAnalysisList.addItem(item)
                     counter = counter + 1
                 self.brianaFunction(staticFunctionList);
-
 
     def brianaFunction(self, staticFunctionList):
         keys = ['fName', 'argNum', 'argName', 'argType', 'argVal', 'retName', 'retType', 'retValue', 'locName',
@@ -467,7 +565,6 @@ class Ui_MainWindow(object):
                 for item in self.stringsStatic:
                     self.poiAnalysisList.addItem(item["string"])
 
-
     def dropDownChangePOI(self):
         dropDownSelect = self.poiFilterDropDown.currentText()
 
@@ -623,42 +720,6 @@ class Ui_MainWindow(object):
             self.poiList.repaint()
 
 
-    def saveProject(self):
-        project = {"Project Name": self.project.name,
-                   "Project Description": self.project.description,
-                   "Binary File Path": self.path,
-                   "arch": self.arch,
-                   "os": self.os,
-                   "bintype": self.bintype,
-                   "machine": self.machine,
-                   "class": self.classVar,
-                   "bits": self.bits,
-                   "language": self.language,
-                   "canary": self.canary,
-                   "endian": self.endian,
-                   "crypto": self.crypto,
-                   "nx": self.nx,
-                   "pic": self.pic,
-                   "relocs": self.relocs,
-                   "stripped": self.stripped,
-                   "extension": self.extension}
-
-        self.collection.insert_many([project])
-
-        it = QtWidgets.QListWidgetItem(self.project.name)
-
-        self.projectList.addItem(it)
-
-        it.setSelected(True)
-
-        self.projectDescriptionField.setEnabled(True)
-
-        self.projectDeleteButton.setEnabled(True)
-
-        self.projectTabName = "Project - " + self.project.name
-        self.analysisTabName = "Analysis - " + self.project.name
-
-        self.retranslateUi(MainWindow)
 
     def savePlugin(self):
         pluginDB = {"Plugin Name": self.plugin.name,
@@ -711,25 +772,6 @@ class Ui_MainWindow(object):
         if currentDocument is not None:
             if currentDocument.text() == "Plugin Structure":
                 self.loadPluginStructureDocumentation()
-        self.retranslateUi(MainWindow)
-
-    def deleteProject(self):
-        self.projectDeleteButton.setEnabled(False)
-        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
-        self.collection.delete_one(p)
-        self.projectList.takeItem(self.projectList.currentRow())
-        self.projectNameField.clear()
-        self.projectDescriptionField.clear()
-        self.binaryFilePathField.clear()
-        self.fileProperties.clear()
-        self.projectNameField.repaint()
-        self.projectDescriptionField.repaint()
-        self.binaryFilePathField.repaint()
-        self.fileProperties.repaint()
-        self.r2 = ""
-        self.projectList.clearSelection()
-        self.projectTabName = "Project"
-        self.analysisTabName = "Analysis"
         self.retranslateUi(MainWindow)
 
     def deletePlugin(self):
@@ -831,43 +873,6 @@ class Ui_MainWindow(object):
             Ui_MainWindow.parseXML(fileName)
             self.pluginNameEdit.setText(list[0])
             self.pluginDescriptionEdit.setText(list[1])
-
-    def projectClicked(self):
-        p = self.collection.find_one({"Project Name": self.projectList.currentItem().text()})
-
-        self.projectNameField.setText(p.get("Project Name"))
-
-        self.projectDescriptionField.setText(p.get("Project Description"))
-
-        self.binaryFilePathField.setText(p.get("Binary File Path"))
-
-        self.fileProperties.append("arch\t\t\t" + p.get("arch") + "\n")
-        self.fileProperties.append("os\t\t\t" + p.get("os") + "\n")
-        self.fileProperties.append("bintype\t\t\t" + p.get("bintype") + "\n")
-        self.fileProperties.append("machine\t\t\t" + p.get("machine") + "\n")
-        self.fileProperties.append("class\t\t\t" + p.get("class") + "\n")
-        self.fileProperties.append("bits\t\t\t" + str(p.get("bits")) + "\n")
-        self.fileProperties.append("language\t\t\t" + p.get("language") + "\n")
-        self.fileProperties.append("canary\t\t\t" + str(p.get("canary")) + "\n")
-        self.fileProperties.append("endian\t\t\t" + p.get("endian") + "\n")
-        self.fileProperties.append("crypto\t\t\t" + str(p.get("crypto")) + "\n")
-        self.fileProperties.append("nx\t\t\t" + str(p.get("nx")) + "\n")
-        self.fileProperties.append("pic\t\t\t" + str(p.get("pic")) + "\n")
-        self.fileProperties.append("relocs\t\t\t" + str(p.get("relocs")) + "\n")
-        self.fileProperties.append("stripped\t\t\t" + str(p.get("stripped")) + "\n")
-        self.fileProperties.append("extension\t\t\t" + p.get("extension") + "\n")
-
-        self.r2 = r2pipe.open(p.get("Binary File Path"))
-
-        self.detailedPoiAnalysisField.clear()
-
-        self.projectDescriptionField.setEnabled(True)
-
-        self.projectDeleteButton.setEnabled(True)
-
-        self.projectTabName = "Project - " + self.projectList.currentItem().text()
-        self.analysisTabName = "Analysis - " + self.projectList.currentItem().text()
-        self.retranslateUi(MainWindow)
 
     def analysisClicked(self):
         selected = self.poiAnalysisList.currentItem().text()
@@ -1161,14 +1166,6 @@ class Ui_MainWindow(object):
             self.collection.replace_one(query, text_file_doc)
         else:
             self.collection.insert_one(query, text_file_doc)
-
-    # End of Documentation Related Function #
-
-    def filter_projects(self):  ##filtering list of project
-        for item in self.projectList.findItems("*", QtCore.Qt.MatchWildcard):
-            item.setHidden(True)
-        for item in self.projectList.findItems(self.projectSearch.text(), QtCore.Qt.MatchStartsWith):
-            item.setHidden(False)
 
     def filter_plugins(self):
         for item in self.pluginManagementList.findItems("*", QtCore.Qt.MatchWildcard):
@@ -2018,7 +2015,6 @@ class Ui_MainWindow(object):
         pluginSelected.setWindowTitle(_translate("pluginSelected", "Error Message: Plugin Selected"))
         self.messageLabel.setText(
             _translate("pluginSelected", "You need to select a plugin before running an analysis."))
-
 
 if __name__ == "__main__":
     import sys

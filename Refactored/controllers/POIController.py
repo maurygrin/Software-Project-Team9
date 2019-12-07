@@ -22,6 +22,12 @@ class POIController(object):
         self.poi_tab.poiDeleteButton.setEnabled(False)
         self.poi_tab.poiSaveButton.setEnabled(False)
 
+        self.poi = ""
+
+        self.poiName = ""
+        self.poiType = ""
+        self.poiOutput = ""
+
     def poiWindow(self):
         self.poi_tab.setupUiPOI(self.poi_tab.windowPOI)
         self.poi_tab.windowPOI.show()
@@ -68,9 +74,14 @@ class POIController(object):
             self.poiSelectedWindow()
         else:
             self.poi = POI(name, typeP, out)
-            self.poi_tab.poiNameEdit.setText(self.poi.name)
-            self.poi_tab.poiTypeEdit.setText(self.poi.typeP)
-            self.poi_tab.poiOutEdit.setText(self.poi.out)
+
+            self.poiName = self.poi.get_name()
+            self.poiType = self.poi.get_type()
+            self.poiOutput = self.poi.get_out()
+
+            self.poi_tab.poiNameEdit.setText(self.poiName)
+            self.poi_tab.poiTypeEdit.setText(self.poiType)
+            self.poi_tab.poiOutEdit.setText(self.poiOutput)
 
             self.poi_tab.poiViewField.clear()
 
@@ -81,9 +92,9 @@ class POIController(object):
             subName = ET.SubElement(child, "nameStrings")
             subType = ET.SubElement(child, "typeStrings")
             subOutput = ET.SubElement(child, "outputString")
-            subName.text = self.poi.name
-            subType.text = self.poi.typeP
-            subOutput.text = self.poi.out
+            subName.text = self.poiName
+            subType.text = self.poiType
+            subOutput.text = self.poiOutput
 
             if typeP == "String":
                 self.listStrings.append(name)
@@ -109,7 +120,7 @@ class POIController(object):
 
             root.append(child)
             tree.write("./plugins/networkPlugin.xml")
-            self.poi_tab.poiList.addItem(self.poi.name)
+            self.poi_tab.poiList.addItem(self.poiName)
             self.poi_tab.poiList.repaint()
 
     def deletePOI(self):
